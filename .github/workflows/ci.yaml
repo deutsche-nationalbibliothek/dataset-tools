@@ -121,6 +121,7 @@ jobs:
       - rustdoc
       - clippy
       - msrv
+      - outdated
       - udeps
     steps:
       - run: exit 0
