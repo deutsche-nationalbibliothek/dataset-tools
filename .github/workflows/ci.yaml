@@ -45,8 +45,18 @@ jobs:
       - name: Run tests
         run: cargo nextest run --workspace --all-features
 
-  ci:
+  msrv:
     runs-on: ubuntu-latest
     needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.87.0
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --workspace
+
+  ci:
+    runs-on: ubuntu-latest
+    needs:
+      - msrv
     steps:
       - run: exit 0

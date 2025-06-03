@@ -4,5 +4,6 @@ resolver = "3"
 
 [workspace.package]
 authors = ["Nico Wagner <n.wagner@dnb.de>"]
+rust-version = "1.87"
 license = "EUPL-1.2"
 edition = "2024"
