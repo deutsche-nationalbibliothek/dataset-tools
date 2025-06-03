@@ -114,6 +114,24 @@ jobs:
       - run: cargo install --locked cargo-udeps
       - run: cargo udeps --workspace
 
+  deny:
+    if: ${{ github.event_name == 'push' || !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        checks:
+          - bans licenses sources
+          - advisories
+    continue-on-error: ${{ matrix.checks == 'advisories' }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: EmbarkStudios/cargo-deny-action@v2
+      with:
+        command: check ${{ matrix.checks }}
+        arguments: --workspace --all-features
+        command-arguments: -c .deny.toml
+        rust-version: stable
+
   ci:
     runs-on: ubuntu-latest
     needs:
@@ -123,5 +141,6 @@ jobs:
       - msrv
       - outdated
       - udeps
+      - deny
     steps:
       - run: exit 0
