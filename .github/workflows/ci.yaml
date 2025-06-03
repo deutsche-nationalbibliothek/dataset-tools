@@ -78,6 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - rustfmt
+      - rustdoc
       - msrv
     steps:
       - run: exit 0
