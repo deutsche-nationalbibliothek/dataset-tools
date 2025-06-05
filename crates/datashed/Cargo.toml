@@ -1,0 +1,30 @@
+[package]
+name = "datashed"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[lib]
+name = "datashed"
+path = "src/lib.rs"
+
+[[bin]]
+name = "datashed"
+path = "src/bin/datashed/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+semver = { workspace = true }
+serde = { workspace = true }
+toml_edit = { workspace = true }
+
+[dev-dependencies]
+anyhow = { workspace = true }
+assert_cmd = { workspace = true }
+assert_fs = { workspace = true }
+predicates = { workspace = true }
+
+
