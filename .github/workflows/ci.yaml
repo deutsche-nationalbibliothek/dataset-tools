@@ -142,18 +142,26 @@ jobs:
       - run: cargo install --locked cargo-careful
       - run: cargo careful test --workspace --all-features
 
+  typos:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crate-ci/typos@v1.33.1
+
   ci:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     needs:
-      - rustfmt
-      - rustdoc
-      - clippy
-      - msrv
       - careful
-      - outdated
-      - udeps
+      - clippy
       - deny
+      - msrv
+      - outdated
+      - rustdoc
+      - rustfmt
+      - typos
+      - udeps
     steps:
       - name: check for cancelled jobs
         if: ${{ contains(needs.*.result, 'cancelled') }}
