@@ -1,4 +1,4 @@
-use std::process::{self};
+use std::process;
 
 use crate::prelude::*;
 
