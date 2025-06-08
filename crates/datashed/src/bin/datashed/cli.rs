@@ -2,7 +2,7 @@ use clap::builder::Styles;
 use clap::builder::styling::{AnsiColor, Effects};
 use clap::{Parser, Subcommand};
 
-use crate::commands::Init;
+use crate::commands::*;
 
 const STYLES: Styles = Styles::styled()
     .header(AnsiColor::Green.on_default().effects(Effects::BOLD))
@@ -22,6 +22,7 @@ pub(crate) struct Args {
 #[derive(Debug, Subcommand)]
 pub(crate) enum Command {
     Init(Init),
+    Version(Version),
 }
 
 #[derive(Debug, clap::Args)]
