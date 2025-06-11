@@ -41,8 +41,17 @@ impl Datashed {
     }
 
     /// Returns the config associated with the datashed.
-    #[inline]
     pub fn config(&self) -> DatashedResult<Config> {
         Config::from_path(self.root_dir.join(Self::CONFIG))
+    }
+
+    /// Returns the base directory of the datashed.
+    pub fn base_dir(&self) -> &PathBuf {
+        &self.root_dir
+    }
+
+    /// Returns the data directory of the datashed.
+    pub fn data_dir(&self) -> PathBuf {
+        self.root_dir.join(Self::DATA_DIR)
     }
 }

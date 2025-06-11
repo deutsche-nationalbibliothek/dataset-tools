@@ -8,9 +8,11 @@ use crate::prelude::CommandResult;
 pub(crate) mod cli;
 pub(crate) mod commands;
 pub(crate) mod prelude;
+pub(crate) mod progress;
 
 fn run(args: Args) -> CommandResult {
     match *args.cmd {
+        Command::Index(cmd) => cmd.execute(),
         Command::Init(cmd) => cmd.execute(),
         Command::Version(cmd) => cmd.execute(),
     }
