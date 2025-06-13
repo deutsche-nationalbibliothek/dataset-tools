@@ -23,4 +23,4 @@ walkdir = { version = "2.5" }
 
 [workspace.dependencies.polars]
 version = "0.48"
-features = ["dtype-slim", "ipc", "lazy"]
+features = ["dtype-slim", "ipc", "lazy", "decompress"]

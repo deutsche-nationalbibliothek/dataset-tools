@@ -1,26 +1,31 @@
-use std::fs::Metadata;
 use std::os::linux::fs::MetadataExt;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use crate::DatashedResult;
 
 pub struct Document {
-    _path: PathBuf,
-    metadata: Metadata,
+    pub path: String,
+    pub size: u64,
 }
 
 impl Document {
-    pub fn from_path<P: AsRef<Path>>(path: P) -> DatashedResult<Self> {
+    pub fn from_path<P: AsRef<Path>>(
+        path: P,
+        data_dir: P,
+    ) -> DatashedResult<Self> {
         let path = path.as_ref().to_path_buf();
         let metadata = path.metadata()?;
-        Ok(Self {
-            _path: path,
-            metadata,
-        })
-    }
 
-    #[inline(always)]
-    pub fn size(&self) -> u64 {
-        self.metadata.st_size()
+        let relpath = path
+            .strip_prefix(data_dir)
+            .expect("strip prefix")
+            .to_str()
+            .expect("valid path")
+            .into();
+
+        Ok(Self {
+            path: relpath,
+            size: metadata.st_size(),
+        })
     }
 }

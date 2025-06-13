@@ -15,6 +15,7 @@ impl Datashed {
     pub const TMP_DIR: &'static str = "tmp";
 
     pub const CONFIG: &'static str = "config.toml";
+    pub const INDEX: &'static str = "index.ipc";
 
     /// Discovers the root of the datashed.
     ///
