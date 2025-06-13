@@ -107,3 +107,45 @@ fn index_output_ipc() -> TestResult {
 
     Ok(())
 }
+
+#[test]
+fn index_num_threads_1() -> TestResult {
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let datashed_dir = create_datashed()?;
+
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["-j", "1", "index", "-q"])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
+
+    check_index(datashed_dir.join("index.ipc"))?;
+
+    Ok(())
+}
+
+#[test]
+fn index_num_threads_2() -> TestResult {
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let datashed_dir = create_datashed()?;
+
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["-j", "1", "index", "-q"])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
+
+    check_index(datashed_dir.join("index.ipc"))?;
+
+    Ok(())
+}

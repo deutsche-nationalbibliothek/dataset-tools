@@ -1,6 +1,7 @@
 use std::process::ExitCode;
 
 use clap::Parser;
+use rayon::ThreadPoolBuilder;
 
 use crate::cli::{Args, Command};
 use crate::prelude::CommandResult;
@@ -20,6 +21,11 @@ fn run(args: Args) -> CommandResult {
 
 fn main() -> ExitCode {
     let args = Args::parse();
+
+    ThreadPoolBuilder::new()
+        .num_threads(args.num_jobs.unwrap_or(0))
+        .build_global()
+        .unwrap();
 
     match run(args) {
         Ok(code) => code,
