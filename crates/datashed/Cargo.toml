@@ -17,9 +17,13 @@ path = "src/bin/datashed/main.rs"
 [dependencies]
 anyhow = { workspace = true }
 clap = { workspace = true }
+indicatif = { workspace = true }
+polars = { workspace = true }
+rayon = { workspace = true }
 semver = { workspace = true }
 serde = { workspace = true }
 toml_edit = { workspace = true }
+walkdir = { workspace = true }
 
 [dev-dependencies]
 anyhow = { workspace = true }
