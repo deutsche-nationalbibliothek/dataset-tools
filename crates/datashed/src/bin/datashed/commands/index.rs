@@ -59,17 +59,20 @@ impl Index {
         let mut paths: Vec<String> = vec![];
         let mut hashes: Vec<String> = vec![];
         let mut sizes: Vec<u64> = vec![];
+        let mut mtimes: Vec<u64> = vec![];
 
         for doc in docs.into_iter() {
             paths.push(doc.path);
             hashes.push(doc.hash);
             sizes.push(doc.size);
+            mtimes.push(doc.mtime);
         }
 
         let mut df = DataFrame::new(vec![
             Column::new("path".into(), paths),
             Column::new("hash".into(), hashes),
             Column::new("size".into(), sizes),
+            Column::new("mtime".into(), mtimes),
         ])?
         .lazy()
         .select([col("*").shrink_dtype()])
