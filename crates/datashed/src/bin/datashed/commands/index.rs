@@ -23,11 +23,6 @@ const PBAR_COLLECT: &str = "Collecting documents: {human_pos} | \
 const PBAR_INDEX: &str = "Indexing documents: {human_pos} ({percent}%) | \
         elapsed: {elapsed_precise}{msg}";
 
-#[inline(always)]
-fn is_plaintext(path: &PathBuf) -> bool {
-    path.to_str().map(|s| s.ends_with(".txt")).unwrap_or(false)
-}
-
 impl Index {
     pub(crate) fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
@@ -42,7 +37,11 @@ impl Index {
             .into_iter()
             .filter_map(Result::ok)
             .map(|dirent| dirent.into_path())
-            .filter(is_plaintext)
+            .filter(|path| {
+                path.to_str()
+                    .map(|s| s.ends_with(".txt"))
+                    .unwrap_or(false)
+            })
             .progress_with(pbar)
             .collect::<Vec<_>>();
 
@@ -58,15 +57,18 @@ impl Index {
             .collect::<Result<Vec<_>, _>>()?;
 
         let mut paths: Vec<String> = vec![];
+        let mut hashes: Vec<String> = vec![];
         let mut sizes: Vec<u64> = vec![];
 
         for doc in docs.into_iter() {
             paths.push(doc.path);
+            hashes.push(doc.hash);
             sizes.push(doc.size);
         }
 
         let mut df = DataFrame::new(vec![
             Column::new("path".into(), paths),
+            Column::new("hash".into(), hashes),
             Column::new("size".into(), sizes),
         ])?
         .lazy()
