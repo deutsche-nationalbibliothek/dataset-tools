@@ -16,6 +16,9 @@ pub struct Config {
     /// Datashed metadata.
     pub metadata: Metadata,
 
+    /// Runtime options.
+    pub runtime: Option<Runtime>,
+
     /// This structure should always be constructed using a public
     /// constructor or using the update syntax:
     ///
@@ -88,4 +91,12 @@ impl Default for Metadata {
             authors: Vec::new(),
         }
     }
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct Runtime {
+    /// Number of threads to use. If this options isn't set or a value
+    /// of "0" is chosen, the maximum number of available threads
+    /// is used.
+    pub num_jobs: Option<usize>,
 }

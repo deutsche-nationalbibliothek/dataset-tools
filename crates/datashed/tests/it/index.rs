@@ -24,19 +24,23 @@ fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
 
     let columns = df.take_columns();
     let paths: Vec<_> = columns[0].str()?.iter().collect();
+    let hashes: Vec<_> = columns[1].str()?.iter().collect();
     let sizes: Vec<_> =
-        columns[1].cast(&DataType::UInt64)?.u64()?.iter().collect();
+        columns[2].cast(&DataType::UInt64)?.u64()?.iter().collect();
 
     // DNB
     assert_eq!(paths[0], Some("0/dnb.txt"));
+    assert_eq!(hashes[0], Some("71eb6431"));
     assert_eq!(sizes[0], Some(769));
 
     // TIB
     assert_eq!(paths[1], Some("0/tib.txt"));
+    assert_eq!(hashes[1], Some("8f30b82a"));
     assert_eq!(sizes[1], Some(1443));
 
     // ZBW
     assert_eq!(paths[2], Some("1/zbw.txt"));
+    assert_eq!(hashes[2], Some("0bf81f96"));
     assert_eq!(sizes[2], Some(908));
 
     Ok(())
@@ -60,7 +64,6 @@ fn index_default() -> TestResult {
         .stderr(predicates::str::is_empty());
 
     check_index(datashed_dir.join("index.ipc"))?;
-
     Ok(())
 }
 
@@ -82,7 +85,6 @@ fn index_output_csv() -> TestResult {
         .stderr(predicates::str::is_empty());
 
     check_index(datashed_dir.join("index.csv"))?;
-
     Ok(())
 }
 
@@ -125,7 +127,6 @@ fn index_num_threads_1() -> TestResult {
         .stderr(predicates::str::is_empty());
 
     check_index(datashed_dir.join("index.ipc"))?;
-
     Ok(())
 }
 
@@ -146,6 +147,5 @@ fn index_num_threads_2() -> TestResult {
         .stderr(predicates::str::is_empty());
 
     check_index(datashed_dir.join("index.ipc"))?;
-
     Ok(())
 }

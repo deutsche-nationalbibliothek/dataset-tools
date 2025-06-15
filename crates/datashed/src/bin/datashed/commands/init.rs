@@ -8,7 +8,7 @@ use semver::Version;
 
 use crate::prelude::*;
 
-const GITIGNORE: &'static str = "/data\n/tmp\n\n/index.ipc\n";
+const GITIGNORE: &str = "/data\n/tmp\n\n/index.ipc\n";
 
 /// Create a new datashed or re-initialize an existing one
 #[derive(Debug, Parser)]

@@ -22,6 +22,7 @@ polars = { workspace = true }
 rayon = { workspace = true }
 semver = { workspace = true }
 serde = { workspace = true }
+sha2 = { workspace = true }
 toml_edit = { workspace = true }
 walkdir = { workspace = true }
 
