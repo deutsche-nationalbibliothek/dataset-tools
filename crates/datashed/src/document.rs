@@ -2,6 +2,7 @@ use std::fmt::Write;
 use std::fs::{self};
 use std::os::linux::fs::MetadataExt;
 use std::path::Path;
+use std::time::UNIX_EPOCH;
 
 use sha2::{Digest, Sha256};
 
@@ -11,6 +12,7 @@ pub struct Document {
     pub path: String,
     pub hash: String,
     pub size: u64,
+    pub mtime: u64,
 }
 
 #[inline]
@@ -41,10 +43,18 @@ impl Document {
             .expect("valid path")
             .into();
 
+        let mtime = metadata
+            .modified()
+            .ok()
+            .and_then(|x| x.duration_since(UNIX_EPOCH).ok())
+            .map(|x| x.as_secs())
+            .expect("valid mtime");
+
         Ok(Self {
             path: relpath,
             hash: sha256(content),
             size: metadata.st_size(),
+            mtime,
         })
     }
 }

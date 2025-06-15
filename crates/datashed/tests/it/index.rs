@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::path::Path;
+use std::time::UNIX_EPOCH;
 
 use polars::io::SerReader;
 use polars::prelude::*;
@@ -7,7 +8,10 @@ use polars::prelude::*;
 use crate::prelude::*;
 
 fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
-    let path_str = path.as_ref().to_str();
+    let path = path.as_ref();
+    let path_str = path.to_str();
+
+    let data_dir = path.parent().unwrap().join("data");
 
     let df = match path_str {
         Some(path_str) if path_str.ends_with(".ipc") => {
@@ -27,21 +31,56 @@ fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
     let hashes: Vec<_> = columns[1].str()?.iter().collect();
     let sizes: Vec<_> =
         columns[2].cast(&DataType::UInt64)?.u64()?.iter().collect();
+    let mtimes: Vec<_> =
+        columns[3].cast(&DataType::UInt64)?.u64()?.iter().collect();
 
     // DNB
     assert_eq!(paths[0], Some("0/dnb.txt"));
     assert_eq!(hashes[0], Some("71eb6431"));
     assert_eq!(sizes[0], Some(769));
 
+    assert_eq!(
+        mtimes[0],
+        data_dir
+            .join(paths[0].unwrap())
+            .metadata()?
+            .modified()
+            .ok()
+            .and_then(|x| x.duration_since(UNIX_EPOCH).ok())
+            .map(|x| x.as_secs())
+    );
+
     // TIB
     assert_eq!(paths[1], Some("0/tib.txt"));
     assert_eq!(hashes[1], Some("8f30b82a"));
     assert_eq!(sizes[1], Some(1443));
 
+    assert_eq!(
+        mtimes[1],
+        data_dir
+            .join(paths[1].unwrap())
+            .metadata()?
+            .modified()
+            .ok()
+            .and_then(|x| x.duration_since(UNIX_EPOCH).ok())
+            .map(|x| x.as_secs())
+    );
+
     // ZBW
     assert_eq!(paths[2], Some("1/zbw.txt"));
     assert_eq!(hashes[2], Some("0bf81f96"));
     assert_eq!(sizes[2], Some(908));
+
+    assert_eq!(
+        mtimes[2],
+        data_dir
+            .join(paths[2].unwrap())
+            .metadata()?
+            .modified()
+            .ok()
+            .and_then(|x| x.duration_since(UNIX_EPOCH).ok())
+            .map(|x| x.as_secs())
+    );
 
     Ok(())
 }
