@@ -1,3 +1,5 @@
+#[cfg(feature = "dnb")]
+use std::ffi::OsStr;
 use std::fmt::Write;
 use std::fs::{self};
 use std::os::linux::fs::MetadataExt;
@@ -11,6 +13,8 @@ use crate::DatashedResult;
 pub struct Document {
     pub path: String,
     pub hash: String,
+    #[cfg(feature = "dnb")]
+    pub ppn: String,
     pub size: u64,
     pub mtime: u64,
 }
@@ -50,9 +54,18 @@ impl Document {
             .map(|x| x.as_secs())
             .expect("valid mtime");
 
+        #[cfg(feature = "dnb")]
+        let ppn = path
+            .file_stem()
+            .and_then(OsStr::to_str)
+            .map(ToString::to_string)
+            .unwrap_or_default();
+
         Ok(Self {
             path: relpath,
             hash: sha256(content),
+            #[cfg(feature = "dnb")]
+            ppn,
             size: metadata.st_size(),
             mtime,
         })

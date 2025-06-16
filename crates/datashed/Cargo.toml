@@ -32,4 +32,6 @@ assert_cmd = { workspace = true }
 assert_fs = { workspace = true }
 predicates = { workspace = true }
 
+[features]
+dnb = []
 
