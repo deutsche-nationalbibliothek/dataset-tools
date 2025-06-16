@@ -27,17 +27,53 @@ fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
     assert_eq!(df.height(), 3);
 
     let columns = df.take_columns();
-    let paths: Vec<_> = columns[0].str()?.iter().collect();
-    let hashes: Vec<_> = columns[1].str()?.iter().collect();
-    let sizes: Vec<_> =
-        columns[2].cast(&DataType::UInt64)?.u64()?.iter().collect();
-    let mtimes: Vec<_> =
-        columns[3].cast(&DataType::UInt64)?.u64()?.iter().collect();
 
-    // DNB
+    let mut idx = 0;
+
+    // PATH
+    let paths: Vec<_> = columns[idx].str()?.iter().collect();
+    idx += 1;
+
     assert_eq!(paths[0], Some("0/dnb.txt"));
+    assert_eq!(paths[1], Some("0/tib.txt"));
+    assert_eq!(paths[2], Some("1/zbw.txt"));
+
+    // HASH
+    let hashes: Vec<_> = columns[idx].str()?.iter().collect();
+    idx += 1;
+
     assert_eq!(hashes[0], Some("71eb6431"));
+    assert_eq!(hashes[1], Some("8f30b82a"));
+    assert_eq!(hashes[2], Some("0bf81f96"));
+
+    // PPN
+    if cfg!(feature = "dnb") {
+        let ppns: Vec<_> = columns[idx].str()?.iter().collect();
+        idx += 1;
+
+        assert_eq!(ppns[0], Some("dnb"));
+        assert_eq!(ppns[1], Some("tib"));
+        assert_eq!(ppns[2], Some("zbw"));
+    }
+
+    // SIZE
+    let sizes: Vec<_> = columns[idx]
+        .cast(&DataType::UInt64)?
+        .u64()?
+        .iter()
+        .collect();
+    idx += 1;
+
     assert_eq!(sizes[0], Some(769));
+    assert_eq!(sizes[1], Some(1443));
+    assert_eq!(sizes[2], Some(908));
+
+    // MTIME
+    let mtimes: Vec<_> = columns[idx]
+        .cast(&DataType::UInt64)?
+        .u64()?
+        .iter()
+        .collect();
 
     assert_eq!(
         mtimes[0],
@@ -50,11 +86,6 @@ fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
             .map(|x| x.as_secs())
     );
 
-    // TIB
-    assert_eq!(paths[1], Some("0/tib.txt"));
-    assert_eq!(hashes[1], Some("8f30b82a"));
-    assert_eq!(sizes[1], Some(1443));
-
     assert_eq!(
         mtimes[1],
         data_dir
@@ -65,11 +96,6 @@ fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
             .and_then(|x| x.duration_since(UNIX_EPOCH).ok())
             .map(|x| x.as_secs())
     );
-
-    // ZBW
-    assert_eq!(paths[2], Some("1/zbw.txt"));
-    assert_eq!(hashes[2], Some("0bf81f96"));
-    assert_eq!(sizes[2], Some(908));
 
     assert_eq!(
         mtimes[2],

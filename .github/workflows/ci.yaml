@@ -46,8 +46,10 @@ jobs:
           targets: ${{ matrix.target.triple }}
       - uses: taiki-e/install-action@nextest
       - uses: Swatinem/rust-cache@v2
-      - name: Run tests
+      - name: Run tests (all features)
         run: cargo nextest run --workspace --all-features
+      - name: Run tests (default)
+        run: cargo nextest run --workspace
 
   rustfmt:
     runs-on: ubuntu-latest
