@@ -29,6 +29,7 @@ pub(crate) struct Args {
 pub(crate) enum Command {
     Index(Index),
     Init(Init),
+    Verify(Verify),
     Version(Version),
 }
 

@@ -32,10 +32,11 @@ fn sha256<T: AsRef<[u8]>>(data: T) -> String {
 }
 
 impl Document {
-    pub fn from_path<P: AsRef<Path>>(
-        path: P,
-        data_dir: P,
-    ) -> DatashedResult<Self> {
+    pub fn from_path<P, Q>(path: P, data_dir: Q) -> DatashedResult<Self>
+    where
+        P: AsRef<Path>,
+        Q: AsRef<Path>,
+    {
         let path = path.as_ref().to_path_buf();
         let metadata = path.metadata()?;
         let content = fs::read(&path)?;

@@ -34,6 +34,7 @@ fn run(args: Args) -> CommandResult {
     match *args.cmd {
         Command::Index(cmd) => cmd.execute(),
         Command::Init(cmd) => cmd.execute(),
+        Command::Verify(cmd) => cmd.execute(),
         Command::Version(cmd) => cmd.execute(),
     }
 }
