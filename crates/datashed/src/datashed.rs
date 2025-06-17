@@ -1,7 +1,9 @@
+use std::fs::File;
 use std::path::PathBuf;
 use std::{env, fs};
 
 use anyhow::bail;
+use polars::prelude::*;
 
 use crate::{Config, DatashedResult};
 
@@ -54,5 +56,14 @@ impl Datashed {
     /// Returns the data directory of the datashed.
     pub fn data_dir(&self) -> PathBuf {
         self.root_dir.join(Self::DATA_DIR)
+    }
+
+    /// Returns the index associated with the datashed.
+    pub fn index(&self) -> DatashedResult<DataFrame> {
+        Ok(IpcReader::new(File::open(
+            self.base_dir().join(Self::INDEX),
+        )?)
+        .memory_mapped(None)
+        .finish()?)
     }
 }
