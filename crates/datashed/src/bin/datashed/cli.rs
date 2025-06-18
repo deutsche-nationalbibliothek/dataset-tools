@@ -27,6 +27,7 @@ pub(crate) struct Args {
 
 #[derive(Debug, Subcommand)]
 pub(crate) enum Command {
+    Completions(Completions),
     Index(Index),
     Init(Init),
     Verify(Verify),

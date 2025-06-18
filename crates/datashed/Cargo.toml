@@ -16,6 +16,7 @@ path = "src/bin/datashed/main.rs"
 
 [dependencies]
 anyhow = { workspace = true }
+clap_complete = { workspace = true }
 clap = { workspace = true }
 indicatif = { workspace = true }
 polars = { workspace = true }
