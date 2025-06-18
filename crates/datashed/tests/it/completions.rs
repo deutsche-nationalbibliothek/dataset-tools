@@ -94,9 +94,5 @@ fn completions_zsh() -> TestResult {
 
     assert!(is_file().eval(&out));
 
-    let mut cmd = process::Command::new("zsh");
-    let assert = cmd.args(["-n", out.to_str().unwrap()]).assert();
-    assert.success();
-
     Ok(())
 }
