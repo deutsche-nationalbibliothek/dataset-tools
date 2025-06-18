@@ -1,3 +1,4 @@
+mod completions;
 mod index;
 mod init;
 mod prelude;
