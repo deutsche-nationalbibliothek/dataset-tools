@@ -10,7 +10,7 @@ pub(crate) enum VerifyMode {
     Strict,
 }
 
-/// verifies whether the metadata conforms to the inventory
+/// Verify whether the metadata conforms to the inventory
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Verify {
     #[command(flatten)]

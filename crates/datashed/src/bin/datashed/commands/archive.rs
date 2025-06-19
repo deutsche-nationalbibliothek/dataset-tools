@@ -12,7 +12,7 @@ use crate::prelude::*;
 const PBAR_ARCHIVE: &str = "Archive documents: {human_pos} ({percent}%) | \
         elapsed: {elapsed_precise}{msg}";
 
-/// Create an archive (tar.gz) of the index, config and all documents.
+/// Create an archive of the index, config and all documents.
 ///
 /// By default, the compression is biased towards high compression ratio
 /// at expense of speed. To change this setting, use the `--fast` or
