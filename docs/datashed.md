@@ -57,7 +57,7 @@ none` option.
 
 ### Versioning
 
-It is good practice to mark the changes to a project's database with
+It is good practice to track changes to a project's database with
 version numbers. Using the `version` command, the version of the project
 can either be changed or incremented. The version must follow the
 [Semantic Versioning](https://semver.org/) guidelines.
