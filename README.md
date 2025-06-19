@@ -11,10 +11,10 @@ the [German National Library].
 
 ## Tools
 
-The [datashed](./docs/datashed.md) tool is a reverse ETL program that
+The [datashed](./docs/datashed.md) tool is a _reverse ETL_ program that
 indexes the documents it contains. Based on this index, data analyses
-can be carried out, for example to identify broken documents or to form
-other subsets based on text statistical characteristics. Finally, the
+can be carried out, for example to identify corrupt documents or to
+build subsets based on text statistical characteristics. Finally, the
 tool offers an HTTP interface to assess the data quality of documents
 and reuse them as a data source.
 
