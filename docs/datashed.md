@@ -55,7 +55,7 @@ identity (if possible). The project is also automatically initialized
 as a Git repository. This behavior can be deactivated using the `--vcs
 none` option.
 
-### Archive
+### Archive and Restore
 
 The `archive` command can be used to create a backup of a datashed. It
 creates a `tar.gz` archive containing all documents, the configuration
@@ -70,3 +70,14 @@ $ datashed archive -o ~/tmp/backup.tar.gz
 Archive documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
+An archive can be restored either via the `tar` program or by using
+the `restore` command. By default, the archive is restored inside the
+current directory. If the archive is to be unpacked into a different
+directory, this can be specified with the `-C` (`--directory`) option.
+The new  directory is created automatically if it does not yet exist.
+
+```console
+$ datashed restore ~/tmp/backup.tar.gz -C foobar
+Successfully restored archive.
+Verify consistency with `datashed verify`.
+```
