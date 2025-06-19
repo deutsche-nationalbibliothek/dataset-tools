@@ -6,12 +6,9 @@
 
 The `archive` command can be used to create a backup of a datashed. It
 creates a `tar.gz` archive containing all documents, the configuration
-and the current index.
-
-> [!IMPORTANT]
-> Only the documents contained in the index are archived. If there are
-> documents that have not yet been indexed, the index should be updated
-> before archiving.
+and the current index. It is important to note, that only the documents
+contained in the index are archived. If there are documents that have
+not yet been indexed, the index should be updated first.
 
 ```console
 $ datashed archive -o ~/tmp/backup.tar.gz
