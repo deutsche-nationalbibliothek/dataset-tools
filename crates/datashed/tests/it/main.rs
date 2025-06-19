@@ -1,3 +1,4 @@
+mod archive;
 mod completions;
 mod index;
 mod init;

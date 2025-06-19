@@ -18,12 +18,14 @@ path = "src/bin/datashed/main.rs"
 anyhow = { workspace = true }
 clap_complete = { workspace = true }
 clap = { workspace = true }
+flate2 = { workspace = true }
 indicatif = { workspace = true }
 polars = { workspace = true }
 rayon = { workspace = true }
 semver = { workspace = true }
 serde = { workspace = true }
 sha2 = { workspace = true }
+tar = { workspace = true }
 toml_edit = { workspace = true }
 walkdir = { workspace = true }
 

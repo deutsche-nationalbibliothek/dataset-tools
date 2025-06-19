@@ -32,6 +32,7 @@ fn num_jobs(args: &Args) -> usize {
 
 fn run(args: Args) -> CommandResult {
     match *args.cmd {
+        Command::Archive(cmd) => cmd.execute(),
         Command::Completions(cmd) => cmd.execute(),
         Command::Index(cmd) => cmd.execute(),
         Command::Init(cmd) => cmd.execute(),
