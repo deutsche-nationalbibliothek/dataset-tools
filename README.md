@@ -6,7 +6,17 @@ tools are based on experiments and prototypes that were developed as
 part of the research work in the _Automated Indexing System_ project of
 the [German National Library].
 
-The tools are not yet ready for productive use; no support is provided.
+> [!NOTE]
+> The tools are not yet ready for productive use; no support is provided.
+
+## Tools
+
+The [datashed](./docs/datashed.md) tool is a reverse ETL program that
+indexes the documents it contains. Based on this index, data analyses
+can be carried out, for example to identify broken documents or to form
+other subsets based on text statistical characteristics. Finally, the
+tool offers an HTTP interface to assess the data quality of documents
+and reuse them as a data source.
 
 
 ## Contributing
