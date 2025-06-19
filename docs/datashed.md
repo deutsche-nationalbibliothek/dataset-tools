@@ -32,8 +32,12 @@ $ tree demo
 
 The `data` directory contains the documents of the datashed. It is up
 to the user to set up an ingest process, e.g. in the form of a Python
-script. The `datashed.toml` contains metadata about the project and
-important runtime options.
+script.
+
+#### Configuration
+
+The `datashed.toml` contains metadata about the project and important
+runtime options.
 
 ```toml
 [metadata]
