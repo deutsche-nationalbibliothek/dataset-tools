@@ -34,6 +34,7 @@ pub(crate) enum Command {
     Completions(Completions),
     Index(Index),
     Init(Init),
+    Restore(Restore),
     Verify(Verify),
     Version(Version),
 }
