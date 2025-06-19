@@ -55,6 +55,37 @@ identity (if possible). The project is also automatically initialized
 as a Git repository. This behavior can be deactivated using the `--vcs
 none` option.
 
+### Versioning
+
+It is good practice to track changes to a project's database with
+version numbers. Using the `version` command, the version of the project
+can either be changed or incremented. The version must follow the
+[Semantic Versioning](https://semver.org/) guidelines.
+
+The current version of the project can be queried as follows:
+
+```console
+$ datashed version
+0.1.0
+```
+
+The following command changes the version of the project to the value
+`0.2.0`. Note, that unless the `-f` (`--force`) flag is set, the new
+version must always be greater than the current version.
+
+```console
+$ datashed version 0.2.0
+```
+
+It is also possible to increment only the _major_, _minor_ or _patch_
+version:
+
+```console
+$ datashed version --bump major
+$ datashed version --bump minor
+$ datashed version --bump patch
+```
+
 ### Archive and Restore
 
 The `archive` command can be used to create a backup of a datashed. It
