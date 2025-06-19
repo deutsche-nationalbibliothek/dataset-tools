@@ -2,7 +2,7 @@
 
 ## Tour
 
-## Creating a new datashed
+### Creating a new datashed
 
 The `init` command is used to create a new _datashed_ project. The
 following command creates a new project `demo`.
@@ -19,7 +19,7 @@ $ mkdir demo && cd demo
 $ datashed init .
 ```
 
-### Project structure
+#### Project structure
 
 An empty project consists of the following files and directories:
 
