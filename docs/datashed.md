@@ -4,7 +4,7 @@
 
 ### Creating a new datashed
 
-The `init` command is used to create a new _datashed_ project. The
+The `init` command is used to create a new datashed project. The
 following command creates a new project `demo`.
 
 ```console
@@ -30,9 +30,11 @@ $ tree demo
 └── tmp
 ```
 
-The `data` directory contains the documents of the datashed. It is up
-to the user to set up an ingest process, e.g. in the form of a Python
-script.
+The `data` directory contains the documents of the datashed. A document
+must be in plain text format and end with the file extension `.txt`.
+It is up to the user to set up an ingest process, e.g. in the form of a
+Python script. Documents can be structured in any subdirectories within
+the `data` directory.
 
 #### Configuration
 
