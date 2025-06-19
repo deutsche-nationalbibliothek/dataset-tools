@@ -1,5 +1,7 @@
 # dataset-tools
 
+[![CI](https://github.com/deutsche-nationalbibliothek/dataset-tools/actions/workflows/ci.yaml/badge.svg)](https://github.com/deutsche-nationalbibliothek/dataset-tools/actions/workflows/ci.yaml)
+
 This project contains tools for data preparation, transformation and
 analysis to create text corpora that can be processed with [Annif]. The
 tools are based on experiments and prototypes that were developed as
