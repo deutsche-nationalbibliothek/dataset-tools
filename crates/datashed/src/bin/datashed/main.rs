@@ -10,6 +10,7 @@ pub(crate) mod cli;
 pub(crate) mod commands;
 pub(crate) mod prelude;
 pub(crate) mod progress;
+pub(crate) mod utils;
 
 fn num_jobs(args: &Args) -> usize {
     if let Some(value) = args.num_jobs {
@@ -40,6 +41,7 @@ fn main() -> ExitCode {
     let result = match *args.cmd {
         Command::Archive(cmd) => cmd.execute(),
         Command::Completions(cmd) => cmd.execute(),
+        Command::Grep(cmd) => cmd.execute(),
         Command::Index(cmd) => cmd.execute(),
         Command::Init(cmd) => cmd.execute(),
         Command::Restore(cmd) => cmd.execute(),
