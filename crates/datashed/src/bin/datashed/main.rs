@@ -47,6 +47,7 @@ fn main() -> ExitCode {
         Command::Restore(cmd) => cmd.execute(),
         Command::Verify(cmd) => cmd.execute(),
         Command::Version(cmd) => cmd.execute(),
+        Command::Vocab(cmd) => cmd.execute(),
     };
 
     match result {

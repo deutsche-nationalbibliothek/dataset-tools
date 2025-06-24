@@ -6,6 +6,7 @@ pub(crate) use init::Init;
 pub(crate) use restore::Restore;
 pub(crate) use verify::Verify;
 pub(crate) use version::Version;
+pub(crate) use vocab::Vocab;
 
 mod archive;
 mod completions;
@@ -15,3 +16,4 @@ mod init;
 mod restore;
 mod verify;
 mod version;
+mod vocab;

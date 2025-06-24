@@ -16,9 +16,11 @@ path = "src/bin/datashed/main.rs"
 
 [dependencies]
 anyhow = { workspace = true }
+bstr = { workspace = true }
 clap_complete = { workspace = true }
 clap = { workspace = true }
 flate2 = { workspace = true }
+hashbrown = { workspace = true }
 indicatif = { workspace = true }
 polars = { workspace = true }
 rayon = { workspace = true }
@@ -28,6 +30,7 @@ serde = { workspace = true }
 sha2 = { workspace = true }
 tar = { workspace = true }
 toml_edit = { workspace = true }
+unicode_categories = { workspace = true }
 walkdir = { workspace = true }
 
 [dev-dependencies]
