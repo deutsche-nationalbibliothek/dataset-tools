@@ -6,7 +6,11 @@ use polars::prelude::*;
 
 use crate::prelude::*;
 
-const HEADER: &str = "path,hash,ppn,size,mtime\n";
+const HEADER: &str = if cfg!(feature = "dnb") {
+    "path,hash,ppn,size,mtime\n"
+} else {
+    "path,hash,size,mtime\n"
+};
 
 #[test]
 fn grep_default() -> TestResult {
