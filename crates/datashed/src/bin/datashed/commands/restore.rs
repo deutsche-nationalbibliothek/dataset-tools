@@ -10,15 +10,15 @@ use crate::prelude::*;
 /// Restore a datashed archive
 #[derive(Debug, Parser)]
 pub(crate) struct Restore {
-    #[command(flatten)]
-    pub(crate) common: CommonArgs,
-
     /// The destination directory.
     #[arg(short = 'C', long = "directory", default_value = ".")]
     dest: PathBuf,
 
     /// The datashed archive to be restored.
     archive: PathBuf,
+
+    #[command(flatten, next_help_heading = "Common options")]
+    pub(crate) common: CommonOpts,
 }
 
 impl Restore {

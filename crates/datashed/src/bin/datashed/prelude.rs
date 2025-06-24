@@ -8,8 +8,11 @@ pub(crate) use indicatif::{
 pub(crate) use polars::prelude::*;
 pub(crate) use rayon::prelude::*;
 
-pub(crate) use crate::cli::CommonArgs;
+pub(crate) use crate::cli::CommonOpts;
 pub(crate) use crate::progress::ProgressBarBuilder;
+pub(crate) use crate::utils::{
+    apply_allow_list, apply_deny_list, write_df,
+};
 
 pub type CommandResult = DatashedResult<ExitCode>;
 

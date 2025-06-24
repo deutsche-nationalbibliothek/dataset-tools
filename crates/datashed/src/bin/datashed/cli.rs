@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use clap::builder::Styles;
 use clap::builder::styling::{AnsiColor, Effects};
 use clap::{Parser, Subcommand};
@@ -32,6 +34,7 @@ pub(crate) struct Args {
 pub(crate) enum Command {
     Archive(Archive),
     Completions(Completions),
+    Grep(Grep),
     Index(Index),
     Init(Init),
     Restore(Restore),
@@ -40,13 +43,31 @@ pub(crate) enum Command {
 }
 
 #[derive(Debug, clap::Args)]
-pub(crate) struct CommonArgs {
+pub(crate) struct CommonOpts {
     /// Operate quietly; do not show progress
     #[arg(short, long, global = true, conflicts_with = "verbose")]
     pub(crate) quiet: bool,
 
-    /// Run verbosely; print additional information to the standard
-    /// error stream
+    /// Run verbosely; print additional infos to stderr
     #[arg(short, long, global = true, conflicts_with = "quiet")]
     pub(crate) verbose: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub(crate) struct FilterOpts {
+    /// Path to an allow list file
+    #[arg(long = "allow-list", short = 'A', value_name = "filename")]
+    pub(crate) allow: Option<PathBuf>,
+
+    /// Path to a deny list file
+    #[arg(long = "deny-list", short = 'D', value_name = "filename")]
+    pub(crate) deny: Option<PathBuf>,
+
+    /// Use an alternative index
+    #[arg(long, short = 'I', value_name = "filename")]
+    pub(crate) index: Option<PathBuf>,
+
+    /// A predicate to filter the index set
+    #[arg(long = "where", value_name = "predicate")]
+    pub(crate) predicate: Option<String>,
 }

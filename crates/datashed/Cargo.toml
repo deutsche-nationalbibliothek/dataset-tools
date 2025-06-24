@@ -22,6 +22,7 @@ flate2 = { workspace = true }
 indicatif = { workspace = true }
 polars = { workspace = true }
 rayon = { workspace = true }
+regex = { workspace = true }
 semver = { workspace = true }
 serde = { workspace = true }
 sha2 = { workspace = true }

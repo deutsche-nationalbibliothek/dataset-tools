@@ -16,6 +16,7 @@ clap_complete = { version = "4.5" }
 indicatif = { version = "0.17", features = ["rayon"] }
 predicates = { version = "3.1" }
 rayon = { version = "1.10" }
+regex = { version = "1.11" }
 semver = { version = "1.0", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 sha2 = { version = "0.10" }
@@ -34,4 +35,12 @@ features = ["zlib-rs"]
 
 [workspace.dependencies.polars]
 version = "0.48"
-features = ["dtype-slim", "ipc", "lazy", "decompress"]
+features = [
+  "decompress",
+  "dtype-slim",
+  "ipc",
+  "is_in",
+  "lazy",
+  "semi_anti_join",
+  "sql",
+]

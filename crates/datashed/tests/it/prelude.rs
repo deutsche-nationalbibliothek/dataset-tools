@@ -60,3 +60,22 @@ pub(crate) fn create_datashed() -> anyhow::Result<TempDir> {
 
     Ok(temp_dir)
 }
+
+pub(crate) fn create_datashed_with_index() -> anyhow::Result<TempDir> {
+    let datashed_dir = create_datashed()?;
+
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .arg("index")
+        .args(["-q"])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
+
+    Ok(datashed_dir)
+}
