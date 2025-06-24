@@ -27,7 +27,7 @@ pub(crate) struct Grep {
     #[arg(long = "invert-match")]
     invert: bool,
 
-    /// Write the result to  `filename`. By defaul output will be
+    /// Write the result to  `filename`. By default output will be
     /// written in CSV format to `stdout`
     #[arg(short, long, value_name = "filename")]
     output: Option<PathBuf>,
