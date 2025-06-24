@@ -55,6 +55,47 @@ identity (if possible). The project is also automatically initialized
 as a Git repository. This behavior can be deactivated using the `--vcs
 none` option.
 
+### Grepping
+
+A simple form of document retrieval is a linear search for patterns.
+This function is provided by the `grep` command. It works in a similar
+way to the Unix `grep` or `rg` command, but it supports other practical
+functions.
+
+Only the documents that have been indexed in Datashed are searched.
+The output contains all lines from the index where the corresponding
+document matches one of the specified patterns. By default, the output
+is written in CSV format on the console.
+
+In the following example, the documents are searched for the phrase
+_"(DNB)"_:
+
+```console
+$ datashed grep -q '\(DNB\)'
+path,hash,ppn,size,mtime
+0/dnb.txt,71eb6431,dnb,769,1750321974
+```
+
+The index can be restricted in advance according to conditions. If, for
+example, only documents with a file size of less than 1 KiB are to be
+searched, this is done using the `--where` option:
+
+```console
+$ datashed grep -q '\(DNB\)' --where 'size <= 1024'
+path,hash,ppn,size,mtime
+0/dnb.txt,71eb6431,dnb,769,1750321974
+```
+
+Another useful option is the restriction to a search window. If only
+the first _n_ bytes are to be searched, this is done by specifying the
+`-n` option:
+
+```console
+$ datashed grep -q -n 50 '\(DNB\)'
+path,hash,ppn,size,mtime
+0/dnb.txt,71eb6431,dnb,769,1750321974
+```
+
 ### Versioning
 
 It is good practice to track changes to a project's database with
