@@ -19,9 +19,6 @@ const PBAR_ARCHIVE: &str = "Archive documents: {human_pos} ({percent}%) | \
 /// `--best` flag.
 #[derive(Debug, Parser)]
 pub(crate) struct Archive {
-    #[command(flatten)]
-    pub(crate) common: CommonArgs,
-
     /// Uses the lowest compression at the highest speed.
     #[arg(long, conflicts_with = "best")]
     fast: bool,
@@ -33,6 +30,9 @@ pub(crate) struct Archive {
     /// Write the archive to `filename` instead of stdout.
     #[arg(short, long, value_name = "filename")]
     output: Option<PathBuf>,
+
+    #[command(flatten, next_help_heading = "Common options")]
+    pub(crate) common: CommonOpts,
 }
 
 impl Archive {

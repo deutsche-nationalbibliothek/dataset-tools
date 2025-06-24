@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use polars::sql::SQLContext;
 use regex::bytes::RegexSetBuilder;
 
+use crate::cli::FilterOpts;
 use crate::prelude::*;
 
 const PBAR_PROCESS: &str = "Processing documents: {human_pos} ({percent}%) | \
@@ -12,22 +13,6 @@ const PBAR_PROCESS: &str = "Processing documents: {human_pos} ({percent}%) | \
 /// Find documents matching patterns
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Grep {
-    #[command(flatten)]
-    pub(crate) common: CommonArgs,
-
-    /// Use an alternative index
-    #[arg(long, short = 'I')]
-    index: Option<PathBuf>,
-
-    /// Ignore documents which are not explicitly listed in the given
-    /// allow lists.
-    #[arg(long = "allow-list", short = 'A')]
-    allow: Option<PathBuf>,
-
-    /// Ignore documents which are listed in the given deny lists.
-    #[arg(long = "deny-list", short = 'D')]
-    deny: Option<PathBuf>,
-
     /// Use only the first n bytes to search for the given pattern. If
     /// the value is 0 or greater than the document size, the entire
     /// document is used for searching.
@@ -38,33 +23,31 @@ pub(crate) struct Grep {
     #[arg(long, short = 'i')]
     ignore_case: bool,
 
-    /// Keep documents that don't match.
+    /// Keep documents that don't match
     #[arg(long = "invert-match")]
     invert: bool,
 
-    /// Additional regular expressions used for searching
-    #[arg(long = "or")]
-    patterns: Vec<String>,
-
-    /// An optional predicate to filter the document-set.
-    #[arg(long = "where")]
-    predicate: Option<String>,
-
-    /// Write the result to  `filename`. By default output will be
-    /// written in CSV format to `stdout`.
+    /// Write the result to  `filename`. By defaul output will be
+    /// written in CSV format to `stdout`
     #[arg(short, long, value_name = "filename")]
     output: Option<PathBuf>,
 
-    /// A regular expression used for searching
-    pattern: Vec<String>,
+    /// Regular expressions used for searching
+    patterns: Vec<String>,
+
+    #[command(flatten, next_help_heading = "Filter options")]
+    pub(crate) filter: FilterOpts,
+
+    #[command(flatten, next_help_heading = "Common options")]
+    pub(crate) common: CommonOpts,
 }
 
 impl Grep {
-    pub(crate) fn execute(mut self) -> CommandResult {
+    pub(crate) fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
 
-        let mut index = if let Some(ref path) = self.index {
+        let mut index = if let Some(ref path) = self.filter.index {
             IpcReader::new(File::open(path)?)
                 .memory_mapped(None)
                 .finish()?
@@ -73,10 +56,10 @@ impl Grep {
             datashed.index()?.lazy()
         };
 
-        index = apply_allow_list(index, self.allow)?;
-        index = apply_deny_list(index, self.deny)?;
+        index = apply_allow_list(index, self.filter.allow)?;
+        index = apply_deny_list(index, self.filter.deny)?;
 
-        if let Some(predicate) = self.predicate {
+        if let Some(predicate) = self.filter.predicate {
             let mut ctx = SQLContext::new();
             ctx.register("df", index);
             index = ctx.execute(&format!(
@@ -86,8 +69,7 @@ impl Grep {
 
         let index = index.collect()?;
 
-        self.pattern.extend_from_slice(&self.patterns);
-        let re = RegexSetBuilder::new(self.pattern)
+        let re = RegexSetBuilder::new(self.patterns)
             .case_insensitive(self.ignore_case)
             .build()?;
 
@@ -107,7 +89,9 @@ impl Grep {
                     fs::read(data_dir.join(path)).unwrap();
 
                 if let Some(n) = self.max_bytes {
-                    haystack.truncate(n);
+                    if n > 0 {
+                        haystack.truncate(n);
+                    }
                 }
 
                 if re.is_match(&haystack) ^ self.invert {

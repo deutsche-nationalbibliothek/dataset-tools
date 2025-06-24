@@ -10,11 +10,11 @@ use crate::prelude::*;
 /// Create an index of all available documents
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Index {
-    #[command(flatten)]
-    pub(crate) common: CommonArgs,
-
     #[arg(long, short)]
     output: Option<PathBuf>,
+
+    #[command(flatten, next_help_heading = "Common options")]
+    pub(crate) common: CommonOpts,
 }
 
 const PBAR_COLLECT: &str = "Collecting documents: {human_pos} | \

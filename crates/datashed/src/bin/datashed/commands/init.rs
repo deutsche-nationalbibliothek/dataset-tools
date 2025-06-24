@@ -13,9 +13,6 @@ const GITIGNORE: &str = "/data\n/tmp\n\n/index.ipc\n";
 /// Create a new datashed or re-initialize an existing one
 #[derive(Debug, Parser)]
 pub(crate) struct Init {
-    #[command(flatten)]
-    pub(crate) common: CommonArgs,
-
     /// The name of the datashed.
     #[arg(short, long)]
     name: Option<String>,
@@ -45,6 +42,9 @@ pub(crate) struct Init {
 
     /// The location of the new datashed (default ".")
     directory: Option<PathBuf>,
+
+    #[command(flatten, next_help_heading = "Common options")]
+    pub(crate) common: CommonOpts,
 }
 
 #[derive(Debug, Clone, PartialEq, ValueEnum)]

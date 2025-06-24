@@ -12,9 +12,6 @@ enum Bump {
 /// Get or set the version of the datashed.
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Version {
-    #[command(flatten)]
-    pub(crate) common: CommonArgs,
-
     /// Whether to overwrite the current version or not.
     #[arg(short, long)]
     force: bool,
@@ -29,6 +26,9 @@ pub(crate) struct Version {
     /// standard. An invalid version strings are rejected.
     #[arg(conflicts_with = "bump")]
     version: Option<SemVer>,
+
+    #[command(flatten, next_help_heading = "Common options")]
+    pub(crate) common: CommonOpts,
 }
 
 impl Version {

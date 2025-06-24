@@ -1,5 +1,6 @@
 mod archive;
 mod completions;
+mod grep;
 mod index;
 mod init;
 mod prelude;

@@ -13,9 +13,6 @@ pub(crate) enum VerifyMode {
 /// Verify whether the metadata conforms to the inventory
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Verify {
-    #[command(flatten)]
-    pub(crate) common: CommonArgs,
-
     /// Set the verify mode: permissive, strict (default), or
     /// pedantic.
     #[arg(
@@ -26,6 +23,9 @@ pub(crate) struct Verify {
         hide_default_value = true
     )]
     mode: VerifyMode,
+
+    #[command(flatten, next_help_heading = "Common options")]
+    pub(crate) common: CommonOpts,
 }
 
 const PBAR_VERIFY: &str = "Verifying documents: {human_pos} ({percent}%) | \

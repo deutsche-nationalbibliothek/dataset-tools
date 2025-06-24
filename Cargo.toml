@@ -39,6 +39,7 @@ features = [
   "decompress",
   "dtype-slim",
   "ipc",
+  "is_in",
   "lazy",
   "semi_anti_join",
   "sql",
