@@ -1,5 +1,6 @@
 pub(crate) use archive::Archive;
 pub(crate) use completions::Completions;
+pub(crate) use config::Config;
 pub(crate) use grep::Grep;
 pub(crate) use index::Index;
 pub(crate) use init::Init;
@@ -10,6 +11,7 @@ pub(crate) use vocab::Vocab;
 
 mod archive;
 mod completions;
+mod config;
 mod grep;
 mod index;
 mod init;

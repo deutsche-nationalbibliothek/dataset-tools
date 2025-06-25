@@ -34,6 +34,7 @@ pub(crate) struct Args {
 pub(crate) enum Command {
     Archive(Archive),
     Completions(Completions),
+    Config(Config),
     Grep(Grep),
     Index(Index),
     Init(Init),
