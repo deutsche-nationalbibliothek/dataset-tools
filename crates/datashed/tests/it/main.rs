@@ -7,3 +7,4 @@ mod prelude;
 mod restore;
 mod verify;
 mod version;
+mod vocab;

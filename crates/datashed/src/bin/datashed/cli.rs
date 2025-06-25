@@ -40,6 +40,7 @@ pub(crate) enum Command {
     Restore(Restore),
     Verify(Verify),
     Version(Version),
+    Vocab(Vocab),
 }
 
 #[derive(Debug, clap::Args)]
