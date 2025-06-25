@@ -1,4 +1,5 @@
-use std::fs::File;
+use std::fs::{File, OpenOptions};
+use std::io::Write;
 
 use assert_fs::prelude::{FileWriteStr, PathChild};
 use polars::io::SerReader;
@@ -192,7 +193,7 @@ fn grep_allow_list() -> TestResult {
 
     // PATH + HASH
     let allow = datashed_dir.child("tmp/ALLOW.csv");
-    allow.write_str("path,hash\n0/dnb.txt,71eb6431")?;
+    allow.write_str("path,hash\n0/dnb.txt,1fbf52b4")?;
 
     let mut cmd = Command::cargo_bin("datashed")?;
     let assert = cmd
@@ -285,7 +286,7 @@ fn grep_deny_list() -> TestResult {
 
     // PATH + HASH
     let deny = datashed_dir.child("tmp/DENY.csv");
-    deny.write_str("path,hash\n0/dnb.txt,71eb6431")?;
+    deny.write_str("path,hash\n0/dnb.txt,1fbf52b4")?;
 
     let mut cmd = Command::cargo_bin("datashed")?;
     let assert = cmd
@@ -405,6 +406,68 @@ fn grep_where() -> TestResult {
         .current_dir(&datashed_dir)
         .args(["grep", "-q", "\\(DNB\\)", "Econ(Stor|Biz)"])
         .args(["--where", "path IN ('0/dnb.txt', '0/tib.txt')"])
+        .args(["-o", output.to_str().unwrap()])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
+
+    let df = IpcReader::new(File::open(output)?).finish()?;
+    assert_eq!(df.column("path")?.str()?.get(0), Some("0/dnb.txt"));
+    assert_eq!(df.height(), 1);
+
+    Ok(())
+}
+
+#[test]
+fn grep_translit() -> TestResult {
+    let datashed_dir = create_datashed_with_index()?;
+    let output = datashed_dir.join("tmp").join("grep.ipc");
+
+    // nfc pattern
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["grep", "-q", "erfüllt"])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::ord::eq(HEADER))
+        .stderr(predicates::str::is_empty());
+
+    // nfd pattern
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["grep", "-q", "erfu\u{308}llt"])
+        .args(["-o", output.to_str().unwrap()])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
+
+    let df = IpcReader::new(File::open(&output)?).finish()?;
+    assert_eq!(df.column("path")?.str()?.get(0), Some("0/dnb.txt"));
+    assert_eq!(df.height(), 1);
+
+    // nfc pattern (nfd normalization)
+    let path = datashed_dir.join(Datashed::CONFIG);
+    let mut config =
+        OpenOptions::new().write(true).append(true).open(path)?;
+    config.write_all(b"[runtime]\nnormalization = 'nfd'")?;
+
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["grep", "-q", "erfüllt"])
         .args(["-o", output.to_str().unwrap()])
         .assert();
 

@@ -5,9 +5,12 @@ use std::path::{Path, PathBuf};
 use semver::Version;
 use serde::{Deserialize, Serialize};
 
+use crate::NormalizationForm;
 use crate::error::DatashedResult;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+#[serde(deny_unknown_fields)]
 pub struct Config {
     /// The path of the config.
     #[serde(skip)]
@@ -94,9 +97,15 @@ impl Default for Metadata {
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+#[serde(deny_unknown_fields)]
 pub struct Runtime {
     /// Number of threads to use. If this options isn't set or a value
     /// of "0" is chosen, the maximum number of available threads
     /// is used.
     pub num_jobs: Option<usize>,
+
+    /// Specifies the Unicode normalization of the data. If necessary,
+    /// options are adapted to the corresponding normalized form.
+    pub normalization: Option<NormalizationForm>,
 }
