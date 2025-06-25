@@ -191,9 +191,8 @@ choose between two modes: In `permissive` mode, the SHA256 checksums of
 the documents must match. If the `strict` mode is selected, the system
 also checks that the date of the last modification (`mtime`) has not
 changed. By default, the command uses the `strict` mode. If the `verify`
-command fails, an error message is issued and a non-zero status code
-is returned.
-
+command fails, an error message is printed to `stderr` and a non-zero
+status code is returned.
 
 ```console
 $ datashed verify --mode permissive
