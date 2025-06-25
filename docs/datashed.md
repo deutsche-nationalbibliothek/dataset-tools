@@ -4,7 +4,7 @@
 
 <hr />
 
-The _datashed tool_ is a _reverse ETL_ program that indexes the
+The `datashed` tool is a _reverse ETL_ program that indexes the
 documents it contains. Based on this index, data analyses can be carried
 out, for example to identify corrupt documents or to build subsets based
 on text statistical characteristics. Finally, the tool offers an HTTP
