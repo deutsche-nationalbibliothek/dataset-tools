@@ -1,5 +1,4 @@
-use std::fs::{File, OpenOptions};
-use std::io::Write;
+use std::fs::File;
 
 use assert_fs::prelude::{FileWriteStr, PathChild};
 use polars::io::SerReader;
@@ -459,10 +458,17 @@ fn grep_translit() -> TestResult {
     assert_eq!(df.height(), 1);
 
     // nfc pattern (nfd normalization)
-    let path = datashed_dir.join(Datashed::CONFIG);
-    let mut config =
-        OpenOptions::new().write(true).append(true).open(path)?;
-    config.write_all(b"[runtime]\nnormalization = 'nfd'")?;
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["config", "--set", "runtime.normalization", "nfd"])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
 
     let mut cmd = Command::cargo_bin("datashed")?;
     let assert = cmd

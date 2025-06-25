@@ -67,6 +67,20 @@ identity (if possible). The project is also automatically initialized
 as a Git repository. This behavior can be deactivated using the `--vcs
 none` option.
 
+Some configuration options can be set using the `config` command:
+
+```console
+$ datashed config runtime.normalization nfd
+$ datashed config runtime.num-jobs 42
+````
+
+The `normalization` option specifies the Unicode normal form in which
+the data is encoded. Configuration options and command line parameters
+are then transliterated into the corresponding normal form if necessary.
+The `num-jobs` option defines the maximum number of CPU cores used by
+the application.
+
+
 ### Vocabulary
 
 The `vocab` command can be used to create the vocabulary (dictionary
