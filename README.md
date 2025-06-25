@@ -8,8 +8,6 @@ tools are based on experiments and prototypes that were developed as
 part of the research work in the _Automated Indexing System_ project of
 the [German National Library].
 
-> [!NOTE]
-> The tools are not yet ready for productive use; no support is provided.
 
 ## Tools
 
