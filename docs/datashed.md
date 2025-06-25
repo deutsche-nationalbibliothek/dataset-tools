@@ -55,6 +55,66 @@ identity (if possible). The project is also automatically initialized
 as a Git repository. This behavior can be deactivated using the `--vcs
 none` option.
 
+### Vocabulary
+
+The `vocab` command can be used to create the vocabulary (dictionary
+or lexicon) of the entire datashed or of any subset. With the help of
+various filter options, the command can be used to create stop word
+lists for the creation of datasets or to compare the (raw) features of
+subsets with each other.
+
+The output contains the terms with the corresponding term frequency
+(`tf`) and the document frequency (`df`).
+
+In the following example, the vocabulary of all documents in the datashed
+is created:
+
+```console
+$ datashed vocab -q -o vocab.csv
+$ head -4 vocab.csv
+term,tf,df
+die,16,2
+und,16,2
+deutsche,8,3
+```
+
+To use two or three adjacent words as vocabulary terms, the options
+`--bigrams` / `-b` or `--trigrams` / `-t` can be used:
+
+```console
+$ datashed vocab -q --bigrams | head -3
+term,tf,df
+die tib,5,1
+die deutsche,4,2
+```
+
+Using the `--stopwords` / `-S` option, all terms that appear in a
+stopword list can be removed in advance:
+
+```console
+$ echo "die\nund\n" >> STOPWORDS.txt
+$ datashed vocab -q -S STOPWORDS.txt | head -4
+term,tf,df
+deutsche,8,3
+in,8,3
+the,8,1
+```
+
+The option `--category` (`-L`) can be used to include only those
+terms where at least on character belongs to the specified unicode
+category. The following categories are available:
+
+* `a` (`all`) -- all letters (_Lc_, _Ll_, _Lm_, _Lo_, _Lt_, _Lu_),
+* `l` (`lowercase`) -- "Letter, Lowercase" category (_Ll_),
+* `u` (`uppercase`) -- "Letter, Uppercase" category (_Lu_),
+* `t` (`titlecase`) -- "Letter, Titlecase" category (_Lt_),
+* `m` (`modifier`) -- "Letter, Modifier" category (_Lm_),
+* `o` (`other`) -- "Letter, Other" category (_Lo_).
+
+In addition, the vocabulary can be further restricted by the
+`--min-term-length`, `--min-term-freq`, or `--min-doc-freq` options.
+
+
 ### Grepping
 
 A simple form of document retrieval is a linear search for patterns.
