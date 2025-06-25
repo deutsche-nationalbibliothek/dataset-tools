@@ -14,7 +14,7 @@ pub(crate) enum VerifyMode {
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Verify {
     /// Set the verify mode
-    #[arg(long, default_value = "strict", value_name = "mode")]
+    #[arg(long, short, default_value = "strict", value_name = "mode")]
     mode: VerifyMode,
 
     #[command(flatten, next_help_heading = "Common options")]

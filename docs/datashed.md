@@ -189,10 +189,10 @@ are in a consistent state. It ensures that no documents have been
 deleted and that the contents of the documents have not changed. You can
 choose between two modes: In `permissive` mode, the SHA256 checksums of
 the documents must match. If the `strict` mode is selected, the system
-also checks that the date of the last modification (`mtime`) has not
-changed. By default, the command uses the `strict` mode. If the `verify`
-command fails, an error message is printed to `stderr` and a non-zero
-status code is returned.
+also checks that the date of the last modification has not changed. By
+default, the command uses the `strict` mode. If the `verify` command
+fails, an error message is printed to `stderr` and a non-zero status
+code is returned.
 
 ```console
 $ datashed verify --mode permissive
