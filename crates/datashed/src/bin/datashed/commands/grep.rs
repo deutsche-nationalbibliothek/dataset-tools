@@ -1,6 +1,7 @@
 use std::fs::{self, File};
 use std::path::PathBuf;
 
+use datashed::translit;
 use polars::sql::SQLContext;
 use regex::bytes::RegexSetBuilder;
 
@@ -46,6 +47,7 @@ impl Grep {
     pub(crate) fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
+        let config = datashed.config()?;
 
         let mut index = if let Some(ref path) = self.filter.index {
             IpcReader::new(File::open(path)?)
@@ -69,7 +71,15 @@ impl Grep {
 
         let index = index.collect()?;
 
-        let re = RegexSetBuilder::new(self.patterns)
+        let patterns: Vec<String> = self
+            .patterns
+            .iter()
+            .map(translit(
+                config.runtime.and_then(|rt| rt.normalization),
+            ))
+            .collect();
+
+        let re = RegexSetBuilder::new(patterns)
             .case_insensitive(self.ignore_case)
             .build()?;
 

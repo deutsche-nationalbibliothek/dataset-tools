@@ -1,8 +1,10 @@
-use std::fs::{self, File};
+use std::fs::{self, File, read_to_string};
+use std::path::PathBuf;
 
 use bstr::ByteSlice;
 use clap::ValueEnum;
-use hashbrown::HashMap;
+use datashed::translit;
+use hashbrown::{HashMap, HashSet};
 use polars::sql::SQLContext;
 
 use crate::cli::FilterOpts;
@@ -33,31 +35,60 @@ pub enum UnicodeCategory {
 /// Create vocabulary (set of terms) statistics
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Vocab {
-    /// Use bigrams as terms
+    /// Use two adjacent words as vocabulary terms
     #[arg(long, short, conflicts_with = "trigrams")]
     bigrams: bool,
 
-    /// Use trigrams as terms
+    /// Use three adjacent words as vocabulary terms
     #[arg(long, short, conflicts_with = "bigrams")]
     trigrams: bool,
 
-    /// Includes only those tokens in the vocabulary where at least one
-    /// character belongs to one of the specified unicode categories
+    /// Exclude words that are contained in the stop word list
+    #[arg(long, short = 'S', value_name = "filename")]
+    stopwords: Option<PathBuf>,
+
+    /// Includes only those terms in the vocabulary where at least one
+    /// character belongs to one of the specified unicode categories.
+    /// Possible categories: all (a), lowercase (l), uppercase (u),
+    /// titlecase (t), modifier (m), or other (o).
     #[arg(
         long = "category",
         short = 'L',
-        value_name = "name",
+        value_name = "category",
         hide_possible_values = true
     )]
     categories: Vec<UnicodeCategory>,
 
-    /// Ignore tokens with a length less than `n`.
-    #[arg(long, short = 'n', default_value = "2", value_name = "n")]
-    min_token_length: usize,
+    /// Ignore tokens with a length less than <n>
+    #[arg(long, default_value = "2", value_name = "n")]
+    min_term_length: usize,
+
+    /// Ignore tokens with a term frequency less than <n>
+    #[arg(
+        long,
+        default_value = "0",
+        value_name = "n",
+        hide_default_value = true
+    )]
+    min_term_freq: u64,
+
+    /// Ignore tokens with a document frequency less than <n>
+    #[arg(
+        long,
+        default_value = "0",
+        value_name = "n",
+        hide_default_value = true
+    )]
+    min_doc_freq: u64,
 
     /// Limits the output to the n most frequent tokens
     #[arg(long, short = 'l', value_name = "n")]
     limit: Option<usize>,
+
+    /// Write the result to <filename>. By default output will be
+    /// written in CSV format to stdout
+    #[arg(short, long, value_name = "filename")]
+    output: Option<PathBuf>,
 
     #[command(flatten, next_help_heading = "Filter options")]
     pub(crate) filter: FilterOpts,
@@ -66,19 +97,11 @@ pub(crate) struct Vocab {
     pub(crate) common: CommonOpts,
 }
 
-/// Includes only those tokens in the vocabulary where at least one
-/// character belongs to one of the specified unicode categories
-// #[arg(
-//     short = 'L',
-//     value_name = "category",
-//     hide_possible_values = true
-// )]
-// categories: Vec<UnicodeCategory>,
-
 impl Vocab {
     pub(crate) fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
+        let config = datashed.config()?;
 
         let size = if self.bigrams {
             2
@@ -104,6 +127,22 @@ impl Vocab {
                 }
             })
             .collect();
+
+        let translit =
+            translit(config.runtime.and_then(|rt| rt.normalization));
+
+        let mut stopwords: HashSet<String> = HashSet::new();
+        stopwords.insert("___SENTINEL___".into());
+
+        if let Some(path) = self.stopwords {
+            stopwords.extend(
+                read_to_string(path)?
+                    .lines()
+                    .filter(|term| term.len() >= self.min_term_length)
+                    .map(str::to_lowercase)
+                    .map(translit),
+            );
+        }
 
         let mut index = if let Some(ref path) = self.filter.index {
             IpcReader::new(File::open(path)?)
@@ -134,7 +173,7 @@ impl Vocab {
 
         let paths = index.column("path")?.str()?;
 
-        let vocab: VocabMap = (0..index.height())
+        let mut vocab: VocabMap = (0..index.height())
             .into_par_iter()
             .progress_with(pbar)
             .map(|idx| {
@@ -142,9 +181,6 @@ impl Vocab {
                 let data = fs::read(data_dir.join(path)).unwrap();
                 let tokens: Vec<String> = data
                     .words()
-                    .filter(|word| {
-                        word.chars().count() >= self.min_token_length
-                    })
                     .filter(|word| {
                         if !self.categories.is_empty() {
                             predicates
@@ -155,6 +191,10 @@ impl Vocab {
                         }
                     })
                     .map(str::to_lowercase)
+                    .filter(|word| {
+                        word.chars().count() >= self.min_term_length
+                    })
+                    .filter(|word| !stopwords.contains(word))
                     .collect();
 
                 tokens.windows(size).fold(
@@ -181,6 +221,12 @@ impl Vocab {
                 acc
             });
 
+        if self.min_term_freq > 1 || self.min_doc_freq > 1 {
+            vocab.retain(|_, (tf, df)| {
+                *tf >= self.min_term_freq && *df >= self.min_doc_freq
+            });
+        }
+
         let mut tokens = Vec::with_capacity(vocab.len());
         let mut freqs = Vec::with_capacity(vocab.len());
         let mut docs = Vec::with_capacity(vocab.len());
@@ -191,27 +237,26 @@ impl Vocab {
             docs.push(df);
         }
 
-        let df = DataFrame::new(vec![
-            Column::new("token".into(), tokens),
+        let mut result = DataFrame::new(vec![
+            Column::new("term".into(), tokens),
             Column::new("tf".into(), freqs),
             Column::new("df".into(), docs),
         ])?;
 
-        let mut df = df.sort(
-            ["tf", "df", "token"],
-            SortMultipleOptions::default()
-                .with_order_descending_multi([true, true, false]),
-        )?;
+        result = result
+            .lazy()
+            .select([col("*").shrink_dtype()])
+            .collect()?;
+
+        let options = SortMultipleOptions::default()
+            .with_order_descending_multi([true, true, false]);
+        result = result.sort(["tf", "df", "term"], options)?;
 
         if self.limit.is_some() {
-            df = df.head(self.limit);
+            result = result.head(self.limit);
         }
 
-        // TODO: shrink dtypes
-        // TODO: write df
-
-        println!("{df}");
-
+        write_df(&mut result, self.output)?;
         Ok(SUCCESS)
     }
 }

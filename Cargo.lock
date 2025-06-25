@@ -659,6 +659,7 @@ dependencies = [
  "sha2",
  "tar",
  "toml_edit",
+ "unicode-normalization",
  "unicode_categories",
  "walkdir",
 ]
