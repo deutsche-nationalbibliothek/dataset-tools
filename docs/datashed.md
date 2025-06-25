@@ -182,7 +182,7 @@ path,hash,ppn,size,mtime
 0/dnb.txt,71eb6431,dnb,769,1750321974
 ```
 
-### Verify
+### Verification
 
 The `verify` command is used to ensure that the index and the documents
 are in a consistent state. It ensures that no documents have been
