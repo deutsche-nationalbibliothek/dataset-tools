@@ -13,15 +13,8 @@ pub(crate) enum VerifyMode {
 /// Verify whether the metadata conforms to the inventory
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Verify {
-    /// Set the verify mode: permissive, strict (default), or
-    /// pedantic.
-    #[arg(
-        long,
-        default_value = "strict",
-        value_name = "mode",
-        hide_possible_values = true,
-        hide_default_value = true
-    )]
+    /// Set the verify mode
+    #[arg(long, default_value = "strict", value_name = "mode")]
     mode: VerifyMode,
 
     #[command(flatten, next_help_heading = "Common options")]
