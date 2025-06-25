@@ -28,6 +28,7 @@ serde = { workspace = true }
 sha2 = { workspace = true }
 tar = { workspace = true }
 toml_edit = { workspace = true }
+unicode-normalization = { workspace = true }
 walkdir = { workspace = true }
 
 [dev-dependencies]

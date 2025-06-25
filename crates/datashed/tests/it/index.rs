@@ -42,9 +42,9 @@ fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
     let hashes: Vec<_> = columns[idx].str()?.iter().collect();
     idx += 1;
 
-    assert_eq!(hashes[0], Some("71eb6431"));
-    assert_eq!(hashes[1], Some("8f30b82a"));
-    assert_eq!(hashes[2], Some("0bf81f96"));
+    assert_eq!(hashes[0], Some("1fbf52b4"));
+    assert_eq!(hashes[1], Some("809239e5"));
+    assert_eq!(hashes[2], Some("a50f7e55"));
 
     // PPN
     if cfg!(feature = "dnb") {
@@ -64,9 +64,9 @@ fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
         .collect();
     idx += 1;
 
-    assert_eq!(sizes[0], Some(769));
-    assert_eq!(sizes[1], Some(1443));
-    assert_eq!(sizes[2], Some(908));
+    assert_eq!(sizes[0], Some(776));
+    assert_eq!(sizes[1], Some(1453));
+    assert_eq!(sizes[2], Some(909));
 
     // MTIME
     let mtimes: Vec<_> = columns[idx]
