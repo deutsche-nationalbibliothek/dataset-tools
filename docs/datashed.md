@@ -104,12 +104,12 @@ The option `--category` (`-L`) can be used to include only those
 terms where at least on character belongs to the specified unicode
 category. The following categories are available:
 
-* `a` (`all`) -- all letters (_Lc_, _Ll_, _Lm_, _Lo_, _Lt_, _Lu_),
-* `l` (`lowercase`) -- "Letter, Lowercase" category (_Ll_),
-* `u` (`uppercase`) -- "Letter, Uppercase" category (_Lu_),
-* `t` (`titlecase`) -- "Letter, Titlecase" category (_Lt_),
-* `m` (`modifier`) -- "Letter, Modifier" category (_Lm_),
-* `o` (`other`) -- "Letter, Other" category (_Lo_).
+* `a` (`all`) —  all letters (_Lc_, _Ll_, _Lm_, _Lo_, _Lt_, _Lu_),
+* `l` (`lowercase`) — "Letter, Lowercase" category (_Ll_),
+* `u` (`uppercase`) — "Letter, Uppercase" category (_Lu_),
+* `t` (`titlecase`) — "Letter, Titlecase" category (_Lt_),
+* `m` (`modifier`) — "Letter, Modifier" category (_Lm_),
+* `o` (`other`) — "Letter, Other" category (_Lo_).
 
 In addition, the vocabulary can be further restricted by the
 `--min-term-length`, `--min-term-freq`, or `--min-doc-freq` options.
