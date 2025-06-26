@@ -2,6 +2,7 @@ use std::fs::File;
 use std::path::Path;
 use std::time::UNIX_EPOCH;
 
+use approx::assert_abs_diff_eq;
 use polars::io::SerReader;
 use polars::prelude::*;
 
@@ -70,6 +71,18 @@ where
     assert_eq!(sizes[0], Some(776));
     assert_eq!(sizes[1], Some(1453));
     assert_eq!(sizes[2], Some(909));
+
+    // ALPHA
+    let alphas: Vec<_> = columns[idx]
+        .cast(&DataType::Float64)?
+        .f64()?
+        .iter()
+        .collect();
+    idx += 1;
+
+    assert_abs_diff_eq!(alphas[0].unwrap(), 0.82529336, epsilon = 1e-4);
+    assert_abs_diff_eq!(alphas[1].unwrap(), 0.83240222, epsilon = 1e-4);
+    assert_abs_diff_eq!(alphas[2].unwrap(), 0.82079648, epsilon = 1e-4);
 
     // MTIME
     let mtimes: Vec<_> = columns[idx]

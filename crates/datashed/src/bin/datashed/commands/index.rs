@@ -71,6 +71,7 @@ impl Index {
         let mut hashes: Vec<String> = vec![];
         let mut names: Vec<String> = vec![];
         let mut sizes: Vec<u64> = vec![];
+        let mut alphas: Vec<f64> = vec![];
         let mut mtimes: Vec<u64> = vec![];
 
         for doc in docs.into_iter() {
@@ -78,6 +79,7 @@ impl Index {
             hashes.push(doc.hash);
             names.push(doc.name);
             sizes.push(doc.size);
+            alphas.push(doc.alpha);
             mtimes.push(doc.mtime);
         }
 
@@ -90,6 +92,7 @@ impl Index {
         }
 
         columns.push(Column::new("size".into(), sizes));
+        columns.push(Column::new("alpha".into(), alphas));
         columns.push(Column::new("mtime".into(), mtimes));
 
         let mut df = DataFrame::new(columns)?

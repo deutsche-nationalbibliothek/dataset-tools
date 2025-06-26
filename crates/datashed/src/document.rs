@@ -5,6 +5,7 @@ use std::os::linux::fs::MetadataExt;
 use std::path::Path;
 use std::time::UNIX_EPOCH;
 
+use bstr::ByteSlice;
 use sha2::{Digest, Sha256};
 
 use crate::DatashedResult;
@@ -14,6 +15,7 @@ pub struct Document {
     pub hash: String,
     pub name: String,
     pub size: u64,
+    pub alpha: f64,
     pub mtime: u64,
 }
 
@@ -29,6 +31,22 @@ fn sha256<T: AsRef<[u8]>>(data: T) -> String {
     })
 }
 
+#[inline]
+fn alpha<T: AsRef<[u8]>>(data: T) -> f64 {
+    let data = data.as_ref();
+
+    let total = data.chars().count() as f64;
+    if total <= 0.0 {
+        return 0.0;
+    }
+
+    let alpha =
+        data.chars().filter(|c: &char| c.is_alphabetic()).count()
+            as f64;
+
+    alpha / total
+}
+
 impl Document {
     pub fn from_path<P, Q>(
         path: P,
@@ -40,7 +58,7 @@ impl Document {
     {
         let path = path.as_ref().to_path_buf();
         let metadata = path.metadata()?;
-        let content = fs::read(&path)?;
+        let data = fs::read(&path)?;
 
         let relpath = path
             .strip_prefix(data_dir)
@@ -65,12 +83,13 @@ impl Document {
         Ok((
             Self {
                 path: relpath,
-                hash: sha256(&content),
+                hash: sha256(&data),
                 name,
                 size: metadata.st_size(),
+                alpha: alpha(&data),
                 mtime,
             },
-            content,
+            data,
         ))
     }
 }
