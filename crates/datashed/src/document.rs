@@ -1,4 +1,3 @@
-#[cfg(feature = "dnb")]
 use std::ffi::OsStr;
 use std::fmt::Write;
 use std::fs::{self};
