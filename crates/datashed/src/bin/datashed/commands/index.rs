@@ -90,6 +90,7 @@ impl Index {
         ])?
         .lazy()
         .select([col("*").shrink_dtype()])
+        .sort(["path"], Default::default())
         .collect()?;
 
         let path_str = if let Some(ref path) = self.output {
