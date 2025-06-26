@@ -83,29 +83,50 @@ the application.
 
 ### Indexing
 
-#### Alpha (`alpha`)
+The core of a datashed is the index of all documents. It contains
+important metrics and metadata. The index is saved by default in the
+file `index.ipc` in Apache Arrow format.
 
-The `alpha` score of a document is the ratio of alphabetic
-characters to the total number of characters. An alphabetic
-character is a character which satisfy the _Alphabetic_ property
-of the [Unicode Standard] described in Chapter 4 (Character
-Properties). The score is defined as
+A new index can be created as follows:
+
+```console
+$ datashed index
+Collecting documents: 3 | elapsed: 00:00:00, done.
+Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
+```
+
+If the file name of the documents contains an identifier, this can be
+written in an additional column using the `--filename-column` option.
+In the following example, the index is extended with a new column `ppn`,
+which contains the file name (without file extension):
+
+```console
+$ datashed index --filename-column "ppn"
+Collecting documents: 3 | elapsed: 00:00:00, done.
+Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
+```
+
+#### Columns
+
+##### Alpha
+
+The `alpha` score of a document is the ratio of alphabetic characters to
+the total number of characters. An alphabetic character is a character
+which satisfy the _Alphabetic_ property of the [Unicode Standard]
+described in Chapter 4 (Character Properties). The score is defined as
 
 $$
 alpha \triangleq \frac{1}{N}\sum_{i = 1}^{N} \mathbf{1}_A(c_i)
 $$
 
-where $N$ is total number of characters of the document, $c_i$
-is the i-th character of the document, $A$ is the subset of all
-characters, which satisfy the _Alphabetic_ property and
-$\mathbf{1}_A$ is the indicator function, which returns 1f64 *
-if the i-th character is alphabetic and otherwise 0.
+where $N$ is total number of characters of the document, $c_i$ is the
+i-th character of the document, $A$ is the subset of all characters,
+which satisfy the _Alphabetic_ property and $\mathbf{1}_A$ is the
+indicator function, which returns 1 if the i-th character is alphabetic
+and otherwise 0. The range of the function is $[0, 1]$ and the score of
+an empty  document is defined to $0.0$.
 
-## Note
-
-The range of the function is $[0, 1]$ and the score of an empty
- document is defined to $0.0$.
-
+A very low `alpha` value may indicate a corrupt document.
 
 
 ### Vocabulary
