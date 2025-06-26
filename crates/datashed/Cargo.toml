@@ -36,6 +36,7 @@ walkdir = { workspace = true }
 
 [dev-dependencies]
 anyhow = { workspace = true }
+approx = { workspace = true }
 assert_cmd = { workspace = true }
 assert_fs = { workspace = true }
 predicates = { workspace = true }

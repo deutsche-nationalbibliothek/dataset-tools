@@ -81,6 +81,33 @@ The `num-jobs` option defines the maximum number of CPU cores used by
 the application.
 
 
+### Indexing
+
+#### Alpha (`alpha`)
+
+The `alpha` score of a document is the ratio of alphabetic
+characters to the total number of characters. An alphabetic
+character is a character which satisfy the _Alphabetic_ property
+of the [Unicode Standard] described in Chapter 4 (Character
+Properties). The score is defined as
+
+$$
+alpha \triangleq \frac{1}{N}\sum_{i = 1}^{N} \mathbf{1}_A(c_i)
+$$
+
+where $N$ is total number of characters of the document, $c_i$
+is the i-th character of the document, $A$ is the subset of all
+characters, which satisfy the _Alphabetic_ property and
+$\mathbf{1}_A$ is the indicator function, which returns 1f64 *
+if the i-th character is alphabetic and otherwise 0.
+
+## Note
+
+The range of the function is $[0, 1]$ and the score of an empty
+ document is defined to $0.0$.
+
+
+
 ### Vocabulary
 
 The `vocab` command can be used to create the vocabulary (dictionary
@@ -285,3 +312,7 @@ $ datashed restore ~/tmp/backup.tar.gz -C foobar
 Successfully restored archive.
 Verify consistency with `datashed verify`.
 ```
+
+
+
+[Unicode Standard]: https://www.unicode.org/versions/latest/
