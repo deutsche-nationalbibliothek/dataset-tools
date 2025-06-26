@@ -47,7 +47,7 @@ impl Verify {
             .try_for_each(|idx| -> Result<(), anyhow::Error> {
                 let path = data_dir.join(paths.get(idx).unwrap());
 
-                let Ok(doc) = Document::from_path(&path, &data_dir)
+                let Ok((doc, _)) = Document::from_path(&path, &data_dir)
                 else {
                     bail!(
                         "verification failed: file not found (path = {}).",

@@ -45,6 +45,7 @@ fn main() -> ExitCode {
         Command::Grep(cmd) => cmd.execute(),
         Command::Index(cmd) => cmd.execute(),
         Command::Init(cmd) => cmd.execute(),
+        Command::Lfreq(cmd) => cmd.execute(),
         Command::Restore(cmd) => cmd.execute(),
         Command::Verify(cmd) => cmd.execute(),
         Command::Version(cmd) => cmd.execute(),

@@ -4,6 +4,7 @@ mod config;
 mod grep;
 mod index;
 mod init;
+mod lfreq;
 mod prelude;
 mod restore;
 mod verify;

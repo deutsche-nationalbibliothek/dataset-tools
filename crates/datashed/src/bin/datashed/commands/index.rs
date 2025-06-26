@@ -53,8 +53,16 @@ impl Index {
         let docs = files
             .par_iter()
             .progress_with(pbar)
-            .map(|path| Document::from_path(path, &data_dir))
-            .collect::<Result<Vec<_>, _>>()?;
+            .filter_map(|path| {
+                if let Ok((doc, _)) =
+                    Document::from_path(path, &data_dir)
+                {
+                    Some(doc)
+                } else {
+                    None
+                }
+            })
+            .collect::<Vec<_>>();
 
         let mut paths: Vec<String> = vec![];
         let mut hashes: Vec<String> = vec![];
