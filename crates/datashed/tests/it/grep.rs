@@ -6,11 +6,7 @@ use polars::prelude::*;
 
 use crate::prelude::*;
 
-const HEADER: &str = if cfg!(feature = "dnb") {
-    "path,hash,ppn,size,mtime\n"
-} else {
-    "path,hash,size,mtime\n"
-};
+const HEADER: &str = "path,hash,size,mtime\n";
 
 #[test]
 fn grep_default() -> TestResult {
@@ -230,28 +226,38 @@ fn grep_allow_list() -> TestResult {
         .stderr(predicates::str::is_empty());
 
     // PPN
-    if cfg!(feature = "dnb") {
-        let allow = datashed_dir.child("tmp/ALLOW.csv");
-        allow.write_str("ppn\ndnb")?;
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["index", "-q", "--filename-column", "ppn"])
+        .assert();
 
-        let mut cmd = Command::cargo_bin("datashed")?;
-        let assert = cmd
-            .current_dir(&datashed_dir)
-            .args(["grep", "-q", "-A", allow.to_str().unwrap()])
-            .args(["\\(DNB\\)", "Econ(Stor|Biz)"])
-            .args(["-o", output.to_str().unwrap()])
-            .assert();
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
 
-        assert
-            .success()
-            .code(0)
-            .stdout(predicates::str::is_empty())
-            .stderr(predicates::str::is_empty());
+    let allow = datashed_dir.child("tmp/ALLOW.csv");
+    allow.write_str("ppn\ndnb")?;
 
-        let df = IpcReader::new(File::open(&output)?).finish()?;
-        assert_eq!(df.column("path")?.str()?.get(0), Some("0/dnb.txt"));
-        assert_eq!(df.height(), 1);
-    }
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["grep", "-q", "-A", allow.to_str().unwrap()])
+        .args(["\\(DNB\\)", "Econ(Stor|Biz)"])
+        .args(["-o", output.to_str().unwrap()])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
+
+    let df = IpcReader::new(File::open(&output)?).finish()?;
+    assert_eq!(df.column("path")?.str()?.get(0), Some("0/dnb.txt"));
+    assert_eq!(df.height(), 1);
 
     Ok(())
 }
@@ -329,28 +335,38 @@ fn grep_deny_list() -> TestResult {
     assert_eq!(df.height(), 2);
 
     // PPN
-    if cfg!(feature = "dnb") {
-        let deny = datashed_dir.child("tmp/DENY.csv");
-        deny.write_str("ppn\ndnb")?;
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["index", "-q", "--filename-column", "ppn"])
+        .assert();
 
-        let mut cmd = Command::cargo_bin("datashed")?;
-        let assert = cmd
-            .current_dir(&datashed_dir)
-            .args(["grep", "-q", "-D", deny.to_str().unwrap()])
-            .args(["\\(DNB\\)", "Econ(Stor|Biz)"])
-            .args(["-o", output.to_str().unwrap()])
-            .assert();
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
 
-        assert
-            .success()
-            .code(0)
-            .stdout(predicates::str::is_empty())
-            .stderr(predicates::str::is_empty());
+    let deny = datashed_dir.child("tmp/DENY.csv");
+    deny.write_str("ppn\ndnb")?;
 
-        let df = IpcReader::new(File::open(&output)?).finish()?;
-        assert_eq!(df.column("path")?.str()?.get(0), Some("1/zbw.txt"));
-        assert_eq!(df.height(), 1);
-    }
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["grep", "-q", "-D", deny.to_str().unwrap()])
+        .args(["\\(DNB\\)", "Econ(Stor|Biz)"])
+        .args(["-o", output.to_str().unwrap()])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
+
+    let df = IpcReader::new(File::open(&output)?).finish()?;
+    assert_eq!(df.column("path")?.str()?.get(0), Some("1/zbw.txt"));
+    assert_eq!(df.height(), 1);
 
     Ok(())
 }

@@ -9,6 +9,10 @@ use crate::prelude::*;
 /// Create an index of all available documents
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Index {
+    /// Write the filename into the specified column.
+    #[arg(long)]
+    filename_column: Option<String>,
+
     #[arg(long, short)]
     output: Option<PathBuf>,
 
@@ -65,32 +69,34 @@ impl Index {
 
         let mut paths: Vec<String> = vec![];
         let mut hashes: Vec<String> = vec![];
-        #[cfg(feature = "dnb")]
-        let mut ppns: Vec<String> = vec![];
+        let mut names: Vec<String> = vec![];
         let mut sizes: Vec<u64> = vec![];
         let mut mtimes: Vec<u64> = vec![];
 
         for doc in docs.into_iter() {
             paths.push(doc.path);
             hashes.push(doc.hash);
-            #[cfg(feature = "dnb")]
-            ppns.push(doc.ppn);
+            names.push(doc.name);
             sizes.push(doc.size);
             mtimes.push(doc.mtime);
         }
 
-        let mut df = DataFrame::new(vec![
-            Column::new("path".into(), paths),
-            Column::new("hash".into(), hashes),
-            #[cfg(feature = "dnb")]
-            Column::new("ppn".into(), ppns),
-            Column::new("size".into(), sizes),
-            Column::new("mtime".into(), mtimes),
-        ])?
-        .lazy()
-        .select([col("*").shrink_dtype()])
-        .sort(["path"], Default::default())
-        .collect()?;
+        let mut columns = vec![];
+        columns.push(Column::new("path".into(), paths));
+        columns.push(Column::new("hash".into(), hashes));
+
+        if let Some(name) = self.filename_column {
+            columns.push(Column::new(name.into(), names));
+        }
+
+        columns.push(Column::new("size".into(), sizes));
+        columns.push(Column::new("mtime".into(), mtimes));
+
+        let mut df = DataFrame::new(columns)?
+            .lazy()
+            .select([col("*").shrink_dtype()])
+            .sort(["path"], Default::default())
+            .collect()?;
 
         let output =
             self.output.or(Some(base_dir.join(Datashed::INDEX)));

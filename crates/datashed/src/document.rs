@@ -13,8 +13,7 @@ use crate::DatashedResult;
 pub struct Document {
     pub path: String,
     pub hash: String,
-    #[cfg(feature = "dnb")]
-    pub ppn: String,
+    pub name: String,
     pub size: u64,
     pub mtime: u64,
 }
@@ -58,8 +57,7 @@ impl Document {
             .map(|x| x.as_secs())
             .expect("valid mtime");
 
-        #[cfg(feature = "dnb")]
-        let ppn = path
+        let name = path
             .file_stem()
             .and_then(OsStr::to_str)
             .map(ToString::to_string)
@@ -69,8 +67,7 @@ impl Document {
             Self {
                 path: relpath,
                 hash: sha256(&content),
-                #[cfg(feature = "dnb")]
-                ppn,
+                name,
                 size: metadata.st_size(),
                 mtime,
             },

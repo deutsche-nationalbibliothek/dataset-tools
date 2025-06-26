@@ -3,9 +3,11 @@ use std::fs::File;
 use std::io::stdout;
 use std::path::{Path, PathBuf};
 
-use datashed::DatashedResult;
+use datashed::{Datashed, DatashedResult};
 use polars::prelude::*;
+use polars::sql::SQLContext;
 
+use crate::cli::FilterOpts;
 use crate::prelude::bail;
 
 pub(crate) fn read_df<P: AsRef<Path>>(
@@ -48,56 +50,86 @@ pub(crate) fn write_df(
     Ok(())
 }
 
-pub(crate) fn apply_allow_list<P: AsRef<Path>>(
-    df: LazyFrame,
-    allow: Option<P>,
-) -> DatashedResult<LazyFrame> {
-    let Some(path) = allow else { return Ok(df) };
-    let allow_list = read_df(path)?;
-
-    let df = if allow_list.column("path").is_ok() {
-        if allow_list.column("hash").is_ok() {
-            df.join(
-                allow_list.lazy(),
-                [col("path"), col("hash")],
-                [col("path"), col("hash")],
-                JoinArgs::new(JoinType::Semi),
-            )
-        } else {
-            df.semi_join(allow_list.lazy(), col("path"), col("path"))
-        }
-    } else if allow_list.column("ppn").is_ok() {
-        df.semi_join(allow_list.lazy(), col("ppn"), col("ppn"))
+pub(crate) fn read_index(
+    datashed: &Datashed,
+    filter: &FilterOpts,
+) -> DatashedResult<DataFrame> {
+    let index = if let Some(ref path) = filter.index {
+        IpcReader::new(File::open(path)?)
+            .memory_mapped(None)
+            .finish()?
     } else {
-        bail!("missing `path` or `ppn` column.")
+        datashed.index()?
     };
 
-    Ok(df)
-}
+    let index_has_ppn = index.column("ppn").is_ok();
+    let mut index = index.lazy();
 
-pub(crate) fn apply_deny_list<P: AsRef<Path>>(
-    df: LazyFrame,
-    deny: Option<P>,
-) -> DatashedResult<LazyFrame> {
-    let Some(path) = deny else { return Ok(df) };
-    let deny_list = read_df(path)?;
+    if let Some(ref path) = filter.allow {
+        let allow_list = read_df(path)?;
 
-    let df = if deny_list.column("path").is_ok() {
-        if deny_list.column("hash").is_ok() {
-            df.join(
-                deny_list.lazy(),
-                [col("path"), col("hash")],
-                [col("path"), col("hash")],
-                JoinArgs::new(JoinType::Anti),
-            )
+        index = if allow_list.column("path").is_ok() {
+            if allow_list.column("hash").is_ok() {
+                index.join(
+                    allow_list.lazy(),
+                    [col("path"), col("hash")],
+                    [col("path"), col("hash")],
+                    JoinArgs::new(JoinType::Semi),
+                )
+            } else {
+                index.semi_join(
+                    allow_list.lazy(),
+                    col("path"),
+                    col("path"),
+                )
+            }
+        } else if allow_list.column("ppn").is_ok() && index_has_ppn {
+            index.semi_join(allow_list.lazy(), col("ppn"), col("ppn"))
         } else {
-            df.anti_join(deny_list.lazy(), col("path"), col("path"))
+            if index_has_ppn {
+                bail!("missing `path` or `ppn` column.")
+            } else {
+                bail!("missing `path` column.")
+            }
         }
-    } else if deny_list.column("ppn").is_ok() {
-        df.anti_join(deny_list.lazy(), col("ppn"), col("ppn"))
-    } else {
-        bail!("missing `path` or `ppn` column.")
     };
 
-    Ok(df)
+    // DENY LIST
+    if let Some(ref path) = filter.deny {
+        let deny_list = read_df(path)?;
+
+        index = if deny_list.column("path").is_ok() {
+            if deny_list.column("hash").is_ok() {
+                index.join(
+                    deny_list.lazy(),
+                    [col("path"), col("hash")],
+                    [col("path"), col("hash")],
+                    JoinArgs::new(JoinType::Anti),
+                )
+            } else {
+                index.anti_join(
+                    deny_list.lazy(),
+                    col("path"),
+                    col("path"),
+                )
+            }
+        } else if deny_list.column("ppn").is_ok() && index_has_ppn {
+            index.anti_join(deny_list.lazy(), col("ppn"), col("ppn"))
+        } else {
+            if index_has_ppn {
+                bail!("missing `path` or `ppn` column.")
+            } else {
+                bail!("missing `path` column.")
+            }
+        };
+    };
+
+    if let Some(ref predicate) = filter.predicate {
+        let mut ctx = SQLContext::new();
+        ctx.register("df", index);
+        index = ctx
+            .execute(&format!("SELECT * FROM df WHERE {predicate}"))?;
+    }
+
+    Ok(index.collect()?)
 }

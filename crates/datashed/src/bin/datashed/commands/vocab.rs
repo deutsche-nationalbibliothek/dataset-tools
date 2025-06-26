@@ -1,11 +1,10 @@
-use std::fs::{self, File, read_to_string};
+use std::fs::{self, read_to_string};
 use std::path::PathBuf;
 
 use bstr::ByteSlice;
 use clap::ValueEnum;
 use datashed::translit;
 use hashbrown::{HashMap, HashSet};
-use polars::sql::SQLContext;
 
 use crate::cli::FilterOpts;
 use crate::prelude::*;
@@ -144,34 +143,13 @@ impl Vocab {
             );
         }
 
-        let mut index = if let Some(ref path) = self.filter.index {
-            IpcReader::new(File::open(path)?)
-                .memory_mapped(None)
-                .finish()?
-                .lazy()
-        } else {
-            datashed.index()?.lazy()
-        };
-
-        index = apply_allow_list(index, self.filter.allow)?;
-        index = apply_deny_list(index, self.filter.deny)?;
-
-        if let Some(predicate) = self.filter.predicate {
-            let mut ctx = SQLContext::new();
-            ctx.register("df", index);
-            index = ctx.execute(&format!(
-                "SELECT * FROM df WHERE {predicate}"
-            ))?;
-        }
-
-        let index = index.collect()?;
+        let index = read_index(&datashed, &self.filter)?;
+        let paths = index.column("path")?.str()?;
 
         let pbar =
             ProgressBarBuilder::new(PBAR_PROCESS, self.common.quiet)
                 .len(index.height() as u64)
                 .build();
-
-        let paths = index.column("path")?.str()?;
 
         let mut vocab: VocabMap = (0..index.height())
             .into_par_iter()

@@ -7,7 +7,10 @@ use polars::prelude::*;
 
 use crate::prelude::*;
 
-fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
+fn check_index<P>(path: P, filename_column: bool) -> TestResult
+where
+    P: AsRef<Path>,
+{
     let path = path.as_ref();
     let path_str = path.to_str();
 
@@ -46,14 +49,14 @@ fn check_index<P: AsRef<Path>>(path: P) -> TestResult {
     assert_eq!(hashes[1], Some("809239e5"));
     assert_eq!(hashes[2], Some("a50f7e55"));
 
-    // PPN
-    if cfg!(feature = "dnb") {
-        let ppns: Vec<_> = columns[idx].str()?.iter().collect();
+    // FILENAME
+    if filename_column {
+        let filenames: Vec<_> = columns[idx].str()?.iter().collect();
         idx += 1;
 
-        assert_eq!(ppns[0], Some("dnb"));
-        assert_eq!(ppns[1], Some("tib"));
-        assert_eq!(ppns[2], Some("zbw"));
+        assert_eq!(filenames[0], Some("dnb"));
+        assert_eq!(filenames[1], Some("tib"));
+        assert_eq!(filenames[2], Some("zbw"));
     }
 
     // SIZE
@@ -118,8 +121,7 @@ fn index_default() -> TestResult {
 
     let assert = cmd
         .current_dir(&datashed_dir)
-        .arg("index")
-        .args(["-q"])
+        .args(["index", "-q"])
         .assert();
 
     assert
@@ -128,7 +130,31 @@ fn index_default() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    check_index(datashed_dir.join("index.ipc"))?;
+    check_index(datashed_dir.join("index.ipc"), false)?;
+    datashed_dir.close()?;
+
+    Ok(())
+}
+
+#[test]
+fn index_filename_column() -> TestResult {
+    let mut cmd = Command::cargo_bin("datashed")?;
+    let datashed_dir = create_datashed()?;
+
+    let assert = cmd
+        .current_dir(&datashed_dir)
+        .args(["index", "-q", "--filename-column", "ppn"])
+        .assert();
+
+    assert
+        .success()
+        .code(0)
+        .stdout(predicates::str::is_empty())
+        .stderr(predicates::str::is_empty());
+
+    check_index(datashed_dir.join("index.ipc"), true)?;
+    datashed_dir.close()?;
+
     Ok(())
 }
 
@@ -149,7 +175,9 @@ fn index_output_csv() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    check_index(datashed_dir.join("index.csv"))?;
+    check_index(datashed_dir.join("index.csv"), false)?;
+    datashed_dir.close()?;
+
     Ok(())
 }
 
@@ -170,7 +198,8 @@ fn index_output_ipc() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    check_index(datashed_dir.join("index.ipc"))?;
+    check_index(datashed_dir.join("index.ipc"), false)?;
+    datashed_dir.close()?;
 
     Ok(())
 }
@@ -191,7 +220,9 @@ fn index_num_threads_1() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    check_index(datashed_dir.join("index.ipc"))?;
+    check_index(datashed_dir.join("index.ipc"), false)?;
+    datashed_dir.close()?;
+
     Ok(())
 }
 
@@ -211,6 +242,8 @@ fn index_num_threads_2() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    check_index(datashed_dir.join("index.ipc"))?;
+    check_index(datashed_dir.join("index.ipc"), false)?;
+    datashed_dir.close()?;
+
     Ok(())
 }

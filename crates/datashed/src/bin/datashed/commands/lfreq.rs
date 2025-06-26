@@ -1,11 +1,9 @@
-use std::fs::File;
 use std::path::PathBuf;
 
 use bstr::ByteSlice;
 use datashed::Document;
 use hashbrown::HashMap;
 use polars::prelude::*;
-use polars::sql::SQLContext;
 use unicode_normalization::UnicodeNormalization;
 
 use crate::prelude::*;
@@ -45,6 +43,9 @@ impl Lfreq {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
 
+        let index = read_index(&datashed, &self.filter)?;
+        let paths = index.column("path")?.str()?;
+
         let mut alphabet = self
             .alphabet
             .to_lowercase()
@@ -53,29 +54,6 @@ impl Lfreq {
             .collect::<Vec<char>>();
         alphabet.sort_unstable();
         alphabet.dedup();
-
-        let mut index = if let Some(ref path) = self.filter.index {
-            IpcReader::new(File::open(path)?)
-                .memory_mapped(None)
-                .finish()?
-                .lazy()
-        } else {
-            datashed.index()?.lazy()
-        };
-
-        index = apply_allow_list(index, self.filter.allow)?;
-        index = apply_deny_list(index, self.filter.deny)?;
-
-        if let Some(predicate) = self.filter.predicate {
-            let mut ctx = SQLContext::new();
-            ctx.register("df", index);
-            index = ctx.execute(&format!(
-                "SELECT * FROM df WHERE {predicate}"
-            ))?;
-        }
-
-        let index = index.collect()?;
-        let paths = index.column("path")?.str()?;
 
         let pbar =
             ProgressBarBuilder::new(PBAR_PROCESS, self.common.quiet)
