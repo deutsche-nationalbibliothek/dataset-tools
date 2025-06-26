@@ -38,6 +38,7 @@ pub(crate) enum Command {
     Grep(Grep),
     Index(Index),
     Init(Init),
+    Lfreq(Lfreq),
     Restore(Restore),
     Verify(Verify),
     Version(Version),

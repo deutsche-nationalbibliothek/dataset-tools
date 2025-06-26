@@ -32,7 +32,10 @@ fn sha256<T: AsRef<[u8]>>(data: T) -> String {
 }
 
 impl Document {
-    pub fn from_path<P, Q>(path: P, data_dir: Q) -> DatashedResult<Self>
+    pub fn from_path<P, Q>(
+        path: P,
+        data_dir: Q,
+    ) -> DatashedResult<(Self, Vec<u8>)>
     where
         P: AsRef<Path>,
         Q: AsRef<Path>,
@@ -62,13 +65,16 @@ impl Document {
             .map(ToString::to_string)
             .unwrap_or_default();
 
-        Ok(Self {
-            path: relpath,
-            hash: sha256(content),
-            #[cfg(feature = "dnb")]
-            ppn,
-            size: metadata.st_size(),
-            mtime,
-        })
+        Ok((
+            Self {
+                path: relpath,
+                hash: sha256(&content),
+                #[cfg(feature = "dnb")]
+                ppn,
+                size: metadata.st_size(),
+                mtime,
+            },
+            content,
+        ))
     }
 }

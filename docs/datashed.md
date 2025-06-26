@@ -182,6 +182,32 @@ path,hash,ppn,size,mtime
 0/dnb.txt,71eb6431,dnb,769,1750321974
 ```
 
+### Letter Frequency
+
+The `lfreq` command generates a frequency table using a fixed
+alphabet. Both the specified alphabet and the documents themselves
+are transliterated in advance into the Uniode normal form NFC and
+converted into lower case letters. All characters that are not part
+of the alphabet are ignored. Unless a alphabet is specified using the
+`--alphabet` option, the German alphabet `a` to `z`, `ä`, `ö`, `ü`, `ß`
+is used by default.
+
+For each document, the output contains the path (`path`), the hash value
+of the document (`hash`), the total number of characters (`total`) and
+the individual letter frequencies generated.
+
+In the following example, a frequency table is created using the
+alphabet `a`, `b` and `c`:
+
+
+```console
+$ datashed lfreq -q --alphabet "abc"
+path,hash,total,a,b,c
+0/dnb.txt,1fbf52b4,85,38,26,21
+0/tib.txt,809239e5,135,56,35,44
+1/zbw.txt,a50f7e55,118,59,19,40
+```
+
 ### Verification
 
 The `verify` command is used to ensure that the index and the documents
