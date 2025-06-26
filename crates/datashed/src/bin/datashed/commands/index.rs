@@ -1,4 +1,3 @@
-use std::fs::File;
 use std::path::PathBuf;
 
 use datashed::Document;
@@ -93,39 +92,9 @@ impl Index {
         .sort(["path"], Default::default())
         .collect()?;
 
-        let path_str = if let Some(ref path) = self.output {
-            path.to_str().unwrap_or_default()
-        } else {
-            ""
-        };
-
-        match self.output {
-            Some(path) if path_str.ends_with(".csv") => {
-                let mut writer = CsvWriter::new(File::create(path)?);
-                writer.finish(&mut df)?;
-            }
-            Some(path) if path_str.ends_with(".tsv") => {
-                let mut writer = CsvWriter::new(File::create(path)?)
-                    .with_separator(b'\t');
-                writer.finish(&mut df)?;
-            }
-            Some(path) => {
-                let mut writer = IpcWriter::new(File::create(path)?)
-                    .with_compression(Some(IpcCompression::ZSTD))
-                    .with_parallel(true);
-
-                writer.finish(&mut df)?;
-            }
-            None => {
-                let mut writer = IpcWriter::new(File::create(
-                    base_dir.join(Datashed::INDEX),
-                )?)
-                .with_compression(Some(IpcCompression::ZSTD))
-                .with_parallel(true);
-
-                writer.finish(&mut df)?;
-            }
-        }
+        let output =
+            self.output.or(Some(base_dir.join(Datashed::INDEX)));
+        write_df(&mut df, output)?;
 
         Ok(SUCCESS)
     }
