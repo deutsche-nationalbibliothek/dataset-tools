@@ -1,8 +1,7 @@
-use std::fs::{self, File};
+use std::fs;
 use std::path::PathBuf;
 
 use datashed::translit;
-use polars::sql::SQLContext;
 use regex::bytes::RegexSetBuilder;
 
 use crate::cli::FilterOpts;
@@ -49,27 +48,7 @@ impl Grep {
         let data_dir = datashed.data_dir();
         let config = datashed.config()?;
 
-        let mut index = if let Some(ref path) = self.filter.index {
-            IpcReader::new(File::open(path)?)
-                .memory_mapped(None)
-                .finish()?
-                .lazy()
-        } else {
-            datashed.index()?.lazy()
-        };
-
-        index = apply_allow_list(index, self.filter.allow)?;
-        index = apply_deny_list(index, self.filter.deny)?;
-
-        if let Some(predicate) = self.filter.predicate {
-            let mut ctx = SQLContext::new();
-            ctx.register("df", index);
-            index = ctx.execute(&format!(
-                "SELECT * FROM df WHERE {predicate}"
-            ))?;
-        }
-
-        let index = index.collect()?;
+        let index = read_index(&datashed, &self.filter)?;
 
         let patterns: Vec<String> = self
             .patterns
