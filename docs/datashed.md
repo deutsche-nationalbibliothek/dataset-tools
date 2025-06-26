@@ -12,9 +12,9 @@ API to use the index and the documents as a data source for building
 datasets. The API can also be used to evaluate the quality of the
 documents or to carry out further annotations.
 
-## Tour
+# Tour
 
-### Creating a new datashed
+## Creating a new datashed
 
 The `init` command is used to create a new datashed project. The
 following command creates a new project `demo`.
@@ -31,7 +31,7 @@ $ mkdir demo && cd demo
 $ datashed init .
 ```
 
-#### Project structure
+### Project structure
 
 An empty project consists of the following files and directories:
 
@@ -48,7 +48,7 @@ It is up to the user to set up an ingest process, e.g. in the form of a
 Python script. Documents can be structured in any subdirectories within
 the `data` directory.
 
-#### Configuration
+### Configuration
 
 The `datashed.toml` contains metadata about the project and important
 runtime options.
@@ -81,11 +81,11 @@ The `num-jobs` option defines the maximum number of CPU cores used by
 the application.
 
 
-### Indexing
+## Indexing
 
 The core of a datashed is the index of all documents. It contains
 important metrics and metadata. The index is saved by default in the
-file `index.ipc` in Apache Arrow format.
+file `index.ipc` in [Apache Arrow] format.
 
 A new index can be created as follows:
 
@@ -106,9 +106,9 @@ Collecting documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
-#### Columns
+### Metrics
 
-##### Alpha
+#### Alpha
 
 The `alpha` score of a document is the ratio of alphabetic characters to
 the total number of characters. An alphabetic character is a character
@@ -129,7 +129,7 @@ an empty  document is defined to $0.0$.
 A very low `alpha` value may indicate a corrupt document.
 
 
-### Vocabulary
+## Vocabulary
 
 The `vocab` command can be used to create the vocabulary (dictionary
 or lexicon) of the entire datashed or of any subset. With the help
@@ -189,7 +189,7 @@ In addition, the vocabulary can be further restricted by the
 `--min-term-length`, `--min-term-freq`, or `--min-doc-freq` options.
 
 
-### Grepping
+## Grepping
 
 A simple form of document retrieval is a linear search for patterns.
 This function is provided by the `grep` command. It works in a similar
@@ -230,7 +230,7 @@ path,hash,size,mtime
 0/dnb.txt,71eb6431,769,1750321974
 ```
 
-### Letter Frequency
+## Letter Frequency
 
 The `lfreq` command generates a frequency table using a fixed
 alphabet. Both the specified alphabet and the documents themselves
@@ -256,7 +256,7 @@ path,hash,total,a,b,c
 1/zbw.txt,a50f7e55,118,59,19,40
 ```
 
-### Verification
+## Data Verification
 
 The `verify` command is used to ensure that the index and the documents
 are in a consistent state. It ensures that no documents have been
@@ -276,7 +276,7 @@ $ datashed verify --mode strict
 Verifying documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
-### Versioning
+## Versioning
 
 It is good practice to track changes to a project's database with
 version numbers. Using the `version` command, the version of the project
@@ -307,7 +307,7 @@ $ datashed version --bump minor
 $ datashed version --bump patch
 ```
 
-### Archive and Restore
+## Archive and Restore
 
 The `archive` command can be used to create a backup of a datashed. It
 creates a `tar.gz` archive containing all documents, the configuration
@@ -335,5 +335,5 @@ Verify consistency with `datashed verify`.
 ```
 
 
-
+[Apache Arrow]: https://arrow.apache.org/
 [Unicode Standard]: https://www.unicode.org/versions/latest/
