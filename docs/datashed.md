@@ -158,8 +158,8 @@ _"(DNB)"_:
 
 ```console
 $ datashed grep -q '\(DNB\)'
-path,hash,ppn,size,mtime
-0/dnb.txt,71eb6431,dnb,769,1750321974
+path,hash,size,mtime
+0/dnb.txt,71eb6431,769,1750321974
 ```
 
 The index can be restricted in advance according to conditions. If, for
@@ -168,8 +168,8 @@ searched, this is done using the `--where` option:
 
 ```console
 $ datashed grep -q '\(DNB\)' --where 'size <= 1024'
-path,hash,ppn,size,mtime
-0/dnb.txt,71eb6431,dnb,769,1750321974
+path,hash,size,mtime
+0/dnb.txt,71eb6431,769,1750321974
 ```
 
 Another useful option is the restriction to a search window. If only
@@ -178,8 +178,8 @@ the first _n_ bytes are to be searched, this is done by specifying the
 
 ```console
 $ datashed grep -q -n 50 '\(DNB\)'
-path,hash,ppn,size,mtime
-0/dnb.txt,71eb6431,dnb,769,1750321974
+path,hash,size,mtime
+0/dnb.txt,71eb6431,769,1750321974
 ```
 
 ### Letter Frequency
