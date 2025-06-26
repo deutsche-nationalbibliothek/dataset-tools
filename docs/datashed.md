@@ -14,7 +14,7 @@ documents or to carry out further annotations.
 
 # Tour
 
-## Creating a new datashed
+## Initialization
 
 The `init` command is used to create a new datashed project. The
 following command creates a new project `demo`.
