@@ -85,12 +85,10 @@ pub(crate) fn read_index(
             }
         } else if allow_list.column("ppn").is_ok() && index_has_ppn {
             index.semi_join(allow_list.lazy(), col("ppn"), col("ppn"))
+        } else if index_has_ppn {
+            bail!("missing `path` or `ppn` column.")
         } else {
-            if index_has_ppn {
-                bail!("missing `path` or `ppn` column.")
-            } else {
-                bail!("missing `path` column.")
-            }
+            bail!("missing `path` column.")
         }
     };
 
@@ -115,12 +113,10 @@ pub(crate) fn read_index(
             }
         } else if deny_list.column("ppn").is_ok() && index_has_ppn {
             index.anti_join(deny_list.lazy(), col("ppn"), col("ppn"))
+        } else if index_has_ppn {
+            bail!("missing `path` or `ppn` column.")
         } else {
-            if index_has_ppn {
-                bail!("missing `path` or `ppn` column.")
-            } else {
-                bail!("missing `path` column.")
-            }
+            bail!("missing `path` column.")
         };
     };
 

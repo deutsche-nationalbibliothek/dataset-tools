@@ -70,6 +70,8 @@ impl Index {
         let mut paths: Vec<String> = vec![];
         let mut hashes: Vec<String> = vec![];
         let mut names: Vec<String> = vec![];
+        let mut lang_codes: Vec<Option<String>> = vec![];
+        let mut lang_scores: Vec<Option<f64>> = vec![];
         let mut sizes: Vec<u64> = vec![];
         let mut alphas: Vec<f64> = vec![];
         let mut mtimes: Vec<u64> = vec![];
@@ -78,12 +80,15 @@ impl Index {
             paths.push(doc.path);
             hashes.push(doc.hash);
             names.push(doc.name);
+            lang_codes.push(doc.lang_code);
+            lang_scores.push(doc.lang_score);
             sizes.push(doc.size);
             alphas.push(doc.alpha);
             mtimes.push(doc.mtime);
         }
 
         let mut columns = vec![];
+
         columns.push(Column::new("path".into(), paths));
         columns.push(Column::new("hash".into(), hashes));
 
@@ -92,6 +97,10 @@ impl Index {
         }
 
         columns.push(Column::new("size".into(), sizes));
+
+        columns.push(Column::new("lang_code".into(), lang_codes));
+        columns.push(Column::new("lang_score".into(), lang_scores));
+
         columns.push(Column::new("alpha".into(), alphas));
         columns.push(Column::new("mtime".into(), mtimes));
 

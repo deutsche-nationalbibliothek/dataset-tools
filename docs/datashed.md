@@ -106,7 +106,15 @@ Collecting documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
-### Metrics
+### Metadata and Metrics
+
+#### Language
+
+The language of the document is given as an ISO-639-2 (B) language
+code in the `lang_code` column and the `lang_score` column contains
+the confidence value. Language detection is performed with [lingua] in
+high-accuracy mode.
+
 
 #### Alpha
 
@@ -337,3 +345,4 @@ Verify consistency with `datashed verify`.
 
 [Apache Arrow]: https://arrow.apache.org/
 [Unicode Standard]: https://www.unicode.org/versions/latest/
+[lingua]: https://github.com/pemistahl/lingua-rs

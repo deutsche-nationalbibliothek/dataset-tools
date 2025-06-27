@@ -72,6 +72,26 @@ where
     assert_eq!(sizes[1], Some(1453));
     assert_eq!(sizes[2], Some(909));
 
+    // LANG CODES
+    let lang_codes: Vec<_> = columns[idx].str()?.iter().collect();
+    idx += 1;
+
+    assert_eq!(lang_codes[0], Some("ger"));
+    assert_eq!(lang_codes[1], Some("ger"));
+    assert_eq!(lang_codes[2], Some("eng"));
+
+    // LANG SCORES
+    let lang_scores: Vec<_> = columns[idx]
+        .cast(&DataType::Float64)?
+        .f64()?
+        .iter()
+        .collect();
+    idx += 1;
+
+    assert_abs_diff_eq!(lang_scores[0].unwrap(), 1.0, epsilon = 1e-4);
+    assert_abs_diff_eq!(lang_scores[1].unwrap(), 1.0, epsilon = 1e-4);
+    assert_abs_diff_eq!(lang_scores[2].unwrap(), 1.0, epsilon = 1e-4);
+
     // ALPHA
     let alphas: Vec<_> = columns[idx]
         .cast(&DataType::Float64)?

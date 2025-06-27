@@ -22,6 +22,7 @@ clap = { workspace = true }
 flate2 = { workspace = true }
 hashbrown = { workspace = true }
 indicatif = { workspace = true }
+lingua = { workspace = true }
 polars = { workspace = true }
 rayon = { workspace = true }
 regex = { workspace = true }
