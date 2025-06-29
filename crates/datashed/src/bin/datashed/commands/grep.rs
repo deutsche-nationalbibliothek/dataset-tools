@@ -1,3 +1,4 @@
+use std::ffi::OsStr;
 use std::fs;
 use std::path::PathBuf;
 
@@ -6,6 +7,7 @@ use regex::bytes::RegexSetBuilder;
 
 use crate::cli::FilterOpts;
 use crate::prelude::*;
+use crate::utils::unnest_index;
 
 const PBAR_PROCESS: &str = "Processing documents: {human_pos} ({percent}%) | \
         elapsed: {elapsed_precise}{msg}";
@@ -49,6 +51,15 @@ impl Grep {
         let config = datashed.config()?;
 
         let index = read_index(&datashed, &self.filter)?;
+
+        let is_arrow = if let Some(ref path) = self.output {
+            path.extension()
+                .and_then(OsStr::to_str)
+                .map(|s| s == "ipc")
+                .unwrap_or_default()
+        } else {
+            false
+        };
 
         let patterns: Vec<String> = self
             .patterns
@@ -95,13 +106,17 @@ impl Grep {
             DataFrame::new(vec![Column::new("path".into(), &matches)])?
                 .lazy();
 
-        let mut result = index
-            .lazy()
-            .semi_join(matches, col("path"), col("path"))
-            .sort(["path"], Default::default())
-            .collect()?;
+        let mut index =
+            index.lazy().semi_join(matches, col("path"), col("path"));
 
-        write_df(&mut result, self.output)?;
+        if !is_arrow {
+            index = unnest_index(index);
+        }
+
+        let mut df =
+            index.sort(["path"], Default::default()).collect()?;
+
+        write_df(&mut df, self.output)?;
 
         Ok(SUCCESS)
     }

@@ -50,6 +50,17 @@ pub(crate) fn write_df(
     Ok(())
 }
 
+#[inline]
+pub(crate) fn unnest_index(df: LazyFrame) -> LazyFrame {
+    df.with_column(
+        col("lang")
+            .struct_()
+            .rename_fields(["lang_code", "lang_score"]),
+    )
+    .unnest(["lang"])
+    .with_column(col("lang_code").cast(DataType::String))
+}
+
 pub(crate) fn read_index(
     datashed: &Datashed,
     filter: &FilterOpts,

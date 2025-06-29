@@ -1,6 +1,7 @@
+use std::ffi::OsStr;
 use std::path::PathBuf;
 
-use datashed::Document;
+use datashed::{Document, iso6392b_dtype};
 use indicatif::ParallelProgressIterator;
 use walkdir::WalkDir;
 
@@ -31,6 +32,15 @@ impl Index {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
         let base_dir = datashed.base_dir();
+
+        let is_arrow = if let Some(ref path) = self.output {
+            path.extension()
+                .and_then(OsStr::to_str)
+                .map(|s| s == "ipc")
+                .unwrap_or_default()
+        } else {
+            true
+        };
 
         let pbar =
             ProgressBarBuilder::new(PBAR_COLLECT, self.common.quiet)
@@ -98,8 +108,19 @@ impl Index {
 
         columns.push(Column::new("size".into(), sizes));
 
-        columns.push(Column::new("lang_code".into(), lang_codes));
-        columns.push(Column::new("lang_score".into(), lang_scores));
+        if is_arrow {
+            let lang = DataFrame::new(vec![
+                Column::new("lang_code".into(), lang_codes)
+                    .cast(&iso6392b_dtype())?,
+                Column::new("lang_score".into(), lang_scores),
+            ])?
+            .into_struct("lang".into());
+
+            columns.push(Column::new("lang".into(), lang));
+        } else {
+            columns.push(Column::new("lang_code".into(), lang_codes));
+            columns.push(Column::new("lang_score".into(), lang_scores));
+        }
 
         columns.push(Column::new("alpha".into(), alphas));
         columns.push(Column::new("mtime".into(), mtimes));

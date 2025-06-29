@@ -16,12 +16,14 @@ where
     let path_str = path.to_str();
 
     let data_dir = path.parent().unwrap().join("data");
+    let mut is_arrow = true;
 
     let df = match path_str {
         Some(path_str) if path_str.ends_with(".ipc") => {
             IpcReader::new(File::open(path)?).finish()?
         }
         Some(path_str) if path_str.ends_with(".csv") => {
+            is_arrow = false;
             CsvReader::new(File::open(path)?).finish()?
         }
         _ => unreachable!(),
@@ -29,6 +31,7 @@ where
 
     let df = df.sort(["path"], SortMultipleOptions::default())?;
     assert_eq!(df.height(), 3);
+    eprintln!("{df:?}");
 
     let columns = df.take_columns();
 
@@ -73,24 +76,47 @@ where
     assert_eq!(sizes[2], Some(909));
 
     // LANG CODES
-    let lang_codes: Vec<_> = columns[idx].str()?.iter().collect();
-    idx += 1;
+    if is_arrow {
+        let lang = columns[idx].cast(&DataType::String)?;
+        let lang_codes: Vec<_> = lang.str()?.iter().collect();
+        idx += 1;
 
-    assert_eq!(lang_codes[0], Some("ger"));
-    assert_eq!(lang_codes[1], Some("ger"));
-    assert_eq!(lang_codes[2], Some("eng"));
+        assert_eq!(lang_codes[0], Some("{\"ger\",1.0}"));
+        assert_eq!(lang_codes[1], Some("{\"ger\",1.0}"));
+        assert_eq!(lang_codes[2], Some("{\"eng\",1.0}"));
+    } else {
+        let lang_codes = columns[idx].cast(&DataType::String)?;
+        let lang_codes: Vec<_> = lang_codes.str()?.iter().collect();
+        idx += 1;
 
-    // LANG SCORES
-    let lang_scores: Vec<_> = columns[idx]
-        .cast(&DataType::Float64)?
-        .f64()?
-        .iter()
-        .collect();
-    idx += 1;
+        assert_eq!(lang_codes[0], Some("ger"));
+        assert_eq!(lang_codes[1], Some("ger"));
+        assert_eq!(lang_codes[2], Some("eng"));
 
-    assert_abs_diff_eq!(lang_scores[0].unwrap(), 1.0, epsilon = 1e-4);
-    assert_abs_diff_eq!(lang_scores[1].unwrap(), 1.0, epsilon = 1e-4);
-    assert_abs_diff_eq!(lang_scores[2].unwrap(), 1.0, epsilon = 1e-4);
+        // LANG SCORES
+        let lang_scores: Vec<_> = columns[idx]
+            .cast(&DataType::Float64)?
+            .f64()?
+            .iter()
+            .collect();
+        idx += 1;
+
+        assert_abs_diff_eq!(
+            lang_scores[0].unwrap(),
+            1.0,
+            epsilon = 1e-4
+        );
+        assert_abs_diff_eq!(
+            lang_scores[1].unwrap(),
+            1.0,
+            epsilon = 1e-4
+        );
+        assert_abs_diff_eq!(
+            lang_scores[2].unwrap(),
+            1.0,
+            epsilon = 1e-4
+        );
+    }
 
     // ALPHA
     let alphas: Vec<_> = columns[idx]
