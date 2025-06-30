@@ -10,7 +10,7 @@ pub(crate) use rayon::prelude::*;
 
 pub(crate) use crate::cli::{CommonOpts, FilterOpts};
 pub(crate) use crate::progress::ProgressBarBuilder;
-pub(crate) use crate::utils::{read_index, write_df};
+pub(crate) use crate::utils::*;
 
 pub type CommandResult = DatashedResult<ExitCode>;
 

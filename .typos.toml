@@ -1,2 +1,7 @@
 [files]
-extend-exclude = ["crates/datashed/tests/data/*.txt"]
+extend-exclude = [
+  "crates/datashed/tests/data/*.txt",
+  "crates/datashed/tests/it/*.rs",
+  "crates/datashed/src/document.rs",
+  "crates/datashed/src/dtypes.rs",
+]

@@ -152,23 +152,11 @@ fn verify_missing_file() -> TestResult {
 
 #[test]
 fn verify_hash_mismatch() -> TestResult {
-    let datashed_dir = create_datashed()?;
-
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
-        .current_dir(&datashed_dir)
-        .args(["index", "--quiet"])
-        .assert();
-
-    assert
-        .success()
-        .code(0)
-        .stdout(predicates::str::is_empty())
-        .stderr(predicates::str::is_empty());
+    let datashed_dir = create_datashed_with_index()?;
 
     fs::write(
         datashed_dir.join("data").join("0/dnb.txt"),
-        "Hello, world",
+        "Dies ist ein kuzer Text.",
     )?;
 
     let mut cmd = Command::cargo_bin("datashed")?;
@@ -200,6 +188,7 @@ fn verify_hash_mismatch() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::ord::eq(error));
 
+    datashed_dir.close()?;
     Ok(())
 }
 

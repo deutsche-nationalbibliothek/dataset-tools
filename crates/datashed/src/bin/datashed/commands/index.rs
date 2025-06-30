@@ -1,6 +1,7 @@
+use std::ffi::OsStr;
 use std::path::PathBuf;
 
-use datashed::Document;
+use datashed::{Document, iso6392b_dtype};
 use indicatif::ParallelProgressIterator;
 use walkdir::WalkDir;
 
@@ -31,6 +32,15 @@ impl Index {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
         let base_dir = datashed.base_dir();
+
+        let is_arrow = if let Some(ref path) = self.output {
+            path.extension()
+                .and_then(OsStr::to_str)
+                .map(|s| s == "ipc")
+                .unwrap_or_default()
+        } else {
+            true
+        };
 
         let pbar =
             ProgressBarBuilder::new(PBAR_COLLECT, self.common.quiet)
@@ -70,6 +80,8 @@ impl Index {
         let mut paths: Vec<String> = vec![];
         let mut hashes: Vec<String> = vec![];
         let mut names: Vec<String> = vec![];
+        let mut lang_codes: Vec<Option<String>> = vec![];
+        let mut lang_scores: Vec<Option<f64>> = vec![];
         let mut sizes: Vec<u64> = vec![];
         let mut alphas: Vec<f64> = vec![];
         let mut mtimes: Vec<u64> = vec![];
@@ -78,25 +90,40 @@ impl Index {
             paths.push(doc.path);
             hashes.push(doc.hash);
             names.push(doc.name);
+            lang_codes.push(doc.lang_code);
+            lang_scores.push(doc.lang_score);
             sizes.push(doc.size);
             alphas.push(doc.alpha);
             mtimes.push(doc.mtime);
         }
 
         let mut columns = vec![];
-        columns.push(Column::new("path".into(), paths));
-        columns.push(Column::new("hash".into(), hashes));
+
+        columns.push(col!("path", paths));
+        columns.push(col!("hash", hashes));
 
         if let Some(name) = self.filename_column {
-            columns.push(Column::new(name.into(), names));
+            columns.push(col!(name, names));
         }
 
-        columns.push(Column::new("size".into(), sizes));
-        columns.push(Column::new("alpha".into(), alphas));
-        columns.push(Column::new("mtime".into(), mtimes));
+        columns.push(col!("size", sizes));
 
-        let mut df = DataFrame::new(columns)?
-            .lazy()
+        let lang = DataFrame::new(vec![
+            col!("lang_code", lang_codes).cast(&iso6392b_dtype())?,
+            col!("lang_score", lang_scores),
+        ])?
+        .into_struct("lang".into());
+
+        columns.push(col!("lang", lang));
+        columns.push(col!("alpha", alphas));
+        columns.push(col!("mtime", mtimes));
+
+        let mut index = DataFrame::new(columns)?.lazy();
+        if !is_arrow {
+            index = unnest_index(index);
+        }
+
+        let mut df = index
             .select([col("*").shrink_dtype()])
             .sort(["path"], Default::default())
             .collect()?;

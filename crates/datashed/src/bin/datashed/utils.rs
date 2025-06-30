@@ -10,6 +10,14 @@ use polars::sql::SQLContext;
 use crate::cli::FilterOpts;
 use crate::prelude::bail;
 
+macro_rules! col {
+    ($name:expr, $values:expr) => {
+        Column::new($name.into(), $values)
+    };
+}
+
+pub(crate) use col;
+
 pub(crate) fn read_df<P: AsRef<Path>>(
     path: P,
 ) -> DatashedResult<DataFrame> {
@@ -50,6 +58,17 @@ pub(crate) fn write_df(
     Ok(())
 }
 
+#[inline]
+pub(crate) fn unnest_index(df: LazyFrame) -> LazyFrame {
+    df.with_column(
+        col("lang")
+            .struct_()
+            .rename_fields(["lang_code", "lang_score"]),
+    )
+    .unnest(["lang"])
+    .with_column(col("lang_code").cast(DataType::String))
+}
+
 pub(crate) fn read_index(
     datashed: &Datashed,
     filter: &FilterOpts,
@@ -85,12 +104,10 @@ pub(crate) fn read_index(
             }
         } else if allow_list.column("ppn").is_ok() && index_has_ppn {
             index.semi_join(allow_list.lazy(), col("ppn"), col("ppn"))
+        } else if index_has_ppn {
+            bail!("missing `path` or `ppn` column.")
         } else {
-            if index_has_ppn {
-                bail!("missing `path` or `ppn` column.")
-            } else {
-                bail!("missing `path` column.")
-            }
+            bail!("missing `path` column.")
         }
     };
 
@@ -115,12 +132,10 @@ pub(crate) fn read_index(
             }
         } else if deny_list.column("ppn").is_ok() && index_has_ppn {
             index.anti_join(deny_list.lazy(), col("ppn"), col("ppn"))
+        } else if index_has_ppn {
+            bail!("missing `path` or `ppn` column.")
         } else {
-            if index_has_ppn {
-                bail!("missing `path` or `ppn` column.")
-            } else {
-                bail!("missing `path` column.")
-            }
+            bail!("missing `path` column.")
         };
     };
 
