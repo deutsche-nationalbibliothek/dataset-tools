@@ -50,3 +50,11 @@ features = [
   "semi_anti_join",
   "sql",
 ]
+
+[profile.release]
+lto = "fat"
+panic = "abort"
+debug = "none"
+codegen-units = 1
+opt-level = 3
+strip = true
