@@ -25,8 +25,8 @@ fn vocab_default() -> TestResult {
     assert_eq!(df.height(), 232);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "die");
     assert_eq!(tfs.get(0).unwrap(), 16);
@@ -65,8 +65,8 @@ fn vocab_bigrams() -> TestResult {
     assert_eq!(df.height(), 358);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "die tib");
     assert_eq!(tfs.get(0).unwrap(), 5);
@@ -101,8 +101,8 @@ fn vocab_trigrams() -> TestResult {
     assert_eq!(df.height(), 376);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(
         terms.get(0).unwrap(),
@@ -147,8 +147,8 @@ fn vocab_stopwords() -> TestResult {
     assert_eq!(df.height(), 230);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "deutsche");
     assert_eq!(tfs.get(0).unwrap(), 8);
@@ -187,8 +187,8 @@ fn vocab_ucs_category_letter() -> TestResult {
     assert_eq!(df.height(), 227);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "die");
     assert_eq!(tfs.get(0).unwrap(), 16);
@@ -223,8 +223,8 @@ fn vocab_ucs_category_lower() -> TestResult {
     assert_eq!(df.height(), 220);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "die");
     assert_eq!(tfs.get(0).unwrap(), 16);
@@ -259,8 +259,8 @@ fn vocab_ucs_category_upper() -> TestResult {
     assert_eq!(df.height(), 115);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "deutsche");
     assert_eq!(tfs.get(0).unwrap(), 8);
@@ -367,8 +367,8 @@ fn vocab_min_term_length() -> TestResult {
     assert_eq!(df.height(), 133);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "deutsche");
     assert_eq!(tfs.get(0).unwrap(), 8);
@@ -403,8 +403,8 @@ fn vocab_min_term_freq() -> TestResult {
     assert_eq!(df.height(), 10);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "die");
     assert_eq!(tfs.get(0).unwrap(), 16);
@@ -439,8 +439,8 @@ fn vocab_min_doc_freq() -> TestResult {
     assert_eq!(df.height(), 3);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "deutsche");
     assert_eq!(tfs.get(0).unwrap(), 8);
@@ -479,8 +479,8 @@ fn vocab_limit() -> TestResult {
     assert_eq!(df.height(), 2);
 
     let terms = df.column("term")?.str()?;
-    let tfs = df.column("tf")?.u32()?;
-    let dfs = df.column("df")?.u32()?;
+    let tfs = df.column("tf")?.u64()?;
+    let dfs = df.column("df")?.u64()?;
 
     assert_eq!(terms.get(0).unwrap(), "die");
     assert_eq!(tfs.get(0).unwrap(), 16);

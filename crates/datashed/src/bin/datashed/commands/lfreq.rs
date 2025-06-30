@@ -132,7 +132,6 @@ impl Lfreq {
 
         let mut df: DataFrame = DataFrame::new(series)?
             .lazy()
-            .select([col("*").shrink_dtype()])
             .sort(["path"], Default::default())
             .collect()?;
 

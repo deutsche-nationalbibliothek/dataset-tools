@@ -221,10 +221,7 @@ impl Vocab {
             Column::new("df".into(), docs),
         ])?;
 
-        result = result
-            .lazy()
-            .select([col("*").shrink_dtype()])
-            .collect()?;
+        result = result.lazy().collect()?;
 
         let options = SortMultipleOptions::default()
             .with_order_descending_multi([true, true, false]);

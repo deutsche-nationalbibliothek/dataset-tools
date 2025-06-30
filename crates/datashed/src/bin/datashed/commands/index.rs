@@ -123,10 +123,8 @@ impl Index {
             index = unnest_index(index);
         }
 
-        let mut df = index
-            .select([col("*").shrink_dtype()])
-            .sort(["path"], Default::default())
-            .collect()?;
+        let mut df =
+            index.sort(["path"], Default::default()).collect()?;
 
         let output =
             self.output.or(Some(base_dir.join(Datashed::INDEX)));
