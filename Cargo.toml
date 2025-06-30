@@ -41,6 +41,8 @@ features = ["zlib-rs"]
 
 [workspace.dependencies.polars]
 version = "0.48"
+# git = "https://github.com/pola-rs/polars"
+# branch = "main"
 features = [
   "decompress",
   "dtype-slim",

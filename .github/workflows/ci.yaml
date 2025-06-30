@@ -49,7 +49,7 @@ jobs:
       - uses: taiki-e/install-action@nextest
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
-        run: cargo nextest run --workspace --all-features
+        run: cargo nextest run --profile ci --workspace --all-features
 
   features:
     runs-on: ubuntu-latest

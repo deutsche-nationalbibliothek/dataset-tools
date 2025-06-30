@@ -79,10 +79,10 @@ fn lfreq_output_ipc() -> TestResult {
     let df = IpcReader::new(File::open(output)?).finish()?;
     assert_eq!(df.height(), 3);
 
-    let totals = df.column("total")?.u32().unwrap();
+    let totals = df.column("total")?.u64().unwrap();
     assert_eq!(totals.get(0), Some(633));
 
-    let r#as = df.column("a")?.u32().unwrap();
+    let r#as = df.column("a")?.u64().unwrap();
     assert_eq!(r#as.get(0), Some(38));
 
     datashed_dir.close()?;

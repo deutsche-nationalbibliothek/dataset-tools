@@ -14,6 +14,10 @@ path = "src/lib.rs"
 name = "datashed"
 path = "src/bin/datashed/main.rs"
 
+[features]
+default = ["performant"]
+performant = ["polars/cse"]
+
 [dependencies]
 anyhow = { workspace = true }
 bstr = { workspace = true }
@@ -42,6 +46,4 @@ assert_cmd = { workspace = true }
 assert_fs = { workspace = true }
 predicates = { workspace = true }
 
-[features]
-dnb = []
 
