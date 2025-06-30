@@ -16,7 +16,7 @@ path = "src/bin/datashed/main.rs"
 
 [features]
 default = ["performant"]
-performant = ["polars/performant", "polars/cse"]
+performant = ["polars/cse"]
 
 [dependencies]
 anyhow = { workspace = true }

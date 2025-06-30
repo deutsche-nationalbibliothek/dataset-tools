@@ -33,9 +33,6 @@ defaults:
 
 jobs:
   test:
-    concurrency:
-      cancel-in-progress: false
-      group: ci-tests
     strategy:
       matrix:
         target:
@@ -50,7 +47,7 @@ jobs:
           toolchain: ${{ matrix.target.toolchain }}
           targets: ${{ matrix.target.triple }}
       - uses: taiki-e/install-action@nextest
-      # - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@v2
       - name: Run tests
         run: cargo nextest run --profile ci --workspace --all-features
 
