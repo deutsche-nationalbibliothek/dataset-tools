@@ -17,6 +17,7 @@ path = "src/bin/datashed/main.rs"
 [features]
 default = ["performant"]
 performant = ["polars/cse"]
+nightly = ["polars/nightly", "hashbrown/nightly"]
 
 [dependencies]
 anyhow = { workspace = true }
