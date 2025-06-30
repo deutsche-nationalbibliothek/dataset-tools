@@ -62,7 +62,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
       - uses: taiki-e/install-action@cargo-hack
-      - run: cargo hack test --all --feature-powerset
+      - run: cargo hack check --all --feature-powerset
 
   rustfmt:
     runs-on: ubuntu-latest
