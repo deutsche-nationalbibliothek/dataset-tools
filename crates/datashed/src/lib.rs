@@ -1,6 +1,6 @@
 mod config;
 mod datashed;
-mod document;
+pub mod document;
 mod dtypes;
 mod error;
 mod unicode;

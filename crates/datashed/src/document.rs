@@ -39,8 +39,7 @@ fn language_detector() -> &'static LanguageDetector {
     })
 }
 
-#[inline]
-fn sha256<T: AsRef<[u8]>>(data: T) -> String {
+pub fn sha256<T: AsRef<[u8]>>(data: T) -> String {
     let mut hasher = Sha256::new();
     hasher.update(data);
 

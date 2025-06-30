@@ -1,5 +1,8 @@
+use std::fs;
+use std::time::UNIX_EPOCH;
+
 use clap::ValueEnum;
-use datashed::Document;
+use datashed::document::sha256;
 
 use crate::prelude::*;
 
@@ -47,8 +50,7 @@ impl Verify {
             .try_for_each(|idx| -> Result<(), anyhow::Error> {
                 let path = data_dir.join(paths.get(idx).unwrap());
 
-                let Ok((doc, _)) = Document::from_path(&path, &data_dir)
-                else {
+                let Ok(data) = fs::read(&path) else {
                     bail!(
                         "verification failed: file not found (path = {}).",
                         path.display()
@@ -56,7 +58,7 @@ impl Verify {
                 };
 
                 let expected = hashes.get(idx).unwrap();
-                let actual = doc.hash;
+                let actual = sha256(data);
 
                 if !actual.starts_with(expected) {
                     bail!(
@@ -65,8 +67,17 @@ impl Verify {
                     );
                 }
 
+                let expected = mtimes.get(idx).unwrap();
+                let metadata = path.metadata()?;
+                let actual = metadata
+                    .modified()
+                    .ok()
+                    .and_then(|x| x.duration_since(UNIX_EPOCH).ok())
+                    .map(|x| x.as_secs())
+                    .expect("valid mtime");
+
                 if self.mode >= VerifyMode::Strict
-                    && doc.mtime != mtimes.get(idx).unwrap()
+                    && expected != actual
                 {
                     bail!(
                         "verification failed: mtime mismatch (path = {}).",
