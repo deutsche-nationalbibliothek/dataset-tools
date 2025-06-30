@@ -112,7 +112,7 @@ Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 
 The language of the document is given as an ISO-639-2 (B) language
 code in the `lang_code` column. The `lang_score` column contains
-the confidence value ($0 \le \text{lang_score} 1$). If the index is
+the confidence value ($0 \le \text{lang\_score} 1$). If the index is
 in [Apache Arrow] format, which is the default, the two columns are
 combined into one column `lang`. Language detection is performed with
 [lingua] in high-accuracy mode.
