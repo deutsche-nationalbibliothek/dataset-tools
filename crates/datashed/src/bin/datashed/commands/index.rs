@@ -99,34 +99,31 @@ impl Index {
 
         let mut columns = vec![];
 
-        columns.push(Column::new("path".into(), paths));
-        columns.push(Column::new("hash".into(), hashes));
+        columns.push(col!("path", paths));
+        columns.push(col!("hash", hashes));
 
         if let Some(name) = self.filename_column {
-            columns.push(Column::new(name.into(), names));
+            columns.push(col!(name, names));
         }
 
-        columns.push(Column::new("size".into(), sizes));
+        columns.push(col!("size", sizes));
 
-        if is_arrow {
-            let lang = DataFrame::new(vec![
-                Column::new("lang_code".into(), lang_codes)
-                    .cast(&iso6392b_dtype())?,
-                Column::new("lang_score".into(), lang_scores),
-            ])?
-            .into_struct("lang".into());
+        let lang = DataFrame::new(vec![
+            col!("lang_code", lang_codes).cast(&iso6392b_dtype())?,
+            col!("lang_score", lang_scores),
+        ])?
+        .into_struct("lang".into());
 
-            columns.push(Column::new("lang".into(), lang));
-        } else {
-            columns.push(Column::new("lang_code".into(), lang_codes));
-            columns.push(Column::new("lang_score".into(), lang_scores));
+        columns.push(col!("lang", lang));
+        columns.push(col!("alpha", alphas));
+        columns.push(col!("mtime", mtimes));
+
+        let mut index = DataFrame::new(columns)?.lazy();
+        if !is_arrow {
+            index = unnest_index(index);
         }
 
-        columns.push(Column::new("alpha".into(), alphas));
-        columns.push(Column::new("mtime".into(), mtimes));
-
-        let mut df = DataFrame::new(columns)?
-            .lazy()
+        let mut df = index
             .select([col("*").shrink_dtype()])
             .sort(["path"], Default::default())
             .collect()?;

@@ -10,6 +10,14 @@ use polars::sql::SQLContext;
 use crate::cli::FilterOpts;
 use crate::prelude::bail;
 
+macro_rules! col {
+    ($name:expr, $values:expr) => {
+        Column::new($name.into(), $values)
+    };
+}
+
+pub(crate) use col;
+
 pub(crate) fn read_df<P: AsRef<Path>>(
     path: P,
 ) -> DatashedResult<DataFrame> {
