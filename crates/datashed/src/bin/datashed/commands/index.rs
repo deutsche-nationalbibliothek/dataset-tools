@@ -109,8 +109,8 @@ impl Index {
         columns.push(col!("size", sizes));
 
         let lang = DataFrame::new(vec![
-            col!("lang_code", lang_codes).cast(&iso6392b_dtype())?,
-            col!("lang_score", lang_scores),
+            col!("code", lang_codes).cast(&iso6392b_dtype())?,
+            col!("score", lang_scores),
         ])?
         .into_struct("lang".into());
 
