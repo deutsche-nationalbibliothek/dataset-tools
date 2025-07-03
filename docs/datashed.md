@@ -117,7 +117,7 @@ that have the same `hash` value are very likely to have the same content
 and should be treated as duplicates.
 
 
-### Document Type
+#### Document Type
 
 The document type is in the column `doctype`. The following types are
 distinguished: _toc_, _review_, and _other_. The document type is either
