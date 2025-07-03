@@ -108,6 +108,14 @@ Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 
 ### Metadata and Metrics
 
+#### Hash
+
+The `hash` column contains a six-byte hexadecimal hash of the document.
+The hash value is derived from the document's SHA256 checksum, by taking
+the first six bytes and format them as a hexadecimal string. Documents
+that have the same hash value are very likely to have the same content
+and should be treated as duplicates.
+
 #### Language
 
 The language of the document is given as an ISO-639-2 (B) language
@@ -136,15 +144,6 @@ and otherwise 0. The range of the function is $[0, 1]$ and the score of
 an empty  document is defined to $0.0$.
 
 A very low `alpha` value may indicate a corrupt document.
-
-
-#### Hash
-
-The `hash` column contains a six-byte hexadecimal hash of the document.
-The hash value is derived from the document's SHA256 checksum, by taking
-the first six bytes and format them as a hexadecimal string. Documents
-that have the same hash value are very likely to have the same content
-and should be treated as duplicates.
 
 
 ## Vocabulary
