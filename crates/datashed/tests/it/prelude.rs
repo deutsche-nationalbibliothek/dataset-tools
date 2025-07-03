@@ -7,6 +7,7 @@ pub(crate) type TestResult = anyhow::Result<()>;
 
 pub(crate) use assert_cmd::Command;
 pub(crate) use assert_fs::TempDir;
+pub(crate) use assert_fs::prelude::*;
 pub(crate) use datashed::{Config, Datashed};
 pub(crate) use polars::prelude::*;
 pub(crate) use predicates::prelude::*;

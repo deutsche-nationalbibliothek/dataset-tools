@@ -7,6 +7,7 @@ mod init;
 mod lfreq;
 mod prelude;
 mod restore;
+mod summary;
 mod verify;
 mod version;
 mod vocab;

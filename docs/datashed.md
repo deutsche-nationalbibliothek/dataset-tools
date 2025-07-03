@@ -265,6 +265,32 @@ path,hash,total,a,b,c
 1/zbw.txt,a50f7e55,118,59,19,40
 ```
 
+## Summary Statistics
+
+The `summary` command can be used to create a summary statistics of
+a datashed. The output is in JSON format.
+
+```console
+$ datashed summary | jq .
+{
+  "docs": 3,
+  "size": 3138
+}
+```
+
+The command is suitable for being integrated into a DVC pipeline. This
+makes it possible to compare the change in inventory among different
+ingest runs.
+
+```json
+stages:
+  summary:
+    cmd:
+      - datashed summary -o summary.json
+    metrics:
+      - summary.json
+```
+
 ## Data Verification
 
 The `verify` command is used to ensure that the index and the documents
