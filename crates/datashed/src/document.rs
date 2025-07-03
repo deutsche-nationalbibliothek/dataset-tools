@@ -44,7 +44,7 @@ pub fn sha256<T: AsRef<[u8]>>(data: T) -> String {
     hasher.update(data);
 
     let hash = hasher.finalize();
-    hash.iter().take(4).fold(String::new(), |mut out, b| {
+    hash.iter().take(6).fold(String::new(), |mut out, b| {
         let _ = write!(out, "{b:02x}");
         out
     })

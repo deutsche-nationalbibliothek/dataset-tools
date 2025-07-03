@@ -189,7 +189,7 @@ fn grep_allow_list() -> TestResult {
 
     // PATH + HASH
     let allow = datashed_dir.child("tmp/ALLOW.csv");
-    allow.write_str("path,hash\n0/dnb.txt,1fbf52b4")?;
+    allow.write_str("path,hash\n0/dnb.txt,1fbf52b4febc")?;
 
     let mut cmd = Command::cargo_bin("datashed")?;
     let assert = cmd
@@ -292,7 +292,7 @@ fn grep_deny_list() -> TestResult {
 
     // PATH + HASH
     let deny = datashed_dir.child("tmp/DENY.csv");
-    deny.write_str("path,hash\n0/dnb.txt,1fbf52b4")?;
+    deny.write_str("path,hash\n0/dnb.txt,1fbf52b4febc")?;
 
     let mut cmd = Command::cargo_bin("datashed")?;
     let assert = cmd
