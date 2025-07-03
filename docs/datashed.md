@@ -290,7 +290,7 @@ The command is suitable for being integrated into a DVC pipeline. This
 makes it possible to compare the change in inventory among different
 ingest runs.
 
-```json
+```yaml
 stages:
   summary:
     cmd:
