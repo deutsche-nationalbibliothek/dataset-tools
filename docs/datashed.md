@@ -116,6 +116,15 @@ the first six bytes and format them as a hexadecimal string. Documents
 that have the same `hash` value are very likely to have the same content
 and should be treated as duplicates.
 
+
+#### Document Type
+
+The document type is in the column `doctype`. The following types are
+distinguished: _toc_, _review_, and _other_. The document type is either
+derived from the directory or optionally from the metadata. If the
+document type cannot be determined, the type _other_ is automatically
+set.
+
 #### Language
 
 The language of the document is given as an ISO-639-2 (B) language

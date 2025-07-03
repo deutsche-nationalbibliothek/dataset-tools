@@ -10,12 +10,13 @@ use bstr::ByteSlice;
 use lingua::{Language, LanguageDetector, LanguageDetectorBuilder};
 use sha2::{Digest, Sha256};
 
-use crate::DatashedResult;
+use crate::{DatashedResult, Doctype};
 
 pub struct Document {
     pub path: String,
     pub hash: String,
     pub name: String,
+    pub doctype: Doctype,
     pub lang_code: Option<String>,
     pub lang_score: Option<f64>,
     pub size: u64,
@@ -115,7 +116,7 @@ impl Document {
         let content = data.to_str().unwrap();
 
         let relpath = path
-            .strip_prefix(data_dir)
+            .strip_prefix(&data_dir)
             .expect("strip prefix")
             .to_str()
             .expect("valid path")
@@ -141,11 +142,16 @@ impl Document {
                 (None, None)
             };
 
+        let doctype =
+            Doctype::try_from(path.strip_prefix(&data_dir).unwrap())
+                .unwrap_or_default();
+
         Ok((
             Self {
                 path: relpath,
                 hash: sha256(&data),
                 name,
+                doctype,
                 lang_code,
                 lang_score,
                 size: metadata.st_size(),

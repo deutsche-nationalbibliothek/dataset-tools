@@ -63,6 +63,15 @@ where
         assert_eq!(filenames[2], Some("zbw"));
     }
 
+    // DOCTYPES
+    let doctypes = columns[idx].cast(&DataType::String)?;
+    let doctypes: Vec<_> = doctypes.str()?.iter().collect();
+    idx += 1;
+
+    assert_eq!(doctypes[0], Some("other"));
+    assert_eq!(doctypes[1], Some("other"));
+    assert_eq!(doctypes[2], Some("other"));
+
     // SIZE
     let sizes: Vec<_> = columns[idx]
         .cast(&DataType::UInt64)?
@@ -236,7 +245,6 @@ fn index_output_csv() -> TestResult {
 
     check_index(datashed_dir.join("index.csv"), false)?;
     datashed_dir.close()?;
-
     Ok(())
 }
 
