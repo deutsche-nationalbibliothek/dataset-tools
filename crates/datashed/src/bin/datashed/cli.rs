@@ -40,6 +40,7 @@ pub(crate) enum Command {
     Init(Init),
     Lfreq(Lfreq),
     Restore(Restore),
+    Summary(Summary),
     Verify(Verify),
     Version(Version),
     Vocab(Vocab),
