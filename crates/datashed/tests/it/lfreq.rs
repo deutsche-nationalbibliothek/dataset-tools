@@ -17,9 +17,15 @@ fn lfreq_default() -> TestResult {
         .success()
         .code(0)
         .stdout(predicates::str::contains("path,hash,total,a,b,c"))
-        .stdout(predicates::str::contains("0/dnb.txt,1fbf52b4,633,38"))
-        .stdout(predicates::str::contains("0/tib.txt,809239e5,1192,56"))
-        .stdout(predicates::str::contains("1/zbw.txt,a50f7e55,742,59"))
+        .stdout(predicates::str::contains(
+            "0/dnb.txt,1fbf52b4febc,633,38",
+        ))
+        .stdout(predicates::str::contains(
+            "0/tib.txt,809239e5941a,1192,56",
+        ))
+        .stdout(predicates::str::contains(
+            "1/zbw.txt,a50f7e557482,742,59",
+        ))
         .stderr(predicates::str::is_empty());
 
     datashed_dir.close()?;
@@ -102,9 +108,9 @@ fn lfreq_alphabet() -> TestResult {
         .success()
         .code(0)
         .stdout(predicates::str::contains("path,hash,total,a,b,ü"))
-        .stdout(predicates::str::contains("1fbf52b4,68,38,26,4"))
-        .stdout(predicates::str::contains("809239e5,94,56,35,3"))
-        .stdout(predicates::str::contains("a50f7e55,79,59,19,1"))
+        .stdout(predicates::str::contains("1fbf52b4febc,68,38,26,4"))
+        .stdout(predicates::str::contains("809239e5941a,94,56,35,3"))
+        .stdout(predicates::str::contains("a50f7e557482,79,59,19,1"))
         .stderr(predicates::str::is_empty());
 
     // empty alphabet
@@ -117,9 +123,9 @@ fn lfreq_alphabet() -> TestResult {
         .success()
         .code(0)
         .stdout(predicates::str::contains("path,hash,total"))
-        .stdout(predicates::str::contains("0/dnb.txt,1fbf52b4,0"))
-        .stdout(predicates::str::contains("0/tib.txt,809239e5,0"))
-        .stdout(predicates::str::contains("1/zbw.txt,a50f7e55,0"))
+        .stdout(predicates::str::contains("0/dnb.txt,1fbf52b4febc,0"))
+        .stdout(predicates::str::contains("0/tib.txt,809239e5941a,0"))
+        .stdout(predicates::str::contains("1/zbw.txt,a50f7e557482,0"))
         .stderr(predicates::str::is_empty());
 
     datashed_dir.close()?;
@@ -155,7 +161,7 @@ fn lfreq_index() -> TestResult {
         .success()
         .code(0)
         .stdout(predicates::ord::eq(
-            "path,hash,total,a,b\n1/zbw.txt,a50f7e55,78,59,19\n",
+            "path,hash,total,a,b\n1/zbw.txt,a50f7e557482,78,59,19\n",
         ))
         .stderr(predicates::str::is_empty());
 
@@ -180,7 +186,7 @@ fn lfreq_allow_list() -> TestResult {
         .success()
         .code(0)
         .stdout(predicates::ord::eq(
-            "path,hash,total,a,b\n0/dnb.txt,1fbf52b4,64,38,26\n",
+            "path,hash,total,a,b\n0/dnb.txt,1fbf52b4febc,64,38,26\n",
         ))
         .stderr(predicates::str::is_empty());
 
@@ -205,7 +211,7 @@ fn lfreq_deny_list() -> TestResult {
         .success()
         .code(0)
         .stdout(predicates::ord::eq(
-            "path,hash,total,a,b\n0/dnb.txt,1fbf52b4,64,38,26\n",
+            "path,hash,total,a,b\n0/dnb.txt,1fbf52b4febc,64,38,26\n",
         ))
         .stderr(predicates::str::is_empty());
 
@@ -227,7 +233,7 @@ fn lfreq_where() -> TestResult {
         .success()
         .code(0)
         .stdout(predicates::ord::eq(
-            "path,hash,total,a,b\n0/dnb.txt,1fbf52b4,64,38,26\n",
+            "path,hash,total,a,b\n0/dnb.txt,1fbf52b4febc,64,38,26\n",
         ))
         .stderr(predicates::str::is_empty());
 

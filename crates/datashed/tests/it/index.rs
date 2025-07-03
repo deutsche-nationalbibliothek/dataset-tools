@@ -31,7 +31,7 @@ where
 
     let df = df.sort(["path"], SortMultipleOptions::default())?;
     assert_eq!(df.height(), 3);
-    eprintln!("{df:?}");
+    // eprintln!("{df:?}");
 
     let columns = df.take_columns();
 
@@ -49,9 +49,9 @@ where
     let hashes: Vec<_> = columns[idx].str()?.iter().collect();
     idx += 1;
 
-    assert_eq!(hashes[0], Some("1fbf52b4"));
-    assert_eq!(hashes[1], Some("809239e5"));
-    assert_eq!(hashes[2], Some("a50f7e55"));
+    assert_eq!(hashes[0], Some("1fbf52b4febc"));
+    assert_eq!(hashes[1], Some("809239e5941a"));
+    assert_eq!(hashes[2], Some("a50f7e557482"));
 
     // FILENAME
     if filename_column {
