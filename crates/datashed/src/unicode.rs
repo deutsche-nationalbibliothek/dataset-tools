@@ -4,7 +4,9 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 use unicode_normalization::UnicodeNormalization;
 
-#[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
+#[derive(
+    Debug, Default, Copy, PartialEq, Clone, Serialize, Deserialize,
+)]
 #[serde(rename_all = "kebab-case")]
 pub enum NormalizationForm {
     #[default]

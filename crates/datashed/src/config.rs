@@ -22,6 +22,9 @@ pub struct Config {
     /// Runtime options.
     pub runtime: Option<Runtime>,
 
+    /// Doctype refinements.
+    pub refinements: Option<Refinements>,
+
     /// This structure should always be constructed using a public
     /// constructor or using the update syntax:
     ///
@@ -108,4 +111,9 @@ pub struct Runtime {
     /// Specifies the Unicode normalization of the data. If necessary,
     /// options are adapted to the corresponding normalized form.
     pub normalization: Option<NormalizationForm>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct Refinements {
+    pub doctype: Option<PathBuf>,
 }

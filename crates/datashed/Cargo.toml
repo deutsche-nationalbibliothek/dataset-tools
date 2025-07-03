@@ -16,8 +16,8 @@ path = "src/bin/datashed/main.rs"
 
 [features]
 default = ["performant"]
-performant = ["polars/cse"]
-nightly = ["polars/nightly", "hashbrown/nightly"]
+performant = ["polars/cse", "pica-record/performant"]
+nightly = ["polars/nightly", "hashbrown/nightly", "pica-record/nightly"]
 
 [dependencies]
 anyhow = { workspace = true }
@@ -28,6 +28,7 @@ flate2 = { workspace = true }
 hashbrown = { workspace = true }
 indicatif = { workspace = true }
 lingua = { workspace = true }
+pica-record = { workspace = true }
 polars = { workspace = true }
 rayon = { workspace = true }
 regex = { workspace = true }
