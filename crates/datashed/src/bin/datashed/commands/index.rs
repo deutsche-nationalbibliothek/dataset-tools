@@ -1,7 +1,7 @@
 use std::ffi::OsStr;
 use std::path::PathBuf;
 
-use datashed::{Document, iso6392b_dtype};
+use datashed::{Document, doctype_dtype, iso6392b_dtype};
 use indicatif::ParallelProgressIterator;
 use walkdir::WalkDir;
 
@@ -80,6 +80,7 @@ impl Index {
         let mut paths: Vec<String> = vec![];
         let mut hashes: Vec<String> = vec![];
         let mut names: Vec<String> = vec![];
+        let mut doctypes: Vec<String> = vec![];
         let mut lang_codes: Vec<Option<String>> = vec![];
         let mut lang_scores: Vec<Option<f64>> = vec![];
         let mut sizes: Vec<u64> = vec![];
@@ -90,6 +91,7 @@ impl Index {
             paths.push(doc.path);
             hashes.push(doc.hash);
             names.push(doc.name);
+            doctypes.push(doc.doctype.to_string());
             lang_codes.push(doc.lang_code);
             lang_scores.push(doc.lang_score);
             sizes.push(doc.size);
@@ -106,6 +108,7 @@ impl Index {
             columns.push(col!(name, names));
         }
 
+        columns.push(col!("doctype", doctypes).cast(&doctype_dtype())?);
         columns.push(col!("size", sizes));
 
         let lang = DataFrame::new(vec![

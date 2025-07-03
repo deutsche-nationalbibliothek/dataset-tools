@@ -1,5 +1,7 @@
 use polars::prelude::*;
 
+use crate::doctype::DOCTYPES;
+
 const ISO639_CODES: [&str; 506] = [
     "aar", "abk", "ace", "ach", "ada", "ady", "afa", "afh", "afr",
     "ain", "aka", "akk", "alb", "ale", "alg", "alt", "amh", "ang",
@@ -62,6 +64,13 @@ const ISO639_CODES: [&str; 506] = [
 
 pub fn iso6392b_dtype() -> DataType {
     let s = Series::new("code".into(), ISO639_CODES);
+    let categories =
+        s.str().unwrap().downcast_iter().next().unwrap().clone();
+    create_enum_dtype(categories)
+}
+
+pub fn doctype_dtype() -> DataType {
+    let s = Series::new("code".into(), DOCTYPES);
     let categories =
         s.str().unwrap().downcast_iter().next().unwrap().clone();
     create_enum_dtype(categories)
