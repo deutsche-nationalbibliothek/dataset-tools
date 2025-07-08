@@ -1,8 +1,12 @@
 use std::ffi::OsStr;
+use std::fs::read_to_string;
 use std::path::PathBuf;
 
-use datashed::{Document, doctype_dtype, iso6392b_dtype};
+use datashed::{
+    Document, Refinements, doctype_dtype, iso6392b_dtype, translit,
+};
 use indicatif::ParallelProgressIterator;
+use pica_record::prelude::*;
 use walkdir::WalkDir;
 
 use crate::prelude::*;
@@ -19,7 +23,12 @@ pub(crate) struct Index {
 
     #[command(flatten, next_help_heading = "Common options")]
     pub(crate) common: CommonOpts,
+
+    metadata: Option<PathBuf>,
 }
+
+const PBAR_METADATA: &str = "Processing metadata: {human_pos} | \
+        elapsed: {elapsed_precise}{msg}";
 
 const PBAR_COLLECT: &str = "Collecting documents: {human_pos} | \
         elapsed: {elapsed_precise}{msg}";
@@ -32,6 +41,45 @@ impl Index {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
         let base_dir = datashed.base_dir();
+        let config = datashed.config()?;
+
+        let mut doctype_refinements = Refinements::default();
+
+        if let Some(refinements) = config.refinements {
+            if let Some(path) = refinements.doctype {
+                let mut content = read_to_string(path)?;
+
+                if let Some(ref runtime) = config.runtime {
+                    content = translit(runtime.normalization)(content);
+                }
+
+                doctype_refinements =
+                    toml_edit::de::from_str(&content)?;
+            }
+        }
+
+        if let Some(path) = self.metadata {
+            let pbar = ProgressBarBuilder::new(
+                PBAR_METADATA,
+                self.common.quiet,
+            )
+            .build();
+
+            let mut reader = ReaderBuilder::new().from_path(path)?;
+            while let Some(result) = reader.next_byte_record() {
+                let Ok(ref record) = result else {
+                    continue;
+                };
+
+                doctype_refinements
+                    .process_record(record, &Default::default());
+                pbar.inc(1);
+            }
+
+            pbar.finish_using_style();
+        }
+
+        let mut doctype_map = doctype_refinements.finish();
 
         let is_arrow = if let Some(ref path) = self.output {
             path.extension()
@@ -88,10 +136,17 @@ impl Index {
         let mut mtimes: Vec<u64> = vec![];
 
         for doc in docs.into_iter() {
+            let name = doc.name;
+
+            let doctype = doctype_map
+                .remove(&name)
+                .unwrap_or(doc.doctype)
+                .to_string();
+
             paths.push(doc.path);
             hashes.push(doc.hash);
-            names.push(doc.name);
-            doctypes.push(doc.doctype.to_string());
+            names.push(name);
+            doctypes.push(doctype);
             lang_codes.push(doc.lang_code);
             lang_scores.push(doc.lang_score);
             sizes.push(doc.size);

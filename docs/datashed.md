@@ -106,6 +106,32 @@ Collecting documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
+In order to derive the document type from metadata, a PICA+ dump
+can optionally be specified. The rule file must be specified in the
+`refinements` section:
+
+```toml
+[refinements]
+doctype = "doctype.toml"
+```
+A rule is an if-then expression where the `if` part must be a valid
+record matcher and the `then` part must contain a valid document type.
+
+```toml
+refinements = [
+  { if = '#013D == 1 && 013D.9 == "040497127"', then = 'review' },
+  ...
+]
+```
+
+```console
+$ datashed index --filename-column "ppn" DUMP.dat.gz
+Processing metadata: 100 | elapsed: 00:00:00, done.
+Collecting documents: 3 | elapsed: 00:00:00, done.
+Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
+```
+
+
 ### Metadata and Metrics
 
 #### Hash
