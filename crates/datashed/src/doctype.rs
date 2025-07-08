@@ -140,9 +140,9 @@ impl Refinements {
     #[inline]
     pub fn finish(mut self) -> HashMap<String, Doctype> {
         for refinement in self.refinements.iter() {
-            let inhertance = refinement.finish();
+            let inheritance = refinement.finish();
 
-            for (src, dst) in inhertance.iter() {
+            for (src, dst) in inheritance.iter() {
                 if let Some(doctype) = self.map.get(dst) {
                     self.map.insert(src.to_owned(), doctype.to_owned());
                 }
