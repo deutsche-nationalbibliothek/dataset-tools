@@ -243,9 +243,7 @@ impl MatchExpr {
             }
         }
 
-        let Some(head) = record.first(&self.head, options) else {
-            return None;
-        };
+        let head = record.first(&self.head, options)?;
 
         for arm in self.cases.iter() {
             if let Some(ref guard) = arm.guard {
