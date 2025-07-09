@@ -132,6 +132,9 @@ if = '017A.a == "nt"'
 then = 'musical-notation'
 ```
 
+The document type is derived from the metadata if a corresponding PICA+
+dump is specified as a comma line option:
+
 ```console
 $ datashed index --filename-column "ppn" DUMP.dat.gz
 Processing metadata: 100 | elapsed: 00:00:00, done.
