@@ -114,15 +114,26 @@ can optionally be specified. The rule file must be specified in the
 [refinements]
 doctype = "doctype.toml"
 ```
-A rule is an if-then expression where the `if` part must be a valid
-record matcher and the `then` part must contain a valid document type.
+
+A refinement can either be formulated as an `if-then` or as a `match`
+expression:
 
 ```toml
-refinements = [
-  { if = '#013D == 1 && 013D.9 == "040497127"', then = 'review' },
-  ...
+[[refinements]]
+match = '037C.d'
+cases = [
+  { pattern = 'Bachelorarbeit', then = 'bachelor-thesis' },
+  { pattern = 'Dissertation', then = 'doctoral-thesis' },
+  { pattern = 'Masterarbeit', then = 'master-thesis' },
 ]
+
+[[refinements]]
+if = '017A.a == "nt"'
+then = 'musical-notation'
 ```
+
+The document type is derived from the metadata if a corresponding PICA+
+dump is specified as a comma line option:
 
 ```console
 $ datashed index --filename-column "ppn" DUMP.dat.gz
@@ -142,14 +153,10 @@ the first six bytes and format them as a hexadecimal string. Documents
 that have the same `hash` value are very likely to have the same content
 and should be treated as duplicates.
 
-
 #### Document Type
 
-The document type is in the column `doctype`. The following types are
-distinguished: _toc_, _review_, and _other_. The document type is either
-derived from the directory or optionally from the metadata. If the
-document type cannot be determined, the type _other_ is automatically
-set.
+The document type is specified in the `doctype` column. It can either be
+derived from metadata or from the path of the document.
 
 #### Language
 
