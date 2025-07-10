@@ -33,6 +33,7 @@ pub(crate) struct Args {
 #[derive(Debug, Subcommand)]
 pub(crate) enum Command {
     Archive(Archive),
+    Bibrefs(Bibrefs),
     Completions(Completions),
     Config(Config),
     Grep(Grep),

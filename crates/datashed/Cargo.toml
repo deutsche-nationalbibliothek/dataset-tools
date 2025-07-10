@@ -27,6 +27,7 @@ clap = { workspace = true }
 flate2 = { workspace = true }
 hashbrown = { workspace = true }
 indicatif = { workspace = true }
+isbn = { workspace = true }
 lingua = { workspace = true }
 pica-record = { workspace = true }
 polars = { workspace = true }

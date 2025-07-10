@@ -17,6 +17,7 @@ bstr = { version = "1.12" }
 clap_complete = { version = "4.5" }
 hashbrown = { version = "0.15" }
 indicatif = { version = "0.18", features = ["rayon"] }
+isbn = { version = "0.4" }
 lingua = { version = "1.7" }
 predicates = { version = "3.1" }
 rayon = { version = "1.10" }
