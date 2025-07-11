@@ -7,11 +7,12 @@ use pica_record::path::{Path as PicaPath, PathExt};
 use pica_record::prelude::*;
 use serde::{Deserialize, Serialize};
 
-pub(crate) const DOCTYPES: [&str; 12] = [
+pub(crate) const DOCTYPES: [&str; 13] = [
     "blurb",
     "musical-notation",
     "other",
     "statistical-report",
+    "bibliography",
     "toc",
     // theses
     "bachelor-thesis",
@@ -28,6 +29,7 @@ pub(crate) const DOCTYPES: [&str; 12] = [
 #[serde(rename_all = "kebab-case")]
 pub enum Doctype {
     Blurb,
+    Bibliography,
     Other,
     Toc,
 
@@ -70,6 +72,7 @@ impl Display for Doctype {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Blurb => write!(f, "blurb"),
+            Self::Bibliography => write!(f, "bibliography"),
             Self::Other => write!(f, "other"),
             Self::Toc => write!(f, "toc"),
 
