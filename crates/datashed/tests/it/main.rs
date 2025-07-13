@@ -1,4 +1,5 @@
 mod archive;
+mod bibrefs;
 mod completions;
 mod config;
 mod grep;
