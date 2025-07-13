@@ -2,6 +2,7 @@ use std::fmt::{self, Display};
 use std::path::{Component, Path};
 use std::str::FromStr;
 
+use bstr::ByteSlice;
 use hashbrown::HashMap;
 use pica_record::path::{Path as PicaPath, PathExt};
 use pica_record::prelude::*;
@@ -246,7 +247,8 @@ impl MatchExpr {
             }
         }
 
-        let head = record.first(&self.head, options)?;
+        let values =
+            record.path(&self.head, options).collect::<Vec<_>>();
 
         for arm in self.cases.iter() {
             if let Some(ref guard) = arm.guard {
@@ -257,9 +259,13 @@ impl MatchExpr {
 
             let result = match arm.pattern {
                 MatchPattern::Literal(ref lit) if lit == "_" => true,
-                MatchPattern::Literal(ref lit) => head == lit,
+                MatchPattern::Literal(ref lit) => {
+                    values.contains(&lit.as_bytes().as_bstr())
+                }
                 MatchPattern::List(ref list) => {
-                    list.iter().any(|item| item == head)
+                    list.iter().any(|item| {
+                        values.contains(&item.as_bytes().as_bstr())
+                    })
                 }
             };
 
@@ -313,6 +319,7 @@ impl IfExpr {
         }
     }
 
+    #[inline(always)]
     pub fn finish(&self) -> &HashMap<String, String> {
         &self.inheritance
     }
