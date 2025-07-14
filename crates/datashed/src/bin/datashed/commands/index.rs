@@ -138,9 +138,10 @@ impl Index {
         for doc in docs.into_iter() {
             let name = doc.name;
 
-            let doctype = doctype_map
-                .remove(&name)
-                .unwrap_or(doc.doctype)
+            let doctype = doc
+                .doctype
+                .or(doctype_map.remove(&name))
+                .unwrap_or_default()
                 .to_string();
 
             paths.push(doc.path);
