@@ -5,7 +5,7 @@ use bstr::ByteSlice;
 use isbn::Isbn;
 use regex::bytes::Regex;
 
-use super::{Kind, Matcher, Reference};
+use super::{Matcher, Reference, ReferenceType};
 
 fn isbn_re() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
@@ -44,7 +44,7 @@ impl Matcher for IsbnMatcher {
                     };
 
                     Some(Reference {
-                        kind: Kind::Isbn,
+                        reftype: ReferenceType::Isbn,
                         start: m.start(),
                         end: m.end(),
                         value,
@@ -71,7 +71,7 @@ mod tests {
         assert_eq!(
             matches[0],
             Reference {
-                kind: Kind::Isbn,
+                reftype: ReferenceType::Isbn,
                 value: "9780596528126".into(),
                 start: 0,
                 end: 18,
@@ -84,7 +84,7 @@ mod tests {
         assert_eq!(
             matches[0],
             Reference {
-                kind: Kind::Isbn,
+                reftype: ReferenceType::Isbn,
                 value: "978-0-596-52812-6".into(),
                 start: 0,
                 end: 22,
@@ -101,7 +101,7 @@ mod tests {
         assert_eq!(
             matches[0],
             Reference {
-                kind: Kind::Isbn,
+                reftype: ReferenceType::Isbn,
                 value: "978-0-596-52812-6".into(),
                 start: 0,
                 end: 22,
@@ -118,7 +118,7 @@ mod tests {
         assert_eq!(
             matches[0],
             Reference {
-                kind: Kind::Isbn,
+                reftype: ReferenceType::Isbn,
                 value: "3518293036".into(),
                 start: 0,
                 end: 15,
@@ -131,7 +131,7 @@ mod tests {
         assert_eq!(
             matches[0],
             Reference {
-                kind: Kind::Isbn,
+                reftype: ReferenceType::Isbn,
                 value: "3-518-29303-6".into(),
                 start: 0,
                 end: 18,
@@ -148,7 +148,7 @@ mod tests {
         assert_eq!(
             matches[0],
             Reference {
-                kind: Kind::Isbn,
+                reftype: ReferenceType::Isbn,
                 value: "3-518-29303-6".into(),
                 start: 2,
                 end: 17,

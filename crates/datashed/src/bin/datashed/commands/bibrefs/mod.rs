@@ -14,18 +14,18 @@ const PBAR_PROCESS: &str = "Processing documents: {human_pos} ({percent}%) | \
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct Reference {
-    kind: Kind,
+    reftype: ReferenceType,
     value: String,
     start: usize,
     end: usize,
 }
 
 #[derive(Debug, PartialEq)]
-pub(crate) enum Kind {
+pub(crate) enum ReferenceType {
     Isbn,
 }
 
-impl Display for Kind {
+impl Display for ReferenceType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Isbn => write!(f, "isbn"),
@@ -56,7 +56,7 @@ pub(crate) struct Bibrefs {
 struct Row {
     path: String,
     hash: String,
-    kind: Kind,
+    reftype: ReferenceType,
     value: String,
     start: usize,
     end: usize,
@@ -92,7 +92,7 @@ impl Bibrefs {
                     .map(|m| Row {
                         path: path.to_string(),
                         hash: hash.to_string(),
-                        kind: m.kind,
+                        reftype: m.reftype,
                         value: m.value,
                         start: m.start,
                         end: m.end,
@@ -103,7 +103,7 @@ impl Bibrefs {
 
         let mut paths = vec![];
         let mut hashes = vec![];
-        let mut kinds = vec![];
+        let mut reftypes = vec![];
         let mut values = vec![];
         let mut starts = vec![];
         let mut ends = vec![];
@@ -111,7 +111,7 @@ impl Bibrefs {
         for row in rows.into_iter() {
             paths.push(row.path);
             hashes.push(row.hash);
-            kinds.push(row.kind.to_string());
+            reftypes.push(row.reftype.to_string());
             values.push(row.value);
             starts.push(row.start as u64);
             ends.push(row.end as u64);
@@ -120,7 +120,7 @@ impl Bibrefs {
         let mut columns = vec![
             col!("path", paths),
             col!("hash", hashes),
-            col!("kind", kinds),
+            col!("reftype", reftypes),
             col!("value", values),
         ];
 
