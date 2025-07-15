@@ -16,7 +16,7 @@ pub struct Document {
     pub path: String,
     pub hash: String,
     pub name: String,
-    pub doctype: Doctype,
+    pub doctype: Option<Doctype>,
     pub lang_code: Option<String>,
     pub lang_score: Option<f64>,
     pub size: u64,
@@ -144,7 +144,7 @@ impl Document {
 
         let doctype =
             Doctype::try_from(path.strip_prefix(&data_dir).unwrap())
-                .unwrap_or_default();
+                .ok();
 
         Ok((
             Self {
