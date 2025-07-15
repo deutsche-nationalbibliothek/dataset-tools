@@ -21,7 +21,9 @@ fn bibrefs_default() -> TestResult {
     assert
         .success()
         .code(0)
-        .stdout(predicates::ord::eq("path,hash,kind,value,start,end\n"))
+        .stdout(predicates::ord::eq(
+            "path,hash,reftype,value,start,end\n",
+        ))
         .stderr(predicates::str::is_empty());
 
     Ok(())
@@ -120,10 +122,7 @@ fn bibrefs_output_ipc() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let df = IpcReader::new(File::open(output)?)
-        .finish()?
-        .unnest(["span"])?;
-
+    let df = IpcReader::new(File::open(output)?).finish()?;
     assert_eq!(df.height(), 1);
 
     let paths: Vec<_> = df.column("path")?.str()?.iter().collect();
@@ -179,7 +178,7 @@ fn bibrefs_isbn() -> TestResult {
         .success()
         .code(0)
         .stdout(predicates::ord::eq(
-            "path,hash,kind,value,start,end\n\
+            "path,hash,reftype,value,start,end\n\
             0/dnb.txt,2bd6ab7dfafa,isbn,978-3-933641-89-2,166,188\n",
         ))
         .stderr(predicates::str::is_empty());

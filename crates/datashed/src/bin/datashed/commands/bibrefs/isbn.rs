@@ -28,9 +28,9 @@ pub struct IsbnMatcher {
 }
 
 impl Matcher for IsbnMatcher {
-    fn matches<T: AsRef<[u8]>>(&self, data: T) -> Vec<Reference> {
+    fn matches(&self, data: &[u8]) -> Vec<Reference> {
         isbn_re()
-            .captures_iter(data.as_ref())
+            .captures_iter(data)
             .filter_map(|caps| {
                 let m = caps.get(0).unwrap();
                 let (_, [value]) = caps.extract();
@@ -65,7 +65,7 @@ mod tests {
     fn test_isbn13() {
         let isbn = IsbnMatcher::default();
 
-        let matches = isbn.matches("ISBN 9780596528126");
+        let matches = isbn.matches(b"ISBN 9780596528126");
         assert_eq!(matches.len(), 1);
 
         assert_eq!(
@@ -78,7 +78,7 @@ mod tests {
             }
         );
 
-        let matches = isbn.matches("ISBN 978-0-596-52812-6");
+        let matches = isbn.matches(b"ISBN 978-0-596-52812-6");
         assert_eq!(matches.len(), 1);
 
         assert_eq!(
@@ -95,7 +95,7 @@ mod tests {
     #[test]
     fn test_isbn13_normalize() {
         let isbn = IsbnMatcher { normalize: true };
-        let matches = isbn.matches("ISBN 978-0-596-52812-6");
+        let matches = isbn.matches(b"ISBN 978-0-596-52812-6");
         assert_eq!(matches.len(), 1);
 
         assert_eq!(
@@ -112,7 +112,7 @@ mod tests {
     #[test]
     fn test_isbn10() {
         let isbn = IsbnMatcher::default();
-        let matches = isbn.matches("ISBN 3518293036");
+        let matches = isbn.matches(b"ISBN 3518293036");
         assert_eq!(matches.len(), 1);
 
         assert_eq!(
@@ -125,7 +125,7 @@ mod tests {
             }
         );
 
-        let matches = isbn.matches("ISBN 3-518-29303-6");
+        let matches = isbn.matches(b"ISBN 3-518-29303-6");
         assert_eq!(matches.len(), 1);
 
         assert_eq!(
@@ -142,7 +142,7 @@ mod tests {
     #[test]
     fn test_isbn10_normalize() {
         let isbn = IsbnMatcher { normalize: true };
-        let matches = isbn.matches("  ISBN 3518293036");
+        let matches = isbn.matches(b"  ISBN 3518293036");
         assert_eq!(matches.len(), 1);
 
         assert_eq!(

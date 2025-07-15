@@ -3,11 +3,13 @@ use std::fs;
 use std::path::PathBuf;
 
 use isbn::IsbnMatcher;
+use issn::IssnMatcher;
 
 use crate::cli::FilterOpts;
 use crate::prelude::*;
 
 mod isbn;
+mod issn;
 
 const PBAR_PROCESS: &str = "Processing documents: {human_pos} ({percent}%) | \
         elapsed: {elapsed_precise}{msg}";
@@ -23,23 +25,29 @@ pub(crate) struct Reference {
 #[derive(Debug, PartialEq)]
 pub(crate) enum ReferenceType {
     Isbn,
+    Issn,
 }
 
 impl Display for ReferenceType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Isbn => write!(f, "isbn"),
+            Self::Issn => write!(f, "issn"),
         }
     }
 }
 
-pub(crate) trait Matcher {
-    fn matches<T: AsRef<[u8]>>(&self, data: T) -> Vec<Reference>;
+pub(crate) trait Matcher: Sync {
+    fn matches(&self, data: &[u8]) -> Vec<Reference>;
 }
 
 /// Finds bibliographic identifiers in documents
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Bibrefs {
+    /// Whether to normalize bibliographic references or not.
+    #[arg(long)]
+    normalize: bool,
+
     /// Write the result to <filename>. By default output will be
     /// written in CSV format to stdout
     #[arg(short, long, value_name = "filename")]
@@ -76,7 +84,14 @@ impl Bibrefs {
                 .len(index.height() as u64)
                 .build();
 
-        let matchers = [IsbnMatcher { normalize: true }];
+        let matchers: &[Box<dyn Matcher>] = &[
+            Box::new(IsbnMatcher {
+                normalize: self.normalize,
+            }),
+            Box::new(IssnMatcher {
+                normalize: self.normalize,
+            }),
+        ];
 
         let rows = (0..index.height())
             .into_par_iter()
@@ -117,33 +132,20 @@ impl Bibrefs {
             ends.push(row.end as u64);
         }
 
-        let mut columns = vec![
+        let mut df = DataFrame::new(vec![
             col!("path", paths),
             col!("hash", hashes),
             col!("reftype", reftypes),
             col!("value", values),
-        ];
+            col!("start", starts),
+            col!("end", ends),
+        ])?
+        .lazy()
+        .sort(["path", "start"], Default::default())
+        .collect()?;
 
-        if is_arrow(&self.output).unwrap_or_default() {
-            columns.push(Column::new(
-                "span".into(),
-                DataFrame::new(vec![
-                    col!("start", starts),
-                    col!("end", ends),
-                ])?
-                .into_struct("span".into()),
-            ));
-        } else {
-            columns.push(col!("start", starts));
-            columns.push(col!("end", ends));
-        }
+        write_df(&mut df, self.output)?;
 
-        let mut result = DataFrame::new(columns)?
-            .lazy()
-            .sort(["path"], Default::default())
-            .collect()?;
-
-        write_df(&mut result, self.output)?;
         Ok(SUCCESS)
     }
 }
