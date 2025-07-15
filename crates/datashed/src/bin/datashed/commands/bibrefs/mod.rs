@@ -3,12 +3,14 @@ use std::fs;
 use std::path::PathBuf;
 
 use isbn::IsbnMatcher;
+use ismn::IsmnMatcher;
 use issn::IssnMatcher;
 
 use crate::cli::FilterOpts;
 use crate::prelude::*;
 
 mod isbn;
+mod ismn;
 mod issn;
 
 const PBAR_PROCESS: &str = "Processing documents: {human_pos} ({percent}%) | \
@@ -26,6 +28,7 @@ pub(crate) struct Reference {
 pub(crate) enum ReferenceType {
     Isbn,
     Issn,
+    Ismn,
 }
 
 impl Display for ReferenceType {
@@ -33,6 +36,7 @@ impl Display for ReferenceType {
         match self {
             Self::Isbn => write!(f, "isbn"),
             Self::Issn => write!(f, "issn"),
+            Self::Ismn => write!(f, "ismn"),
         }
     }
 }
@@ -89,6 +93,9 @@ impl Bibrefs {
                 normalize: self.normalize,
             }),
             Box::new(IssnMatcher {
+                normalize: self.normalize,
+            }),
+            Box::new(IsmnMatcher {
                 normalize: self.normalize,
             }),
         ];
