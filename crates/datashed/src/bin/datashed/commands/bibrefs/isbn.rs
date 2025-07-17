@@ -24,7 +24,13 @@ fn isbn_re() -> &'static Regex {
 
 #[derive(Debug, Default)]
 pub struct IsbnMatcher {
-    pub normalize: bool,
+    normalize: bool,
+}
+
+impl IsbnMatcher {
+    pub fn new(normalize: bool) -> Self {
+        Self { normalize }
+    }
 }
 
 impl Matcher for IsbnMatcher {

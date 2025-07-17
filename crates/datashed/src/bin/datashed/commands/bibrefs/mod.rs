@@ -2,16 +2,24 @@ use std::fmt::{self, Display};
 use std::fs;
 use std::path::PathBuf;
 
+use doi::DoiMatcher;
 use isbn::IsbnMatcher;
 use ismn::IsmnMatcher;
+use isni::IsniMatcher;
 use issn::IssnMatcher;
+use jel::JelMatcher;
+use orcid::OrcidMatcher;
 
 use crate::cli::FilterOpts;
 use crate::prelude::*;
 
+mod doi;
 mod isbn;
 mod ismn;
+mod isni;
 mod issn;
+mod jel;
+mod orcid;
 
 const PBAR_PROCESS: &str = "Processing documents: {human_pos} ({percent}%) | \
         elapsed: {elapsed_precise}{msg}";
@@ -29,6 +37,10 @@ pub(crate) enum ReferenceType {
     Isbn,
     Issn,
     Ismn,
+    Doi,
+    Orcid,
+    Isni,
+    Jel,
 }
 
 impl Display for ReferenceType {
@@ -37,8 +49,22 @@ impl Display for ReferenceType {
             Self::Isbn => write!(f, "isbn"),
             Self::Issn => write!(f, "issn"),
             Self::Ismn => write!(f, "ismn"),
+            Self::Doi => write!(f, "doi"),
+            Self::Orcid => write!(f, "orcid"),
+            Self::Isni => write!(f, "isni"),
+            Self::Jel => write!(f, "jel"),
         }
     }
+}
+
+pub fn reftype_dtype() -> DataType {
+    let s = Series::new(
+        "code".into(),
+        ["isbn", "issn", "ismn", "doi", "orcid", "isni", "jel"],
+    );
+    let categories =
+        s.str().unwrap().downcast_iter().next().unwrap().clone();
+    create_enum_dtype(categories)
 }
 
 pub(crate) trait Matcher: Sync {
@@ -51,6 +77,11 @@ pub(crate) struct Bibrefs {
     /// Whether to normalize bibliographic references or not.
     #[arg(long)]
     normalize: bool,
+
+    /// Only use those references that can be found in the Crossref
+    /// public data file.
+    #[arg(long)]
+    crossref: Option<PathBuf>,
 
     /// Write the result to <filename>. By default output will be
     /// written in CSV format to stdout
@@ -89,15 +120,13 @@ impl Bibrefs {
                 .build();
 
         let matchers: &[Box<dyn Matcher>] = &[
-            Box::new(IsbnMatcher {
-                normalize: self.normalize,
-            }),
-            Box::new(IssnMatcher {
-                normalize: self.normalize,
-            }),
-            Box::new(IsmnMatcher {
-                normalize: self.normalize,
-            }),
+            Box::new(DoiMatcher::new(self.normalize, self.crossref)),
+            Box::new(IsbnMatcher::new(self.normalize)),
+            Box::new(IssnMatcher::new(self.normalize)),
+            Box::new(IsmnMatcher::new(self.normalize)),
+            Box::new(OrcidMatcher::new(self.normalize)),
+            Box::new(IsniMatcher::new(self.normalize)),
+            Box::new(JelMatcher::new(self.normalize)),
         ];
 
         let rows = (0..index.height())
@@ -142,7 +171,7 @@ impl Bibrefs {
         let mut df = DataFrame::new(vec![
             col!("path", paths),
             col!("hash", hashes),
-            col!("reftype", reftypes),
+            col!("reftype", reftypes).cast(&reftype_dtype())?,
             col!("value", values),
             col!("start", starts),
             col!("end", ends),

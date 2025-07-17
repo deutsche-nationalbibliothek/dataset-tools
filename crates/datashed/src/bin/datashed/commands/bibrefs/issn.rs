@@ -15,7 +15,13 @@ fn issn_re() -> &'static Regex {
 
 #[derive(Debug, Default)]
 pub struct IssnMatcher {
-    pub normalize: bool,
+    normalize: bool,
+}
+
+impl IssnMatcher {
+    pub fn new(normalize: bool) -> Self {
+        Self { normalize }
+    }
 }
 
 const DIGITS: [char; 10] =
@@ -54,7 +60,7 @@ fn is_valid(issn: &str) -> bool {
 
     match issn.chars().last() {
         // be tolerant if the check digit is in lower case
-        Some(c) if c == 'x' => digit == 'X',
+        Some('x') => digit == 'X',
         Some(c) => c == digit,
         _ => false,
     }

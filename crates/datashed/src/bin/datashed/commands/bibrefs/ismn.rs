@@ -21,7 +21,13 @@ fn ismn_re() -> &'static Regex {
 
 #[derive(Debug, Default)]
 pub struct IsmnMatcher {
-    pub normalize: bool,
+    normalize: bool,
+}
+
+impl IsmnMatcher {
+    pub fn new(normalize: bool) -> Self {
+        Self { normalize }
+    }
 }
 
 fn is_valid(ismn: &str) -> bool {
@@ -47,7 +53,7 @@ fn is_valid(ismn: &str) -> bool {
         sum += 39;
     }
 
-    sum % 10 == 0
+    sum.is_multiple_of(10)
 }
 
 impl Matcher for IsmnMatcher {
