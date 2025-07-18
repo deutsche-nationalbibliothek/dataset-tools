@@ -9,6 +9,7 @@ use isni::IsniMatcher;
 use issn::IssnMatcher;
 use jel::JelMatcher;
 use orcid::OrcidMatcher;
+use udc::UdcMatcher;
 
 use crate::cli::FilterOpts;
 use crate::prelude::*;
@@ -20,6 +21,7 @@ mod isni;
 mod issn;
 mod jel;
 mod orcid;
+mod udc;
 
 const PBAR_PROCESS: &str = "Processing documents: {human_pos} ({percent}%) | \
         elapsed: {elapsed_precise}{msg}";
@@ -41,6 +43,7 @@ pub(crate) enum ReferenceType {
     Orcid,
     Isni,
     Jel,
+    Udc,
 }
 
 impl Display for ReferenceType {
@@ -53,6 +56,7 @@ impl Display for ReferenceType {
             Self::Orcid => write!(f, "orcid"),
             Self::Isni => write!(f, "isni"),
             Self::Jel => write!(f, "jel"),
+            Self::Udc => write!(f, "udc"),
         }
     }
 }
@@ -60,7 +64,7 @@ impl Display for ReferenceType {
 pub fn reftype_dtype() -> DataType {
     let s = Series::new(
         "code".into(),
-        ["isbn", "issn", "ismn", "doi", "orcid", "isni", "jel"],
+        ["isbn", "issn", "ismn", "doi", "orcid", "isni", "jel", "udc"],
     );
     let categories =
         s.str().unwrap().downcast_iter().next().unwrap().clone();
@@ -127,6 +131,7 @@ impl Bibrefs {
             Box::new(OrcidMatcher::new(self.normalize)),
             Box::new(IsniMatcher::new(self.normalize)),
             Box::new(JelMatcher::new(self.normalize)),
+            Box::new(UdcMatcher::new(self.normalize)),
         ];
 
         let rows = (0..index.height())
