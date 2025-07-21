@@ -18,18 +18,18 @@ macro_rules! col {
 
 pub(crate) use col;
 
-// pub(crate) fn is_arrow<P: AsRef<Path>>(
-//     path: &Option<P>,
-// ) -> Option<bool> {
-//     if let Some(path) = path {
-//         path.as_ref()
-//             .extension()
-//             .and_then(OsStr::to_str)
-//             .map(|s| s == "ipc")
-//     } else {
-//         Some(false)
-//     }
-// }
+pub(crate) fn is_arrow<P: AsRef<Path>>(
+    path: &Option<P>,
+) -> Option<bool> {
+    if let Some(path) = path {
+        path.as_ref()
+            .extension()
+            .and_then(OsStr::to_str)
+            .map(|s| s == "ipc")
+    } else {
+        Some(false)
+    }
+}
 
 pub(crate) fn read_df<P: AsRef<Path>>(
     path: P,

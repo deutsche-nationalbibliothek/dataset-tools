@@ -8,8 +8,11 @@ use super::{Matcher, Reference, ReferenceType};
 fn issn_re() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
     RE.get_or_init(|| {
-        Regex::new(r"(?ix)ISSN(?::?\s*)?\s(\d{4}[-\u00AD\u2010\u2011\u2014]\d{3}[\dXx])")
-            .unwrap()
+        Regex::new(
+            r"(?ix)ISSN(?:-L)?(?:\s*\((?:print|internet)\)\s*)?(?::?\s*)?\s
+            (\d{4}[-\u00AD\u2010\u2011\u2014]\d{3}[\dXx])",
+        )
+        .unwrap()
     })
 }
 

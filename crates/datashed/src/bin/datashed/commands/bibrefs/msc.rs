@@ -5,34 +5,40 @@ use regex::bytes::Regex;
 
 use super::{Matcher, Reference, ReferenceType};
 
-fn jel_re() -> &'static Regex {
+fn msc_re() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
     RE.get_or_init(|| {
         Regex::new(
-            r"(?x)JEL(?::?\s*)\s([A-RYZ]\d{1,2})
-                (?:(?:\s*[,;·/]?\s*)?([A-RYZ]\d{1,2}))?
-                (?:(?:\s*[,;·/]?\s*)?([A-RYZ]\d{1,2}))?
-                (?:(?:\s*[,;·/]?\s*)?([A-RYZ]\d{1,2}))?
-                (?:(?:\s*[,;·/]?\s*)?([A-RYZ]\d{1,2}))?
-                (?:(?:\s*[,;·/]?\s*)?([A-RYZ]\d{1,2}))?
-                (?:(?:\s*[,;·/]?\s*)?([A-RYZ]\d{1,2}))?",
+            r"(?ix)
+                (?:Mathematical\sSubject\sClassification|MSC)(?:\s*20[012]0\s*)?(?:\s*:?\s*)\s
+                (?:(?:Primary\s*)?(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)
+                (?:(?:Secondary\s*)?(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)?
+                (?:(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)?
+                (?:(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)?
+                (?:(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)?
+                (?:(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)?
+                (?:(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)?
+                (?:(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)?
+                (?:(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)?
+                (?:(\d{2}[A-Z]\d{2})(?:\s*[.·,;]?\s*)?)?
+            ",
         )
         .unwrap()
     })
 }
 
 #[derive(Debug, Default)]
-pub struct JelMatcher {}
+pub struct MscMatcher {}
 
-impl JelMatcher {
+impl MscMatcher {
     pub fn new(_normalize: bool) -> Self {
         Self {}
     }
 }
 
-impl Matcher for JelMatcher {
+impl Matcher for MscMatcher {
     fn matches(&self, data: &[u8]) -> Vec<Reference> {
-        jel_re()
+        msc_re()
             .captures_iter(data.as_ref())
             .flat_map(|caps| {
                 caps.iter()
@@ -46,7 +52,7 @@ impl Matcher for JelMatcher {
                                 .to_string();
 
                             Some(Reference {
-                                reftype: ReferenceType::Jel,
+                                reftype: ReferenceType::Msc,
                                 start: m.start(),
                                 end: m.end(),
                                 value,

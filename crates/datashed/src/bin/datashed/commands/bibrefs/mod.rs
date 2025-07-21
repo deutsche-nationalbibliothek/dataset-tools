@@ -8,6 +8,7 @@ use ismn::IsmnMatcher;
 use isni::IsniMatcher;
 use issn::IssnMatcher;
 use jel::JelMatcher;
+use msc::MscMatcher;
 use orcid::OrcidMatcher;
 use udc::UdcMatcher;
 
@@ -20,6 +21,7 @@ mod ismn;
 mod isni;
 mod issn;
 mod jel;
+mod msc;
 mod orcid;
 mod udc;
 
@@ -36,26 +38,28 @@ pub(crate) struct Reference {
 
 #[derive(Debug, PartialEq)]
 pub(crate) enum ReferenceType {
-    Isbn,
-    Issn,
-    Ismn,
     Doi,
-    Orcid,
+    Isbn,
+    Ismn,
     Isni,
+    Issn,
     Jel,
+    Msc,
+    Orcid,
     Udc,
 }
 
 impl Display for ReferenceType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Isbn => write!(f, "isbn"),
-            Self::Issn => write!(f, "issn"),
-            Self::Ismn => write!(f, "ismn"),
             Self::Doi => write!(f, "doi"),
-            Self::Orcid => write!(f, "orcid"),
+            Self::Isbn => write!(f, "isbn"),
+            Self::Ismn => write!(f, "ismn"),
             Self::Isni => write!(f, "isni"),
+            Self::Issn => write!(f, "issn"),
             Self::Jel => write!(f, "jel"),
+            Self::Msc => write!(f, "msc"),
+            Self::Orcid => write!(f, "orcid"),
             Self::Udc => write!(f, "udc"),
         }
     }
@@ -64,7 +68,10 @@ impl Display for ReferenceType {
 pub fn reftype_dtype() -> DataType {
     let s = Series::new(
         "code".into(),
-        ["isbn", "issn", "ismn", "doi", "orcid", "isni", "jel", "udc"],
+        [
+            "isbn", "issn", "ismn", "doi", "orcid", "isni", "jel",
+            "udc", "msc",
+        ],
     );
     let categories =
         s.str().unwrap().downcast_iter().next().unwrap().clone();
@@ -86,6 +93,11 @@ pub(crate) struct Bibrefs {
     /// public data file.
     #[arg(long)]
     crossref: Option<PathBuf>,
+
+    /// Only use those references that can be found in the DataCite
+    /// public data files
+    #[arg(long)]
+    datacite: Option<PathBuf>,
 
     /// Write the result to <filename>. By default output will be
     /// written in CSV format to stdout
@@ -124,7 +136,11 @@ impl Bibrefs {
                 .build();
 
         let matchers: &[Box<dyn Matcher>] = &[
-            Box::new(DoiMatcher::new(self.normalize, self.crossref)),
+            Box::new(DoiMatcher::new(
+                self.normalize,
+                self.crossref,
+                self.datacite,
+            )),
             Box::new(IsbnMatcher::new(self.normalize)),
             Box::new(IssnMatcher::new(self.normalize)),
             Box::new(IsmnMatcher::new(self.normalize)),
@@ -132,6 +148,7 @@ impl Bibrefs {
             Box::new(IsniMatcher::new(self.normalize)),
             Box::new(JelMatcher::new(self.normalize)),
             Box::new(UdcMatcher::new(self.normalize)),
+            Box::new(MscMatcher::new(self.normalize)),
         ];
 
         let rows = (0..index.height())
@@ -176,7 +193,11 @@ impl Bibrefs {
         let mut df = DataFrame::new(vec![
             col!("path", paths),
             col!("hash", hashes),
-            col!("reftype", reftypes).cast(&reftype_dtype())?,
+            if is_arrow(&self.output).unwrap_or_default() {
+                col!("reftype", reftypes).cast(&reftype_dtype())?
+            } else {
+                col!("reftype", reftypes)
+            },
             col!("value", values),
             col!("start", starts),
             col!("end", ends),
