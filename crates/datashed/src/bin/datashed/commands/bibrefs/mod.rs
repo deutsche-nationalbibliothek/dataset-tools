@@ -9,6 +9,7 @@ use ismn::IsmnMatcher;
 use isni::IsniMatcher;
 use issn::IssnMatcher;
 use jel::JelMatcher;
+use lcc::LccMatcher;
 use msc::MscMatcher;
 use orcid::OrcidMatcher;
 use udc::UdcMatcher;
@@ -23,6 +24,7 @@ mod ismn;
 mod isni;
 mod issn;
 mod jel;
+mod lcc;
 mod msc;
 mod orcid;
 mod udc;
@@ -47,6 +49,7 @@ pub(crate) enum ReferenceType {
     Isni,
     Issn,
     Jel,
+    Lcc,
     Msc,
     Orcid,
     Udc,
@@ -62,6 +65,7 @@ impl Display for ReferenceType {
             Self::Isni => write!(f, "isni"),
             Self::Issn => write!(f, "issn"),
             Self::Jel => write!(f, "jel"),
+            Self::Lcc => write!(f, "lcc"),
             Self::Msc => write!(f, "msc"),
             Self::Orcid => write!(f, "orcid"),
             Self::Udc => write!(f, "udc"),
@@ -74,7 +78,7 @@ pub fn reftype_dtype() -> DataType {
         "code".into(),
         [
             "isbn", "issn", "ismn", "doi", "orcid", "isni", "jel",
-            "udc", "msc", "ddc",
+            "udc", "msc", "ddc", "lcc",
         ],
     );
     let categories =
@@ -145,15 +149,16 @@ impl Bibrefs {
                 self.crossref,
                 self.datacite,
             )),
-            Box::new(IsbnMatcher::new(self.normalize)),
-            Box::new(IssnMatcher::new(self.normalize)),
-            Box::new(IsmnMatcher::new(self.normalize)),
-            Box::new(OrcidMatcher::new(self.normalize)),
-            Box::new(IsniMatcher::new(self.normalize)),
-            Box::new(JelMatcher::new(self.normalize)),
-            Box::new(UdcMatcher::new(self.normalize)),
-            Box::new(MscMatcher::new(self.normalize)),
             Box::new(DdcMatcher::new(self.normalize)),
+            Box::new(IsbnMatcher::new(self.normalize)),
+            Box::new(IsmnMatcher::new(self.normalize)),
+            Box::new(IsniMatcher::new(self.normalize)),
+            Box::new(IssnMatcher::new(self.normalize)),
+            Box::new(JelMatcher::new(self.normalize)),
+            Box::new(LccMatcher::new(self.normalize)),
+            Box::new(MscMatcher::new(self.normalize)),
+            Box::new(OrcidMatcher::new(self.normalize)),
+            Box::new(UdcMatcher::new(self.normalize)),
         ];
 
         let rows = (0..index.height())
