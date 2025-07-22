@@ -15,4 +15,4 @@ pub(crate) use crate::utils::*;
 pub type CommandResult = DatashedResult<ExitCode>;
 
 pub(crate) const SUCCESS: ExitCode = ExitCode::SUCCESS;
-// pub(crate) const FAILURE: ExitCode = ExitCode::FAILURE;
+pub(crate) const FAILURE: ExitCode = ExitCode::FAILURE;
