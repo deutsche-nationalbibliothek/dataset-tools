@@ -252,11 +252,11 @@ shape: (5, 6)
 
 ## Vocabulary
 
-The `vocab` command can be used to create the vocabulary (dictionary
-or lexicon) of the entire datashed or of any subset. With the help
-of various filter options, the command can be used to create stop
-word lists that are tailored to the entire population. Also the (raw)
-features of subsets can be compared with each other.
+The `vocab` command can be used to create the vocabulary $\mathcal{V}$
+(dictionary or lexicon) of the entire datashed or of any subset. With
+the help of various filter options, the command can be used to create
+stop word lists that are tailored to the entire population. Also the
+(raw) features of subsets can be compared with each other.
 
 The output contains the terms with the corresponding term frequency
 (`tf`) and the document frequency (`df`).
