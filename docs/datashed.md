@@ -230,7 +230,7 @@ Processing Crossref: 33,402 (100%) | elapsed: 00:05:54, done.
 Processing documents: 10,439,309 (100%) | elapsed: 00:21:37, done.
 ```
 
-The generated DataFrame looks like this:
+The generated table looks like this:
 
 ```python
 >>> import polars as pl
