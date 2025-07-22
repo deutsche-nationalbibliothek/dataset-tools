@@ -192,16 +192,17 @@ A very low `alpha` value may indicate a corrupt document.
 With the help of the `bibrefs` command, bibliographic identifiers can be
 found in documents. The following identifiers are supported:
 
+* `ddc` — [Dewey Decimal Classification (DDC)](https://en.wikipedia.org/wiki/Dewey_Decimal_Classification)
+* `doi` — [Digital Object Identifier (DOI)](https://en.wikipedia.org/wiki/Digital_object_identifier)
 * `isbn` — [International Standard Book Number (ISBN)](https://en.wikipedia.org/wiki/ISBN)
 * `ismn` — [International Standard Music Number (ISMN)](https://en.wikipedia.org/wiki/International_Standard_Music_Number)
+* `isni` — [International Standard Name Identifier (ISNI)](https://en.wikipedia.org/wiki/International_Standard_Name_Identifier)
 * `issn` — [International Standard Serial Number (ISSN)](https://en.wikipedia.org/wiki/ISSN)
-* `isni` / `orcid` — [International Standard Name Identifier (ISNI)](https://en.wikipedia.org/wiki/International_Standard_Name_Identifier) / [ORCID](https://en.wikipedia.org/wiki/ORCID)
-* `udc` — [Universal Decimal Classification (UDC)](https://en.wikipedia.org/wiki/Universal_Decimal_Classification)
-* `doi` — [Digital Object Identifier (DOI)](https://en.wikipedia.org/wiki/Digital_object_identifier)
-* `ddc` — [Dewey Decimal Classification (DDC)](https://en.wikipedia.org/wiki/Dewey_Decimal_Classification)
-* `msc` — [Mathematics Subject Classification (MSC)](https://mathscinet.ams.org/mathscinet/msc/msc2020.html)
 * `jel` — [JEL Classification System (JEL)](https://www.aeaweb.org/econlit/jelCodes.php?view=jel)
 * `lcc` — [Library of Congress Classification (LCC)](https://www.loc.gov/catdir/cpso/lcc.html)
+* `msc` — [Mathematics Subject Classification (MSC)](https://mathscinet.ams.org/mathscinet/msc/msc2020.html)
+* `orcid` — [Open Researcher and Contributor ID](https://en.wikipedia.org/wiki/ORCID)
+* `udc` — [Universal Decimal Classification (UDC)](https://en.wikipedia.org/wiki/Universal_Decimal_Classification)
 
 The implementation is carried out using regular expressions, whereby the
 expressions were formulated as strictly as possible in order to achieve
