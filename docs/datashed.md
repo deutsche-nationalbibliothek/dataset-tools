@@ -216,9 +216,9 @@ additional metadata.
 
 The `--normalize` option can be used to convert identifiers into
 a normalized, canonical form. When finding DOIs, the results can
-be filtered by adding a path to a directory containing Crossref
-(`--crossref` option) and/or Datacite (`--datacite` option) public data
-files.
+be filtered by adding a path to a directory containing [Crossref]
+(`--crossref` option) and/or [Datacite] (`--datacite` option) public
+data files.
 
 The following call generates the list of bibliographic identifiers in
 normalized form and Crossref/Datacite allow list:
@@ -483,5 +483,7 @@ Verify consistency with `datashed verify`.
 
 
 [Apache Arrow]: https://arrow.apache.org/
+[Crossref]: https://www.crossref.org/learning/public-data-file/
+[Datacite]: https://datafiles.datacite.org/
 [Unicode Standard]: https://www.unicode.org/versions/latest/
 [lingua]: https://github.com/pemistahl/lingua-rs
