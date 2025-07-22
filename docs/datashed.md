@@ -224,8 +224,7 @@ In the following example the list of bibliographic identifiers is
 generated in normalized form using Crossref and Datacite allow lists:
 
 ```console
-$ datashed bibrefs --normalize --datacite ~/share/datacite --crossref ~/share/crossref \
-    -o bibrefs.ipc
+$ datashed bibrefs --normalize --datacite ~/share/datacite --crossref ~/share/crossref -o bibrefs.ipc
 Processing Datacite: 5,930 (100%) | elapsed: 00:05:13, done.
 Processing Crossref: 33,402 (100%) | elapsed: 00:05:54, done.
 Processing documents: 10,439,309 (100%) | elapsed: 00:21:37, done.
