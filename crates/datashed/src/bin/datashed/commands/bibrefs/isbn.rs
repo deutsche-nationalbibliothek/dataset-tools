@@ -121,7 +121,6 @@ mod tests {
         let isbn = IsbnMatcher::default();
         let matches = isbn.matches(b"ISBN 3518293036");
         assert_eq!(matches.len(), 1);
-
         assert_eq!(
             matches[0],
             Reference {
@@ -134,7 +133,6 @@ mod tests {
 
         let matches = isbn.matches(b"ISBN 3-518-29303-6");
         assert_eq!(matches.len(), 1);
-
         assert_eq!(
             matches[0],
             Reference {

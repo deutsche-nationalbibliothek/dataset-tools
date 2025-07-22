@@ -2,6 +2,7 @@ use std::fmt::{self, Display};
 use std::fs;
 use std::path::PathBuf;
 
+use ddc::DdcMatcher;
 use doi::DoiMatcher;
 use isbn::IsbnMatcher;
 use ismn::IsmnMatcher;
@@ -15,6 +16,7 @@ use udc::UdcMatcher;
 use crate::cli::FilterOpts;
 use crate::prelude::*;
 
+mod ddc;
 mod doi;
 mod isbn;
 mod ismn;
@@ -38,6 +40,7 @@ pub(crate) struct Reference {
 
 #[derive(Debug, PartialEq)]
 pub(crate) enum ReferenceType {
+    Ddc,
     Doi,
     Isbn,
     Ismn,
@@ -52,6 +55,7 @@ pub(crate) enum ReferenceType {
 impl Display for ReferenceType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::Ddc => write!(f, "ddc"),
             Self::Doi => write!(f, "doi"),
             Self::Isbn => write!(f, "isbn"),
             Self::Ismn => write!(f, "ismn"),
@@ -70,7 +74,7 @@ pub fn reftype_dtype() -> DataType {
         "code".into(),
         [
             "isbn", "issn", "ismn", "doi", "orcid", "isni", "jel",
-            "udc", "msc",
+            "udc", "msc", "ddc",
         ],
     );
     let categories =
@@ -149,6 +153,7 @@ impl Bibrefs {
             Box::new(JelMatcher::new(self.normalize)),
             Box::new(UdcMatcher::new(self.normalize)),
             Box::new(MscMatcher::new(self.normalize)),
+            Box::new(DdcMatcher::new(self.normalize)),
         ];
 
         let rows = (0..index.height())
