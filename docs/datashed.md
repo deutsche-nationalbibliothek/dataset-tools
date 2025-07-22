@@ -192,17 +192,17 @@ A very low `alpha` value may indicate a corrupt document.
 With the help of the `bibrefs` command, bibliographic identifiers can be
 found in documents. The following identifiers are supported:
 
-* `ddc` — [Dewey Decimal Classification (DDC)](https://en.wikipedia.org/wiki/Dewey_Decimal_Classification)
-* `doi` — [Digital Object Identifier (DOI)](https://en.wikipedia.org/wiki/Digital_object_identifier)
-* `isbn` — [International Standard Book Number (ISBN)](https://en.wikipedia.org/wiki/ISBN)
-* `ismn` — [International Standard Music Number (ISMN)](https://en.wikipedia.org/wiki/International_Standard_Music_Number)
-* `isni` — [International Standard Name Identifier (ISNI)](https://en.wikipedia.org/wiki/International_Standard_Name_Identifier)
-* `issn` — [International Standard Serial Number (ISSN)](https://en.wikipedia.org/wiki/ISSN)
-* `jel` — [JEL Classification System (JEL)](https://www.aeaweb.org/econlit/jelCodes.php?view=jel)
-* `lcc` — [Library of Congress Classification (LCC)](https://www.loc.gov/catdir/cpso/lcc.html)
-* `msc` — [Mathematics Subject Classification (MSC)](https://mathscinet.ams.org/mathscinet/msc/msc2020.html)
-* `orcid` — [Open Researcher and Contributor ID](https://en.wikipedia.org/wiki/ORCID)
-* `udc` — [Universal Decimal Classification (UDC)](https://en.wikipedia.org/wiki/Universal_Decimal_Classification)
+* [Dewey Decimal Classification (DDC)](https://en.wikipedia.org/wiki/Dewey_Decimal_Classification) — `ddc`
+* [Digital Object Identifier (DOI)](https://en.wikipedia.org/wiki/Digital_object_identifier) — `doi`
+* [International Standard Book Number (ISBN)](https://en.wikipedia.org/wiki/ISBN) — `isbn`
+* [International Standard Music Number (ISMN)](https://en.wikipedia.org/wiki/International_Standard_Music_Number) — `isnm`
+* [International Standard Name Identifier (ISNI)](https://en.wikipedia.org/wiki/International_Standard_Name_Identifier) — `isni`
+* [International Standard Serial Number (ISSN)](https://en.wikipedia.org/wiki/ISSN) — `issn`
+* [JEL Classification System (JEL)](https://www.aeaweb.org/econlit/jelCodes.php?view=jel) — `jel`
+* [Library of Congress Classification (LCC)](https://www.loc.gov/catdir/cpso/lcc.html) — `lcc`
+* [Mathematics Subject Classification (MSC)](https://mathscinet.ams.org/mathscinet/msc/msc2020.html) — `msc`
+* [Open Researcher and Contributor ID](https://en.wikipedia.org/wiki/ORCID) — `orcid`
+* [Universal Decimal Classification (UDC)](https://en.wikipedia.org/wiki/Universal_Decimal_Classification) — `udc`
 
 The implementation is carried out using regular expressions, whereby the
 expressions were formulated as strictly as possible in order to achieve
