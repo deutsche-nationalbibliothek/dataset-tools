@@ -187,14 +187,76 @@ an empty  document is defined to $0.0$.
 
 A very low `alpha` value may indicate a corrupt document.
 
+## Bibliographic References
+
+With the help of the `bibrefs` command, bibliographic identifiers can be
+found in documents. The following identifiers are supported:
+
+* [Dewey Decimal Classification (DDC)](https://en.wikipedia.org/wiki/Dewey_Decimal_Classification) — `ddc`
+* [Digital Object Identifier (DOI)](https://en.wikipedia.org/wiki/Digital_object_identifier) — `doi`
+* [International Standard Book Number (ISBN)](https://en.wikipedia.org/wiki/ISBN) — `isbn`
+* [International Standard Music Number (ISMN)](https://en.wikipedia.org/wiki/International_Standard_Music_Number) — `isnm`
+* [International Standard Name Identifier (ISNI)](https://en.wikipedia.org/wiki/International_Standard_Name_Identifier) — `isni`
+* [International Standard Serial Number (ISSN)](https://en.wikipedia.org/wiki/ISSN) — `issn`
+* [JEL Classification System (JEL)](https://www.aeaweb.org/econlit/jelCodes.php?view=jel) — `jel`
+* [Library of Congress Classification (LCC)](https://www.loc.gov/catdir/cpso/lcc.html) — `lcc`
+* [Mathematics Subject Classification (MSC)](https://mathscinet.ams.org/mathscinet/msc/msc2020.html) — `msc`
+* [Open Researcher and Contributor ID (ORCID)](https://en.wikipedia.org/wiki/ORCID) — `orcid`
+* [Universal Decimal Classification (UDC)](https://en.wikipedia.org/wiki/Universal_Decimal_Classification) — `udc`
+
+The implementation is carried out using regular expressions, whereby the
+expressions were formulated as strictly as possible in order to achieve
+a low error rate. If possible, the identifiers found are validated
+(checksum verification).
+
+For each match, the path (`path`), the hash (`hash`) and the location
+within the document (`start` and `end`) are also recorded. The columns
+`path` and `hash` can be used to JOIN with the index in order to get
+additional metadata.
+
+The `--normalize` option can be used to convert identifiers into
+a normalized, canonical form. When finding DOIs, the results can
+be filtered by adding a path to a directory containing [Crossref]
+(`--crossref` option) and/or [Datacite] (`--datacite` option) public
+data files.
+
+In the following example the list of bibliographic identifiers is
+generated in normalized form using Crossref and Datacite allow lists:
+
+```console
+$ datashed bibrefs --normalize --datacite ~/share/datacite --crossref ~/share/crossref -o bibrefs.ipc
+Processing Datacite: 5,930 (100%) | elapsed: 00:05:13, done.
+Processing Crossref: 33,402 (100%) | elapsed: 00:05:54, done.
+Processing documents: 10,439,309 (100%) | elapsed: 00:21:37, done.
+```
+
+The generated table looks like this:
+
+```python
+>>> import polars as pl
+>>> bibrefs = pl.read_ipc("bibrefs.ipc", memory_map=False)
+>>> bibrefs.sample(5)
+shape: (5, 6)
+┌───────────────────────┬──────────────┬─────────┬────────────────────────┬────────┬────────┐
+│ path                  ┆ hash         ┆ reftype ┆ value                  ┆ start  ┆ end    │
+│ ---                   ┆ ---          ┆ ---     ┆ ---                    ┆ ---    ┆ ---    │
+│ str                   ┆ str          ┆ enum    ┆ str                    ┆ u64    ┆ u64    │
+╞═══════════════════════╪══════════════╪═════════╪════════════════════════╪════════╪════════╡
+│ ft/589/1265380589.txt ┆ 5152f83ab95d ┆ isbn    ┆ 978-3-8409-3021-8      ┆ 181920 ┆ 181938 │
+│ ft/717/1292043717.txt ┆ e95bbc70fa79 ┆ doi     ┆ 10.1002/pamm.202200302 ┆ 58     ┆ 80     │
+│ ft/013/1335636013.txt ┆ 839f31e41437 ┆ doi     ┆ 10.1002/jee.20201      ┆ 67929  ┆ 67946  │
+│ ft/140/1127742140.txt ┆ c06d6d20641b ┆ ddc     ┆ 481.6                  ┆ 402168 ┆ 402173 │
+│ ft/925/1256772925.txt ┆ 7affb2fb7c67 ┆ isbn    ┆ 978-3-8379-7673-1      ┆ 70964  ┆ 70982  │
+└───────────────────────┴──────────────┴─────────┴────────────────────────┴────────┴────────┘
+```
 
 ## Vocabulary
 
-The `vocab` command can be used to create the vocabulary (dictionary
-or lexicon) of the entire datashed or of any subset. With the help
-of various filter options, the command can be used to create stop
-word lists that are tailored to the entire population. Also the (raw)
-features of subsets can be compared with each other.
+The `vocab` command can be used to create the vocabulary $\mathcal{V}$
+(dictionary or lexicon) of the entire datashed or of any subset. With
+the help of various filter options, the command can be used to create
+stop word lists that are tailored to the entire population. Also the
+(raw) features of subsets can be compared with each other.
 
 The output contains the terms with the corresponding term frequency
 (`tf`) and the document frequency (`df`).
@@ -421,5 +483,7 @@ Verify consistency with `datashed verify`.
 
 
 [Apache Arrow]: https://arrow.apache.org/
+[Crossref]: https://www.crossref.org/learning/public-data-file/
+[Datacite]: https://datafiles.datacite.org/
 [Unicode Standard]: https://www.unicode.org/versions/latest/
 [lingua]: https://github.com/pemistahl/lingua-rs
