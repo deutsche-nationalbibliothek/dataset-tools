@@ -220,8 +220,8 @@ be filtered by adding a path to a directory containing [Crossref]
 (`--crossref` option) and/or [Datacite] (`--datacite` option) public
 data files.
 
-The following call generates the list of bibliographic identifiers in
-normalized form and Crossref/Datacite allow list:
+In the following example the list of bibliographic identifiers is
+generated in normalized form using Crossref and Datacite allow lists:
 
 ```console
 $ datashed bibrefs -I tmp/index2.ipc --normalize --datacite ~/share/datacite --crossref ~/share/crossref -o bibrefs.ipc
