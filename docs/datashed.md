@@ -166,7 +166,6 @@ confidence value. If the index is in [Apache Arrow] format, which is the
 default, the two columns are combined into one column `lang`. Language
 detection is performed with [lingua] in high-accuracy mode.
 
-
 #### Alpha
 
 The `alpha` score of a document is the ratio of alphabetic characters to
@@ -383,14 +382,15 @@ Invariants and constraints that the index (or the bibliographic
 identifiers) must fulfill can be checked with the `check` command. The
 command requires a configuration file containing a list of tests. A test
 specification requires a unique ID and a query formulated in SQL. The test
-fails if the SQL query does not evaluate to "true". Unless otherwise
-specified, the tests are automatically read from the "checks.toml" file.
+fails if the SQL query does not evaluate to `true`. Unless otherwise
+specified, the tests are automatically read from the `checks.toml` file.
 
 Optionally, a test can contain a description that is included in the
 output. If a test is to be skipped, the `skip` flag can be set.
 
-The following check verifies whether the file size is the same for the
-same hash value:
+In the following example, the check verifies whether the file size is
+the same for the same hash value (by shortening the hash, there is a
+small chance that there will be a difference):
 
 ```toml
 [check.I001]
@@ -407,7 +407,7 @@ query = """
 The command is invoked as follows:
 
 ```console
-$ datashed check -I tmp/index2.ipc
+$ datashed check
         PASS [    0.021s] I001 ⊢ Expect all documents to be non-empty (`size` > 0)
         PASS [    0.416s] I002 ⊢ The `ppn` column must contain valid PPNs
         PASS [   18.589s] I003 ⊢ Same `hash` value implies same `size` value
