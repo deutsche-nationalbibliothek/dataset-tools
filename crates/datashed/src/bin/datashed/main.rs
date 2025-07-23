@@ -41,6 +41,7 @@ fn main() -> ExitCode {
     let result = match *args.cmd {
         Command::Archive(cmd) => cmd.execute(),
         Command::Bibrefs(cmd) => cmd.execute(),
+        Command::Check(cmd) => cmd.execute(),
         Command::Completions(cmd) => cmd.execute(),
         Command::Config(cmd) => cmd.execute(),
         Command::Grep(cmd) => cmd.execute(),

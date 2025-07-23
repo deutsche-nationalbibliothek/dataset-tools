@@ -1,5 +1,6 @@
 pub(crate) use archive::Archive;
 pub(crate) use bibrefs::Bibrefs;
+pub(crate) use check::Check;
 pub(crate) use completions::Completions;
 pub(crate) use config::Config;
 pub(crate) use grep::Grep;
@@ -14,6 +15,7 @@ pub(crate) use vocab::Vocab;
 
 mod archive;
 mod bibrefs;
+mod check;
 mod completions;
 mod config;
 mod grep;
