@@ -377,6 +377,62 @@ path,hash,total,a,b,c
 1/zbw.txt,a50f7e55,118,59,19,40
 ```
 
+## Check
+
+Invariants and constraints that the index (or the bibliographic
+identifiers) must fulfill can be checked with the `check` command. The
+command requires a configuration file containing a list of tests. A test
+specification requires a unique ID and a query formulated in SQL. The test
+fails if the SQL query does not evaluate to "true". Unless otherwise
+specified, the tests are automatically read from the "checks.toml" file.
+
+Optionally, a test can contain a description that is included in the
+output. If a test is to be skipped, the `skip` flag can be set.
+
+The following check verifies whether the file size is the same for the
+same hash value:
+
+```toml
+[check.I001]
+description = "Same `hash` value implies same `size` value"
+query = """
+       SELECT COUNT(*) == 0
+         FROM index AS lhs
+   INNER JOIN index AS rhs
+        USING (hash)
+        WHERE lhs.size != rhs.size
+"""
+```
+
+The command is invoked as follows:
+
+```console
+$ datashed check -I tmp/index2.ipc
+        PASS [    0.021s] I001 ⊢ Expect all documents to be non-empty (`size` > 0)
+        PASS [    0.416s] I002 ⊢ The `ppn` column must contain valid PPNs
+        PASS [   18.589s] I003 ⊢ Same `hash` value implies same `size` value
+        PASS [   19.492s] I004 ⊢ The `path` starting with 'toc/' implies `doctype` 'toc'
+        PASS [   19.539s] I005 ⊢ The `lang.score` value is taken from the interval [0, 1]
+        PASS [   19.590s] I006 ⊢ A `alpha` value is taken from the interval [0, 1]
+────────────
+     Summary 6 checks executed: 6 passed, 0 skipped, 0 failed
+```
+
+If at least on check fails, the command returns a non-zero status
+code. This made it possible for the quality checks to be carried out
+automatically in a data pipeline. The following example demonstrates the
+integration as a separate stage in a [DVC] pipeline:
+
+```yaml
+stages:
+  check:
+    cmd:
+      - datashed check
+    deps:
+      - checks.toml
+      - index.ipc
+```
+
 ## Summary Statistics
 
 The `summary` command can be used to create a summary statistics of
@@ -390,7 +446,7 @@ $ datashed summary | jq .
 }
 ```
 
-The command is suitable for being integrated into a DVC pipeline. This
+The command is suitable for being integrated into a [DVC] pipeline. This
 makes it possible to compare the change in inventory among different
 ingest runs.
 
@@ -485,5 +541,6 @@ Verify consistency with `datashed verify`.
 [Apache Arrow]: https://arrow.apache.org/
 [Crossref]: https://www.crossref.org/learning/public-data-file/
 [Datacite]: https://datafiles.datacite.org/
-[Unicode Standard]: https://www.unicode.org/versions/latest/
+[DVC]: https://dvc.org/
 [lingua]: https://github.com/pemistahl/lingua-rs
+[Unicode Standard]: https://www.unicode.org/versions/latest/
