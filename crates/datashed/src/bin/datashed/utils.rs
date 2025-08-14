@@ -78,7 +78,7 @@ pub(crate) fn unnest_index(df: LazyFrame) -> LazyFrame {
             .struct_()
             .rename_fields(["lang_code", "lang_score"]),
     )
-    .unnest(["lang"])
+    .unnest(by_name(["lang"], true))
     .with_columns([
         col("lang_code").cast(DataType::String),
         col("doctype").cast(DataType::String),
