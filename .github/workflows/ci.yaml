@@ -20,9 +20,10 @@ concurrency:
 env:
   CARGO_INCREMENTAL: 0
   CARGO_TERM_COLOR: always
-  RUSTDOCFLAGS: "-Dwarnings"
-  RUSTUP_MAX_RETRIES: 10
   RUST_BACKTRACE: 1
+  RUSTDOCFLAGS: "-Dwarnings"
+  RUSTFLAGS: -C debuginfo=0
+  RUSTUP_MAX_RETRIES: 10
 
 permissions:
   contents: read
@@ -34,7 +35,6 @@ defaults:
 jobs:
   test:
     strategy:
-      max-parallel: 1
       matrix:
         target:
           - { os: ubuntu-latest, toolchain: stable, triple: x86_64-unknown-linux-gnu }
@@ -49,9 +49,15 @@ jobs:
           targets: ${{ matrix.target.triple }}
       - uses: taiki-e/install-action@nextest
       - uses: Swatinem/rust-cache@v2
+      - name: Compile tests
+        if: ${{ matrix.target.toolchain != 'nightly' }}
+        run: cargo nextest run --profile ci --workspace --no-run
       - name: Run tests
         if: ${{ matrix.target.toolchain != 'nightly' }}
         run: cargo nextest run --profile ci --workspace
+      - name: Compile tests (nightly)
+        if: ${{ matrix.target.toolchain == 'nightly' }}
+        run: cargo nextest run --profile ci --workspace -F nightly --no-run
       - name: Run tests (nightly)
         if: ${{ matrix.target.toolchain == 'nightly' }}
         run: cargo nextest run --profile ci --workspace -F nightly
