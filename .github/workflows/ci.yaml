@@ -34,6 +34,7 @@ defaults:
 jobs:
   test:
     strategy:
+      max-parallel: 2
       matrix:
         target:
           - { os: ubuntu-latest, toolchain: stable, triple: x86_64-unknown-linux-gnu }
