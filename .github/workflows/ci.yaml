@@ -51,10 +51,10 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
         if: ${{ matrix.target.toolchain != 'nightly' }}
-        run: cargo nextest run --profile ci --workspace -F performant
+        run: cargo nextest run --profile ci --workspace
       - name: Run tests (nightly)
         if: ${{ matrix.target.toolchain == 'nightly' }}
-        run: cargo nextest run --profile ci --workspace --all-features
+        run: cargo nextest run --profile ci --workspace -F nightly
 
   features:
     runs-on: ubuntu-latest
