@@ -23,6 +23,7 @@ env:
   RUSTDOCFLAGS: "-Dwarnings"
   RUSTUP_MAX_RETRIES: 10
   RUST_BACKTRACE: 1
+  RUSTFLAGS: -C debuginfo=0
 
 permissions:
   contents: read
@@ -49,9 +50,15 @@ jobs:
           targets: ${{ matrix.target.triple }}
       - uses: taiki-e/install-action@nextest
       - uses: Swatinem/rust-cache@v2
+      - name: Compile tests
+        if: ${{ matrix.target.toolchain != 'nightly' }}
+        run: cargo nextest run --profile ci --workspace --no-run
       - name: Run tests
         if: ${{ matrix.target.toolchain != 'nightly' }}
         run: cargo nextest run --profile ci --workspace
+      - name: Compile tests (nightly)
+        if: ${{ matrix.target.toolchain == 'nightly' }}
+        run: cargo nextest run --profile ci --workspace -F nightly --no-run
       - name: Run tests (nightly)
         if: ${{ matrix.target.toolchain == 'nightly' }}
         run: cargo nextest run --profile ci --workspace -F nightly
