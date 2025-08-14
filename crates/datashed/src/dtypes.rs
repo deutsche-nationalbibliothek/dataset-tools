@@ -60,15 +60,13 @@ const ISO639_CODES: [&str; 486] = [
 ];
 
 pub fn iso6392b_dtype() -> DataType {
-    let s = Series::new("code".into(), ISO639_CODES);
-    let categories =
-        s.str().unwrap().downcast_iter().next().unwrap().clone();
-    create_enum_dtype(categories)
+    DataType::from_frozen_categories(
+        FrozenCategories::new(ISO639_CODES).unwrap(),
+    )
 }
 
 pub fn doctype_dtype() -> DataType {
-    let s = Series::new("code".into(), DOCTYPES);
-    let categories =
-        s.str().unwrap().downcast_iter().next().unwrap().clone();
-    create_enum_dtype(categories)
+    DataType::from_frozen_categories(
+        FrozenCategories::new(DOCTYPES).unwrap(),
+    )
 }

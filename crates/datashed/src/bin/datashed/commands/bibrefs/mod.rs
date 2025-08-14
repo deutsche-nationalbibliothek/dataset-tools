@@ -74,16 +74,14 @@ impl Display for ReferenceType {
 }
 
 pub fn reftype_dtype() -> DataType {
-    let s = Series::new(
-        "code".into(),
-        [
-            "isbn", "issn", "ismn", "doi", "orcid", "isni", "jel",
-            "udc", "msc", "ddc", "lcc",
-        ],
-    );
-    let categories =
-        s.str().unwrap().downcast_iter().next().unwrap().clone();
-    create_enum_dtype(categories)
+    const CODES: [&str; 11] = [
+        "isbn", "issn", "ismn", "doi", "orcid", "isni", "jel", "udc",
+        "msc", "ddc", "lcc",
+    ];
+
+    DataType::from_frozen_categories(
+        FrozenCategories::new(CODES).unwrap(),
+    )
 }
 
 pub(crate) trait Matcher: Sync {
