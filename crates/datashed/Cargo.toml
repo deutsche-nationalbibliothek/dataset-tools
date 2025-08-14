@@ -15,7 +15,7 @@ name = "datashed"
 path = "src/bin/datashed/main.rs"
 
 [features]
-default = ["performant"]
+default = []
 performant = ["polars/cse", "pica-record/performant"]
 nightly = ["polars/nightly", "hashbrown/nightly", "pica-record/nightly"]
 
