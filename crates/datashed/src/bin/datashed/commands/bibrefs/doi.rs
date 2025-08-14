@@ -43,8 +43,8 @@ impl DoiMatcher {
         let datacite = Self::datacite(datacite, normalize);
         let crossref = Self::crossref(crossref, normalize);
 
-        let mut dois = HashSet::from_iter(datacite.into_iter());
-        dois.extend(crossref.into_iter());
+        let mut dois = HashSet::from_iter(datacite);
+        dois.extend(crossref);
 
         Self { normalize, dois }
     }
