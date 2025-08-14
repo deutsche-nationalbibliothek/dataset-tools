@@ -20,10 +20,10 @@ concurrency:
 env:
   CARGO_INCREMENTAL: 0
   CARGO_TERM_COLOR: always
-  RUSTDOCFLAGS: "-Dwarnings"
-  RUSTUP_MAX_RETRIES: 10
   RUST_BACKTRACE: 1
+  RUSTDOCFLAGS: "-Dwarnings"
   RUSTFLAGS: -C debuginfo=0
+  RUSTUP_MAX_RETRIES: 10
 
 permissions:
   contents: read
@@ -35,7 +35,6 @@ defaults:
 jobs:
   test:
     strategy:
-      max-parallel: 1
       matrix:
         target:
           - { os: ubuntu-latest, toolchain: stable, triple: x86_64-unknown-linux-gnu }
