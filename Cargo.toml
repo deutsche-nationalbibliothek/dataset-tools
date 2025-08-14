@@ -53,6 +53,8 @@ version = "0.50"
 features = [
   "decompress",
   "dtype-slim",
+  "dtype-u8",
+  "dtype-u16",
   "ipc",
   "is_in",
   "lazy",
