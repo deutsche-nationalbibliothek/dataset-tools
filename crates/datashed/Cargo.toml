@@ -26,10 +26,12 @@ clap_complete = { workspace = true }
 clap = { workspace = true }
 flate2 = { workspace = true }
 hashbrown = { workspace = true }
+indexmap = { workspace = true }
 indicatif = { workspace = true }
 isbn = { workspace = true }
-indexmap = { workspace = true }
 lingua = { workspace = true }
+ndarray-stats = { workspace = true }
+ndarray = { workspace = true }
 owo-colors = { workspace = true }
 pica-record = { workspace = true }
 polars = { workspace = true }

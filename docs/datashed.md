@@ -166,6 +166,10 @@ confidence value. If the index is in [Apache Arrow] format, which is the
 default, the two columns are combined into one column `lang`. Language
 detection is performed with [lingua] in high-accuracy mode.
 
+#### Letter Frequency
+
+_tba_
+
 #### Alpha
 
 The `alpha` score of a document is the ratio of alphabetic characters to

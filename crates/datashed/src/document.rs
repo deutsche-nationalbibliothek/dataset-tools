@@ -3,12 +3,16 @@ use std::fmt::Write;
 use std::fs::{self};
 use std::os::linux::fs::MetadataExt;
 use std::path::Path;
-use std::sync::OnceLock;
+use std::sync::{LazyLock, OnceLock};
 use std::time::UNIX_EPOCH;
 
-use bstr::ByteSlice;
+use bstr::{BStr, ByteSlice};
+use hashbrown::HashMap;
 use lingua::{Language, LanguageDetector, LanguageDetectorBuilder};
+use ndarray::Array1;
+use ndarray_stats::DeviationExt;
 use sha2::{Digest, Sha256};
+use unicode_normalization::UnicodeNormalization;
 
 use crate::{DatashedResult, Doctype};
 
@@ -21,6 +25,7 @@ pub struct Document {
     pub lang_score: Option<f64>,
     pub size: u64,
     pub alpha: f64,
+    pub lfreq: Option<f64>,
     pub mtime: u64,
 }
 
@@ -101,6 +106,80 @@ fn lang<T: Into<String>>(text: T) -> Option<(String, f64)> {
     }
 }
 
+fn lfreq(code: &str, data: &BStr) -> Option<f64> {
+    const ALPHABET_GER: [char; 30] = [
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+        'y', 'z', 'ß', 'ä', 'ö', 'ü',
+    ];
+
+    const ALPHABET_ENG: [char; 26] = [
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+        'y', 'z',
+    ];
+
+    static LFREQ_GER: LazyLock<Array1<f64>> = LazyLock::new(|| {
+        Array1::from_vec(vec![
+            0.06006, 0.02148, 0.02690, 0.04718, 0.16006, 0.01832,
+            0.03064, 0.04249, 0.07752, 0.00297, 0.01536, 0.03787,
+            0.02798, 0.09660, 0.02684, 0.01049, 0.00028, 0.07737,
+            0.06343, 0.06369, 0.03820, 0.00918, 0.01427, 0.00051,
+            0.00107, 0.01237, 0.00170, 0.00548, 0.00269, 0.00683,
+        ])
+    });
+
+    static LFREQ_ENG: LazyLock<Array1<f64>> = LazyLock::new(|| {
+        Array1::from_vec(vec![
+            0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228,
+            0.02015, 0.06094, 0.06966, 0.00253, 0.01772, 0.04025,
+            0.02406, 0.06749, 0.07507, 0.01929, 0.00950, 0.05987,
+            0.06327, 0.09056, 0.02758, 0.00978, 0.02360, 0.00250,
+            0.01974, 0.00074,
+        ])
+    });
+
+    fn lfreq_inner(
+        data: &BStr,
+        alphabet: &[char],
+        frequencies: &Array1<f64>,
+    ) -> Option<f64> {
+        let freqs = data
+            .chars()
+            .nfc()
+            .to_string()
+            .to_lowercase()
+            .chars()
+            .filter(|c| alphabet.contains(c))
+            .fold(HashMap::new(), |mut freqs, value| {
+                freqs
+                    .entry(value)
+                    .and_modify(|entry| *entry += 1)
+                    .or_insert(1);
+                freqs
+            });
+
+        let n = freqs.values().sum::<u64>();
+        let x = if n > 0 {
+            Array1::from_iter(
+                alphabet
+                    .iter()
+                    .map(|c| *freqs.get(c).unwrap_or(&0) as f64),
+            ) / n as f64
+        } else {
+            Array1::zeros(alphabet.len())
+        };
+
+        x.l2_dist(&frequencies).ok()
+    }
+
+    match code {
+        "ger" => lfreq_inner(data, &ALPHABET_GER, &*LFREQ_GER),
+        "eng" => lfreq_inner(data, &ALPHABET_ENG, &*LFREQ_ENG),
+        _ => None,
+    }
+}
+
 impl Document {
     pub fn from_path<P, Q>(
         path: P,
@@ -142,6 +221,11 @@ impl Document {
                 (None, None)
             };
 
+        let lfreq = lang_code
+            .as_ref()
+            .map(|code| lfreq(&code, data.as_bstr()))
+            .flatten();
+
         let doctype =
             Doctype::try_from(path.strip_prefix(&data_dir).unwrap())
                 .ok();
@@ -156,6 +240,7 @@ impl Document {
                 lang_score,
                 size: metadata.st_size(),
                 alpha: alpha(&data),
+                lfreq,
                 mtime,
             },
             data,

@@ -132,6 +132,7 @@ impl Index {
         let mut lang_codes: Vec<Option<String>> = vec![];
         let mut lang_scores: Vec<Option<f64>> = vec![];
         let mut sizes: Vec<u64> = vec![];
+        let mut lfreqs: Vec<Option<f64>> = vec![];
         let mut alphas: Vec<f64> = vec![];
         let mut mtimes: Vec<u64> = vec![];
 
@@ -151,6 +152,7 @@ impl Index {
             lang_codes.push(doc.lang_code);
             lang_scores.push(doc.lang_score);
             sizes.push(doc.size);
+            lfreqs.push(doc.lfreq);
             alphas.push(doc.alpha);
             mtimes.push(doc.mtime);
         }
@@ -174,6 +176,7 @@ impl Index {
         .into_struct("lang".into());
 
         columns.push(col!("lang", lang));
+        columns.push(col!("lfreq", lfreqs));
         columns.push(col!("alpha", alphas));
         columns.push(col!("mtime", mtimes));
 
