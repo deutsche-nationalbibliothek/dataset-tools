@@ -168,7 +168,7 @@ detection is performed with [lingua] in high-accuracy mode.
 
 #### Letter Frequency
 
-The `lfreq` column contains a measure of how far the document deviates
+The `lfreq` score contains a measure of how far the document deviates
 from the letter distribution of the respective language. To get the
 value, a vector $x$ of relative letter frequencies is first calculated
 over the characters of a fixed alphabet. Then the [euclidian distance]
