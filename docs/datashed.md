@@ -172,16 +172,21 @@ The `lfreq` score contains a measure of how far the document deviates
 from the letter distribution of the respective language. To get the
 value, a vector $x$ of relative letter frequencies is first calculated
 over the characters of a fixed alphabet. Then the [euclidian distance]
-to a reference vector $y$ of the respective language is calculated
+to th reference vector $y$ of the respective language is calculated
 ($\ell^2$-norm).
 
 $$
 \text{lfreq} \triangleq \left \lVert x - y \right \rVert_2
 $$
 
-Letters that are not part of the language's alphabet are ignored. So
-far only English and German are supported (please file a GitHub issue if
-another language is needed).
+Letters that are not part of the language's alphabet are ignored. So far
+only English and German are supported. If the language of the document
+is not supported, the `lfreq` value is set to `null`.
+
+> [!NOTE]
+> If you need the support of another language, please create a GitHub
+> issue with a reference to the alphabet of the language and a reference
+> vector containing the relative frequencies.
 
 #### Alpha
 
