@@ -171,12 +171,12 @@ detection is performed with [lingua] in high-accuracy mode.
 The `lfreq` column contains a measure of how far the document deviates
 from the letter distribution of the respective language. To get the
 value, a vector $x$ of relative letter frequencies is first calculated
-over the characters of a fixed alphabet. Then the euclidian distance
+over the characters of a fixed alphabet. Then the [euclidian distance]
 to a reference vector $y$ of the respective language is calculated
-($\ell^2$ norm).
+($\ell^2$-norm).
 
 $$
-lfreq \triangleq \left \lVert x - y \right \rVert_2
+\text{lfreq} \triangleq \left \lVert x - y \right \rVert_2
 $$
 
 Letters that are not part of the language's alphabet are ignored. So
@@ -191,7 +191,7 @@ which satisfy the _Alphabetic_ property of the [Unicode Standard]
 described in Chapter 4 (Character Properties). The score is defined as
 
 $$
-alpha \triangleq \frac{1}{N}\sum_{i = 1}^{N} \mathbf{1}_A(c_i)
+\text{alpha} \triangleq \frac{1}{N}\sum_{i = 1}^{N} \mathbf{1}_A(c_i)
 $$
 
 where $N$ is total number of characters of the document, $c_i$ is the
@@ -561,3 +561,4 @@ Verify consistency with `datashed verify`.
 [DVC]: https://dvc.org/
 [lingua]: https://github.com/pemistahl/lingua-rs
 [Unicode Standard]: https://www.unicode.org/versions/latest/
+[euclidian distance]: https://en.wikipedia.org/wiki/Euclidean_distance
