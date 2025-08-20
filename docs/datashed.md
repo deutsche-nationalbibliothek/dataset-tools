@@ -168,7 +168,20 @@ detection is performed with [lingua] in high-accuracy mode.
 
 #### Letter Frequency
 
-_tba_
+The `lfreq` column contains a measure of how far the document deviates
+from the letter distribution of the respective language. To get the
+value, a vector $x$ of relative letter frequencies is first calculated
+over the characters of a fixed alphabet. Then the euclidian distance
+to a reference vector $y$ of the respective language is calculated
+($\ell^2$ norm).
+
+$$
+lfreq \triangleq \left \lVert x - y \right \rVert_2
+$$
+
+Letters that are not part of the language's alphabet are ignored. So
+far only English and German are supported (please file a GitHub issue if
+another language is needed).
 
 #### Alpha
 
