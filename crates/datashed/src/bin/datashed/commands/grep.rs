@@ -88,10 +88,10 @@ impl Grep {
                 let mut haystack =
                     fs::read(data_dir.join(path)).unwrap();
 
-                if let Some(n) = self.max_bytes {
-                    if n > 0 {
-                        haystack.truncate(n);
-                    }
+                if let Some(n) = self.max_bytes
+                    && n > 0
+                {
+                    haystack.truncate(n);
                 }
 
                 if re.is_match(&haystack) ^ self.invert {

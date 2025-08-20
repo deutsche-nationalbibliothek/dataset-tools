@@ -45,17 +45,15 @@ impl Index {
 
         let mut doctype_refinements = Refinements::default();
 
-        if let Some(refinements) = config.refinements {
-            if let Some(path) = refinements.doctype {
-                let mut content = read_to_string(path)?;
-
-                if let Some(ref runtime) = config.runtime {
-                    content = translit(runtime.normalization)(content);
-                }
-
-                doctype_refinements =
-                    toml_edit::de::from_str(&content)?;
+        if let Some(refinements) = config.refinements
+            && let Some(path) = refinements.doctype
+        {
+            let mut content = read_to_string(path)?;
+            if let Some(ref runtime) = config.runtime {
+                content = translit(runtime.normalization)(content);
             }
+
+            doctype_refinements = toml_edit::de::from_str(&content)?;
         }
 
         if let Some(path) = self.metadata {

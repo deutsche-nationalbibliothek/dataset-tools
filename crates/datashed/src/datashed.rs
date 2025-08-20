@@ -29,10 +29,9 @@ impl Datashed {
         loop {
             if let Ok(metadata) =
                 fs::metadata(root_dir.join(Self::CONFIG))
+                && metadata.is_file()
             {
-                if metadata.is_file() {
-                    break;
-                }
+                break;
             }
 
             if !root_dir.pop() {
