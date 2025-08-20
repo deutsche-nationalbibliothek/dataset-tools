@@ -170,12 +170,12 @@ fn lfreq(code: &str, data: &BStr) -> Option<f64> {
             Array1::zeros(alphabet.len())
         };
 
-        x.l2_dist(&frequencies).ok()
+        x.l2_dist(frequencies).ok()
     }
 
     match code {
-        "ger" => lfreq_inner(data, &ALPHABET_GER, &*LFREQ_GER),
-        "eng" => lfreq_inner(data, &ALPHABET_ENG, &*LFREQ_ENG),
+        "ger" => lfreq_inner(data, &ALPHABET_GER, &LFREQ_GER),
+        "eng" => lfreq_inner(data, &ALPHABET_ENG, &LFREQ_ENG),
         _ => None,
     }
 }
@@ -223,8 +223,7 @@ impl Document {
 
         let lfreq = lang_code
             .as_ref()
-            .map(|code| lfreq(&code, data.as_bstr()))
-            .flatten();
+            .and_then(|code| lfreq(code, data.as_bstr()));
 
         let doctype =
             Doctype::try_from(path.strip_prefix(&data_dir).unwrap())

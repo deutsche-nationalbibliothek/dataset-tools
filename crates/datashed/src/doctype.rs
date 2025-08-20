@@ -238,23 +238,21 @@ impl MatchExpr {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) -> Option<Doctype> {
-        if let Some(ref path) = self.inherit {
-            if let Some(dst) = record.first(path, options) {
-                if let Some(src) = record.ppn() {
-                    self.inheritance
-                        .insert(src.to_string(), dst.to_string());
-                }
-            }
+        if let Some(ref path) = self.inherit
+            && let Some(dst) = record.first(path, options)
+            && let Some(src) = record.ppn()
+        {
+            self.inheritance.insert(src.to_string(), dst.to_string());
         }
 
         let values =
             record.path(&self.head, options).collect::<Vec<_>>();
 
         for arm in self.cases.iter() {
-            if let Some(ref guard) = arm.guard {
-                if !guard.is_match(record, options) {
-                    continue;
-                }
+            if let Some(ref guard) = arm.guard
+                && !guard.is_match(record, options)
+            {
+                continue;
             }
 
             let result = match arm.pattern {
@@ -303,13 +301,11 @@ impl IfExpr {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) -> Option<Doctype> {
-        if let Some(ref path) = self.inherit {
-            if let Some(dst) = record.first(path, options) {
-                if let Some(src) = record.ppn() {
-                    self.inheritance
-                        .insert(src.to_string(), dst.to_string());
-                }
-            }
+        if let Some(ref path) = self.inherit
+            && let Some(dst) = record.first(path, options)
+            && let Some(src) = record.ppn()
+        {
+            self.inheritance.insert(src.to_string(), dst.to_string());
         }
 
         if self.predicate.is_match(record, options) {

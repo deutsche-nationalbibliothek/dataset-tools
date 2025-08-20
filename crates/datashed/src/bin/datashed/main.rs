@@ -17,14 +17,12 @@ fn num_jobs(args: &Args) -> usize {
         return value;
     }
 
-    if let Ok(datashed) = Datashed::discover() {
-        if let Ok(config) = datashed.config() {
-            if let Some(runtime) = config.runtime {
-                if let Some(num_jobs) = runtime.num_jobs {
-                    return num_jobs;
-                }
-            }
-        }
+    if let Ok(datashed) = Datashed::discover()
+        && let Ok(config) = datashed.config()
+        && let Some(runtime) = config.runtime
+        && let Some(num_jobs) = runtime.num_jobs
+    {
+        return num_jobs;
     }
 
     0

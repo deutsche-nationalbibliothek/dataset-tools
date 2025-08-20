@@ -87,10 +87,10 @@ fn git_get_user<P: AsRef<Path>>(path: P) -> Option<String> {
         .stdout(Stdio::piped())
         .output();
 
-    if let Ok(output) = result {
-        if let Ok(name) = std::str::from_utf8(&output.stdout) {
-            user.push_str(name.trim_end());
-        }
+    if let Ok(output) = result
+        && let Ok(name) = std::str::from_utf8(&output.stdout)
+    {
+        user.push_str(name.trim_end());
     }
 
     if user.is_empty() {
@@ -105,10 +105,10 @@ fn git_get_user<P: AsRef<Path>>(path: P) -> Option<String> {
         .stdout(Stdio::piped())
         .output();
 
-    if let Ok(output) = result {
-        if let Ok(email) = std::str::from_utf8(&output.stdout) {
-            user.push_str(&format!(" <{}>", email.trim_end()));
-        }
+    if let Ok(output) = result
+        && let Ok(email) = std::str::from_utf8(&output.stdout)
+    {
+        user.push_str(&format!(" <{}>", email.trim_end()));
     }
 
     Some(user)
@@ -152,16 +152,14 @@ impl Init {
         }
 
         if !config.exists() || self.force {
-            if self.authors.is_empty() {
-                if let Some(author) = git_get_user(&root_dir) {
-                    if self.common.verbose {
-                        eprintln!(
-                            "Set author to Git identity '{author}'"
-                        );
-                    }
-
-                    self.authors.push(author);
+            if self.authors.is_empty()
+                && let Some(author) = git_get_user(&root_dir)
+            {
+                if self.common.verbose {
+                    eprintln!("Set author to Git identity '{author}'");
                 }
+
+                self.authors.push(author);
             }
 
             let mut config = Config::create(config)?;
