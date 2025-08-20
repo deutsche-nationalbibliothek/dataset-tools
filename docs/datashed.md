@@ -166,6 +166,28 @@ confidence value. If the index is in [Apache Arrow] format, which is the
 default, the two columns are combined into one column `lang`. Language
 detection is performed with [lingua] in high-accuracy mode.
 
+#### Letter Frequency
+
+The `lfreq` score contains a measure of how far the document deviates
+from the letter distribution of the respective language. To get the
+value, a vector $x$ of relative letter frequencies is first calculated
+over the characters of a fixed alphabet. Then the [euclidian distance]
+to th reference vector $y$ of the respective language is calculated
+($\ell^2$-norm).
+
+$$
+\text{lfreq} \triangleq \left \lVert x - y \right \rVert_2
+$$
+
+Letters that are not part of the language's alphabet are ignored. So far
+only English and German are supported. If the language of the document
+is not supported, the `lfreq` value is set to `null`.
+
+> [!NOTE]
+> If you need the support of another language, please create a GitHub
+> issue with a reference to the alphabet of the language and a reference
+> vector containing the relative frequencies.
+
 #### Alpha
 
 The `alpha` score of a document is the ratio of alphabetic characters to
@@ -174,7 +196,7 @@ which satisfy the _Alphabetic_ property of the [Unicode Standard]
 described in Chapter 4 (Character Properties). The score is defined as
 
 $$
-alpha \triangleq \frac{1}{N}\sum_{i = 1}^{N} \mathbf{1}_A(c_i)
+\text{alpha} \triangleq \frac{1}{N}\sum_{i = 1}^{N} \mathbf{1}_A(c_i)
 $$
 
 where $N$ is total number of characters of the document, $c_i$ is the
@@ -544,3 +566,4 @@ Verify consistency with `datashed verify`.
 [DVC]: https://dvc.org/
 [lingua]: https://github.com/pemistahl/lingua-rs
 [Unicode Standard]: https://www.unicode.org/versions/latest/
+[euclidian distance]: https://en.wikipedia.org/wiki/Euclidean_distance

@@ -127,6 +127,18 @@ where
         );
     }
 
+    // LFREQ
+    let lfreqs: Vec<_> = columns[idx]
+        .cast(&DataType::Float64)?
+        .f64()?
+        .iter()
+        .collect();
+    idx += 1;
+
+    assert_abs_diff_eq!(lfreqs[0].unwrap(), 0.05829559, epsilon = 1e-4);
+    assert_abs_diff_eq!(lfreqs[1].unwrap(), 0.05025442, epsilon = 1e-4);
+    assert_abs_diff_eq!(lfreqs[2].unwrap(), 0.06817873, epsilon = 1e-4);
+
     // ALPHA
     let alphas: Vec<_> = columns[idx]
         .cast(&DataType::Float64)?
