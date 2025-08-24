@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/datashed"]
+members = ["crates/datashed", "crates/unhyphen"]
 resolver = "3"
 
 [workspace.package]
