@@ -26,11 +26,14 @@ pub(crate) const DOCTYPES: [&str; 13] = [
     "review",
 ];
 
-#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug, Default, Clone, Copy, PartialEq, Serialize, Deserialize,
+)]
 #[serde(rename_all = "kebab-case")]
 pub enum Doctype {
     Blurb,
     Bibliography,
+    #[default]
     Other,
     Toc,
 
@@ -48,12 +51,6 @@ pub enum Doctype {
     Correction,
     Editorial,
     Review,
-}
-
-impl Default for Doctype {
-    fn default() -> Self {
-        Self::Other
-    }
 }
 
 impl FromStr for Doctype {
