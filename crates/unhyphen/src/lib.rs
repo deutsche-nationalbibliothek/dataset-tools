@@ -188,12 +188,11 @@ fn frequencies(
     tokens: &[Token<'_>],
     threshold: u64,
 ) -> HashMap<String, u64> {
-    let mut iter = tokens.iter();
     let mut state = State::Start;
     let mut words = vec![];
     let mut buf = vec![];
 
-    while let Some(token) = iter.next() {
+    for token in tokens.iter() {
         match state {
             State::Start => match token {
                 Token::Whitespace(_) => continue,
