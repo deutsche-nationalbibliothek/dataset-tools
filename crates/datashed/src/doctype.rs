@@ -8,22 +8,22 @@ use pica_record::path::{Path as PicaPath, PathExt};
 use pica_record::prelude::*;
 use serde::{Deserialize, Serialize};
 
-pub(crate) const DOCTYPES: [&str; 13] = [
-    "blurb",
-    "musical-notation",
-    "other",
-    "statistical-report",
-    "bibliography",
-    "toc",
-    // theses
+pub(crate) const DOCTYPES: [&str; 11] = [
+    // article
+    "review",
+    "working-paper",
+    // thesis
     "bachelor-thesis",
     "diploma-thesis",
     "doctoral-thesis",
+    "magister-thesis",
     "master-thesis",
-    // Miscellaneous
-    "correction",
-    "editorial",
-    "review",
+    "study-thesis",
+    // paratext
+    "blurb",
+    "toc",
+    // other
+    "other",
 ];
 
 #[derive(
@@ -31,26 +31,25 @@ pub(crate) const DOCTYPES: [&str; 13] = [
 )]
 #[serde(rename_all = "kebab-case")]
 pub enum Doctype {
-    Blurb,
-    Bibliography,
-    #[default]
-    Other,
-    Toc,
+    // article
+    Review,
+    WorkingPaper,
 
-    // Few Text
-    MusicalNotation,
-    StatisticalReport,
-
-    // Theses
+    // thesis
     BachelorThesis,
     DiplomaThesis,
     DoctoralThesis,
+    MagisterThesis,
     MasterThesis,
+    StudyThesis,
 
-    // Miscellaneous
-    Correction,
-    Editorial,
-    Review,
+    // paratext
+    Blurb,
+    Toc,
+
+    // other
+    #[default]
+    Other,
 }
 
 impl FromStr for Doctype {
@@ -69,25 +68,24 @@ impl FromStr for Doctype {
 impl Display for Doctype {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Blurb => write!(f, "blurb"),
-            Self::Bibliography => write!(f, "bibliography"),
-            Self::Other => write!(f, "other"),
-            Self::Toc => write!(f, "toc"),
+            // Article
+            Self::Review => write!(f, "review"),
+            Self::WorkingPaper => write!(f, "working-paper"),
 
-            // Few Text
-            Self::MusicalNotation => write!(f, "musical-notation"),
-            Self::StatisticalReport => write!(f, "statistical-report"),
-
-            // Theses
+            // Thesis
             Self::BachelorThesis => write!(f, "bachelor-thesis"),
             Self::DiplomaThesis => write!(f, "diploma-thesis"),
             Self::DoctoralThesis => write!(f, "doctoral-thesis"),
+            Self::MagisterThesis => write!(f, "magister-thesis"),
             Self::MasterThesis => write!(f, "master-thesis"),
+            Self::StudyThesis => write!(f, "study-thesis"),
 
-            // Miscellaneous
-            Self::Correction => write!(f, "correction"),
-            Self::Editorial => write!(f, "editorial"),
-            Self::Review => write!(f, "review"),
+            // Paratexts
+            Self::Blurb => write!(f, "blurb"),
+            Self::Toc => write!(f, "toc"),
+
+            // Other
+            Self::Other => write!(f, "other"),
         }
     }
 }
