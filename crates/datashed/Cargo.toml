@@ -20,10 +20,13 @@ performant = ["polars/cse", "pica-record/performant"]
 nightly = ["polars/nightly", "hashbrown/nightly", "pica-record/nightly"]
 
 [dependencies]
+actix-files = { workspace = true }
+actix-web = { workspace = true }
 anyhow = { workspace = true }
 bstr = { workspace = true }
 clap_complete = { workspace = true }
 clap = { workspace = true }
+env_logger = { workspace = true }
 flate2 = { workspace = true }
 hashbrown = { workspace = true }
 indexmap = { workspace = true }
@@ -32,6 +35,7 @@ isbn = { workspace = true }
 lingua = { workspace = true }
 ndarray-stats = { workspace = true }
 ndarray = { workspace = true }
+openssl = { workspace = true }
 owo-colors = { workspace = true }
 pica-record = { workspace = true }
 polars = { workspace = true }

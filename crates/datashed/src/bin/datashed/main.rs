@@ -2,6 +2,7 @@ use std::process::ExitCode;
 
 use clap::Parser;
 use datashed::Datashed;
+use env_logger::Env;
 use rayon::ThreadPoolBuilder;
 
 use crate::cli::{Args, Command};
@@ -28,13 +29,21 @@ fn num_jobs(args: &Args) -> usize {
     0
 }
 
-fn main() -> ExitCode {
+#[actix_web::main]
+async fn main() -> ExitCode {
     let args = Args::parse();
 
     ThreadPoolBuilder::new()
         .num_threads(num_jobs(&args))
         .build_global()
         .unwrap();
+
+    env_logger::Builder::from_env(
+        Env::default().default_filter_or("info"),
+    )
+    .format_module_path(false)
+    .format_target(false)
+    .init();
 
     let result = match *args.cmd {
         Command::Archive(cmd) => cmd.execute(),
@@ -47,6 +56,7 @@ fn main() -> ExitCode {
         Command::Init(cmd) => cmd.execute(),
         Command::Lfreq(cmd) => cmd.execute(),
         Command::Restore(cmd) => cmd.execute(),
+        Command::Serve(cmd) => cmd.execute().await,
         Command::Summary(cmd) => cmd.execute(),
         Command::Verify(cmd) => cmd.execute(),
         Command::Version(cmd) => cmd.execute(),
