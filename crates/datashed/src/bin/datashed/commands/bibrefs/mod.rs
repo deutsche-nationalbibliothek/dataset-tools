@@ -64,7 +64,7 @@ impl Display for ReferenceType {
             Self::Ismn => write!(f, "ismn"),
             Self::Isni => write!(f, "isni"),
             Self::Issn => write!(f, "issn"),
-            Self::Jel => write!(f, "jel"),
+            Self::Jel => write!(f, "jelc"),
             Self::Lcc => write!(f, "lcc"),
             Self::Msc => write!(f, "msc"),
             Self::Orcid => write!(f, "orcid"),
@@ -75,7 +75,7 @@ impl Display for ReferenceType {
 
 pub fn reftype_dtype() -> DataType {
     const CODES: [&str; 11] = [
-        "isbn", "issn", "ismn", "doi", "orcid", "isni", "jel", "udc",
+        "isbn", "issn", "ismn", "doi", "orcid", "isni", "jelc", "udc",
         "msc", "ddc", "lcc",
     ];
 
