@@ -8,10 +8,9 @@ use pica_record::path::{Path as PicaPath, PathExt};
 use pica_record::prelude::*;
 use serde::{Deserialize, Serialize};
 
-pub(crate) const DOCTYPES: [&str; 11] = [
+pub(crate) const DOCTYPES: [&str; 12] = [
     // article
     "review",
-    "working-paper",
     // thesis
     "bachelor-thesis",
     "diploma-thesis",
@@ -23,6 +22,8 @@ pub(crate) const DOCTYPES: [&str; 11] = [
     "blurb",
     "toc",
     // other
+    "policy-paper",
+    "working-paper",
     "other",
 ];
 
@@ -33,7 +34,6 @@ pub(crate) const DOCTYPES: [&str; 11] = [
 pub enum Doctype {
     // article
     Review,
-    WorkingPaper,
 
     // thesis
     BachelorThesis,
@@ -48,6 +48,8 @@ pub enum Doctype {
     Toc,
 
     // other
+    PolicyPaper,
+    WorkingPaper,
     #[default]
     Other,
 }
@@ -70,7 +72,6 @@ impl Display for Doctype {
         match self {
             // Article
             Self::Review => write!(f, "review"),
-            Self::WorkingPaper => write!(f, "working-paper"),
 
             // Thesis
             Self::BachelorThesis => write!(f, "bachelor-thesis"),
@@ -85,6 +86,8 @@ impl Display for Doctype {
             Self::Toc => write!(f, "toc"),
 
             // Other
+            Self::PolicyPaper => write!(f, "policy-paper"),
+            Self::WorkingPaper => write!(f, "working-paper"),
             Self::Other => write!(f, "other"),
         }
     }
