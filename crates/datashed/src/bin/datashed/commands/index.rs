@@ -1,9 +1,11 @@
 use std::ffi::OsStr;
 use std::fs::read_to_string;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 use datashed::{
-    Document, Refinements, doctype_dtype, iso6392b_dtype, translit,
+    Doctype, Document, Refinements, doctype_dtype, iso6392b_dtype,
+    translit,
 };
 use indicatif::ParallelProgressIterator;
 use pica_record::prelude::*;
@@ -17,6 +19,9 @@ pub(crate) struct Index {
     /// Write the filename into the specified column.
     #[arg(long)]
     filename_column: Option<String>,
+
+    #[arg(long, default_value = "other")]
+    doctype: String,
 
     #[arg(long, short)]
     output: Option<PathBuf>,
@@ -42,6 +47,11 @@ impl Index {
         let data_dir = datashed.data_dir();
         let base_dir = datashed.base_dir();
         let config = datashed.config()?;
+
+        let Ok(default_doctype) = Doctype::from_str(&self.doctype)
+        else {
+            bail!("Invalid doctype '{}'", self.doctype);
+        };
 
         let mut doctype_refinements = Refinements::default();
 
@@ -140,7 +150,7 @@ impl Index {
             let doctype = doc
                 .doctype
                 .or(doctype_map.remove(&name))
-                .unwrap_or_default()
+                .unwrap_or(default_doctype)
                 .to_string();
 
             paths.push(doc.path);
