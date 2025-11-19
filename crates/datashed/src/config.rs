@@ -1,5 +1,6 @@
 use std::fs::{self, File};
 use std::io::{self, Write};
+use std::net::IpAddr;
 use std::path::{Path, PathBuf};
 
 use semver::Version;
@@ -21,6 +22,9 @@ pub struct Config {
 
     /// Runtime options.
     pub runtime: Option<Runtime>,
+
+    /// Server options.
+    pub server: Option<Server>,
 
     /// Doctype refinements.
     pub refinements: Option<Refinements>,
@@ -111,6 +115,15 @@ pub struct Runtime {
     /// Specifies the Unicode normalization of the data. If necessary,
     /// options are adapted to the corresponding normalized form.
     pub normalization: Option<NormalizationForm>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Server {
+    pub address: IpAddr,
+    pub port: u16,
+    pub workers: Option<usize>,
+    pub cert: PathBuf,
+    pub key: PathBuf,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]
