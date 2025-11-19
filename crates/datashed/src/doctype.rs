@@ -8,7 +8,7 @@ use pica_record::path::{Path as PicaPath, PathExt};
 use pica_record::prelude::*;
 use serde::{Deserialize, Serialize};
 
-pub(crate) const DOCTYPES: [&str; 14] = [
+pub(crate) const DOCTYPES: [&str; 16] = [
     // article
     "review",
     // thesis
@@ -22,6 +22,8 @@ pub(crate) const DOCTYPES: [&str; 14] = [
     // paratext
     "blurb",
     "correction",
+    "editorial",
+    "preface",
     "toc",
     // other
     "policy-paper",
@@ -49,6 +51,8 @@ pub enum Doctype {
     // paratext
     Blurb,
     Correction,
+    Editorial,
+    Preface,
     Toc,
 
     // other
@@ -91,6 +95,8 @@ impl Display for Doctype {
             // Paratexts
             Self::Blurb => write!(f, "blurb"),
             Self::Correction => write!(f, "correction"),
+            Self::Editorial => write!(f, "editorial"),
+            Self::Preface => write!(f, "preface"),
             Self::Toc => write!(f, "toc"),
 
             // Other
