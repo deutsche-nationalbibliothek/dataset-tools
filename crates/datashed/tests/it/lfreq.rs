@@ -8,8 +8,7 @@ use crate::prelude::*;
 fn lfreq_default() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["lfreq", "-q"])
         .assert();
@@ -37,8 +36,7 @@ fn lfreq_output_csv() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.child("lfreq.csv");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["lfreq", "-q", "-o", output.to_str().unwrap()])
         .assert();
@@ -70,8 +68,7 @@ fn lfreq_output_ipc() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.child("lfreq.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["lfreq", "-q", "-o", output.to_str().unwrap()])
         .assert();
@@ -99,11 +96,11 @@ fn lfreq_output_ipc() -> TestResult {
 fn lfreq_alphabet() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["lfreq", "-q", "--alphabet", "abü"])
         .assert();
+
     assert
         .success()
         .code(0)
@@ -114,8 +111,7 @@ fn lfreq_alphabet() -> TestResult {
         .stderr(predicates::str::is_empty());
 
     // empty alphabet
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["lfreq", "-q", "--alphabet", ""])
         .assert();
@@ -151,8 +147,7 @@ fn lfreq_index() -> TestResult {
 
     let index = datashed_dir.child("tmp/index.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["lfreq", "-q", "--alphabet", "ab"])
         .args(["-I", index.to_str().unwrap()])
@@ -176,8 +171,7 @@ fn lfreq_allow_list() -> TestResult {
     let allow = datashed_dir.child("tmp/ALLOW.csv");
     allow.write_str("path\n0/dnb.txt")?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["lfreq", "-q", "--alphabet", "ab"])
         .args(["-A", allow.to_str().unwrap()])
@@ -201,8 +195,7 @@ fn lfreq_deny_list() -> TestResult {
     let deny = datashed_dir.child("tmp/DENY.csv");
     deny.write_str("path\n0/tib.txt\n1/zbw.txt\n")?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["lfreq", "-q", "--alphabet", "ab"])
         .args(["-D", deny.to_str().unwrap()])
@@ -223,8 +216,7 @@ fn lfreq_deny_list() -> TestResult {
 fn lfreq_where() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["lfreq", "-q", "--alphabet", "ab"])
         .args(["--where", "path == '0/dnb.txt'"])

@@ -196,10 +196,9 @@ where
 
 #[test]
 fn index_default() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let datashed_dir = create_datashed()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "-q"])
         .assert();
@@ -218,10 +217,9 @@ fn index_default() -> TestResult {
 
 #[test]
 fn index_filename_column() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let datashed_dir = create_datashed()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "-q", "--filename-column", "ppn"])
         .assert();
@@ -240,10 +238,9 @@ fn index_filename_column() -> TestResult {
 
 #[test]
 fn index_output_csv() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let datashed_dir = create_datashed()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "-q"])
         .args(["-o", datashed_dir.join("index.csv").to_str().unwrap()])
@@ -262,10 +259,9 @@ fn index_output_csv() -> TestResult {
 
 #[test]
 fn index_output_ipc() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let datashed_dir = create_datashed()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "-q"])
         .args(["-o", datashed_dir.join("index.ipc").to_str().unwrap()])
@@ -285,10 +281,9 @@ fn index_output_ipc() -> TestResult {
 
 #[test]
 fn index_num_threads_1() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let datashed_dir = create_datashed()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["-j", "1", "index", "-q"])
         .assert();
@@ -307,10 +302,9 @@ fn index_num_threads_1() -> TestResult {
 
 #[test]
 fn index_num_threads_2() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let datashed_dir = create_datashed()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["-j", "1", "index", "-q"])
         .assert();

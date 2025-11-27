@@ -6,8 +6,10 @@ use crate::prelude::*;
 fn summary_stdout() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&datashed_dir).arg("summary").assert();
+    let assert = datashed_cmd()
+        .current_dir(&datashed_dir)
+        .arg("summary")
+        .assert();
 
     assert
         .success()
@@ -24,8 +26,7 @@ fn summary_output() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("summary.json");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["summary", "-o", output.to_str().unwrap()])
         .assert();
@@ -52,8 +53,7 @@ fn summary_allow_list() -> TestResult {
     let allow = datashed_dir.child("tmp/ALLOW.csv");
     allow.write_str("path\n0/dnb.txt\n0/tib.txt\n")?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["summary", "-A", allow.to_str().unwrap()])
         .assert();
@@ -75,8 +75,7 @@ fn summary_deny_list() -> TestResult {
     let deny = datashed_dir.child("tmp/DENY.csv");
     deny.write_str("path\n0/dnb.txt\n")?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["summary", "-D", deny.to_str().unwrap()])
         .assert();
@@ -110,8 +109,7 @@ fn summary_index() -> TestResult {
 
     let index = datashed_dir.child("tmp/index.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["summary", "-I", index.to_str().unwrap()])
         .assert();
@@ -130,8 +128,7 @@ fn summary_index() -> TestResult {
 fn summary_where() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .arg("summary")
         .args(["--where", "path IN ('0/dnb.txt', '0/tib.txt')"])

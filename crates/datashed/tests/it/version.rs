@@ -2,10 +2,13 @@ use crate::prelude::*;
 
 #[test]
 fn version_default() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = create_datashed()?;
 
-    let assert = cmd.current_dir(&temp_dir).arg("version").assert();
+    let assert = datashed_cmd()
+        .current_dir(&temp_dir)
+        .arg("version")
+        .assert();
+
     assert
         .success()
         .code(0)
@@ -19,8 +22,7 @@ fn version_default() -> TestResult {
 fn version_set_version() -> TestResult {
     let temp_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("version")
         .arg("0.2.0")
@@ -32,8 +34,11 @@ fn version_set_version() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&temp_dir).arg("version").assert();
+    let assert = datashed_cmd()
+        .current_dir(&temp_dir)
+        .arg("version")
+        .assert();
+
     assert
         .success()
         .code(0)
@@ -47,8 +52,7 @@ fn version_set_version() -> TestResult {
 fn version_reject_smaller() -> TestResult {
     let temp_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("version")
         .arg("0.0.1")
@@ -69,8 +73,7 @@ fn version_reject_smaller() -> TestResult {
 fn version_reject_invalid() -> TestResult {
     let temp_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("version")
         .arg("X.2.0")
@@ -91,8 +94,7 @@ fn version_reject_invalid() -> TestResult {
 fn version_bump_major() -> TestResult {
     let temp_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("version")
         .args(["--bump", "major"])
@@ -104,8 +106,10 @@ fn version_bump_major() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&temp_dir).arg("version").assert();
+    let assert = datashed_cmd()
+        .current_dir(&temp_dir)
+        .arg("version")
+        .assert();
     assert
         .success()
         .code(0)
@@ -119,8 +123,7 @@ fn version_bump_major() -> TestResult {
 fn version_bump_minor() -> TestResult {
     let temp_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("version")
         .args(["--bump", "minor"])
@@ -132,8 +135,10 @@ fn version_bump_minor() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&temp_dir).arg("version").assert();
+    let assert = datashed_cmd()
+        .current_dir(&temp_dir)
+        .arg("version")
+        .assert();
     assert
         .success()
         .code(0)
@@ -147,8 +152,7 @@ fn version_bump_minor() -> TestResult {
 fn version_bump_patch() -> TestResult {
     let temp_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("version")
         .args(["--bump", "patch"])
@@ -160,8 +164,10 @@ fn version_bump_patch() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&temp_dir).arg("version").assert();
+    let assert = datashed_cmd()
+        .current_dir(&temp_dir)
+        .arg("version")
+        .assert();
     assert
         .success()
         .code(0)
