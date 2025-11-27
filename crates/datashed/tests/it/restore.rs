@@ -5,16 +5,17 @@ fn restore_default() -> TestResult {
     let datashed_dir = create_datashed()?;
 
     // create index
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&datashed_dir).arg("index").assert();
+    let assert = datashed_cmd()
+        .current_dir(&datashed_dir)
+        .arg("index")
+        .assert();
     assert.success();
 
     // create backup
     let temp_dir = TempDir::new()?;
     let archive = temp_dir.join("archive.tar.gz");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["archive", "-q"])
         .args(["-o", archive.to_str().unwrap()])
@@ -29,8 +30,7 @@ fn restore_default() -> TestResult {
     // restore backup
     let dest_dir = TempDir::new()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&dest_dir)
         .args(["restore", archive.to_str().unwrap()])
         .assert();
@@ -44,8 +44,8 @@ fn restore_default() -> TestResult {
         ));
 
     // verify
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&dest_dir).arg("verify").assert();
+    let assert =
+        datashed_cmd().current_dir(&dest_dir).arg("verify").assert();
 
     assert
         .success()
@@ -63,16 +63,17 @@ fn restore_directory() -> TestResult {
     let datashed_dir = create_datashed()?;
 
     // create index
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&datashed_dir).arg("index").assert();
+    let assert = datashed_cmd()
+        .current_dir(&datashed_dir)
+        .arg("index")
+        .assert();
     assert.success();
 
     // create backup
     let temp_dir = TempDir::new()?;
     let archive = temp_dir.join("archive.tar.gz");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["archive", "-q"])
         .args(["-o", archive.to_str().unwrap()])
@@ -88,8 +89,7 @@ fn restore_directory() -> TestResult {
     let dest_dir = TempDir::new()?;
     let out_dir = dest_dir.join("out");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&dest_dir)
         .args(["restore", archive.to_str().unwrap()])
         .args(["--directory", out_dir.to_str().unwrap()])
@@ -104,8 +104,8 @@ fn restore_directory() -> TestResult {
         ));
 
     // verify
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&out_dir).arg("verify").assert();
+    let assert =
+        datashed_cmd().current_dir(&out_dir).arg("verify").assert();
 
     assert
         .success()
@@ -123,16 +123,17 @@ fn restore_verbose() -> TestResult {
     let datashed_dir = create_datashed()?;
 
     // create index
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&datashed_dir).arg("index").assert();
+    let assert = datashed_cmd()
+        .current_dir(&datashed_dir)
+        .arg("index")
+        .assert();
     assert.success();
 
     // create backup
     let temp_dir = TempDir::new()?;
     let archive = temp_dir.join("archive.tar.gz");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["archive", "-q"])
         .args(["-o", archive.to_str().unwrap()])
@@ -148,8 +149,7 @@ fn restore_verbose() -> TestResult {
     let dest_dir = TempDir::new()?;
     let out_dir = dest_dir.join("out");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&dest_dir)
         .args(["restore", "-v", archive.to_str().unwrap()])
         .args(["-C", out_dir.to_str().unwrap()])
@@ -168,8 +168,8 @@ fn restore_verbose() -> TestResult {
         ));
 
     // verify
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&out_dir).arg("verify").assert();
+    let assert =
+        datashed_cmd().current_dir(&out_dir).arg("verify").assert();
 
     assert
         .success()
@@ -187,16 +187,17 @@ fn restore_quiet() -> TestResult {
     let datashed_dir = create_datashed()?;
 
     // create index
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&datashed_dir).arg("index").assert();
+    let assert = datashed_cmd()
+        .current_dir(&datashed_dir)
+        .arg("index")
+        .assert();
     assert.success();
 
     // create backup
     let temp_dir = TempDir::new()?;
     let archive = temp_dir.join("archive.tar.gz");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["archive", "-q"])
         .args(["-o", archive.to_str().unwrap()])
@@ -211,8 +212,7 @@ fn restore_quiet() -> TestResult {
     // restore backup
     let dest_dir = TempDir::new()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&dest_dir)
         .args(["restore", "-q", archive.to_str().unwrap()])
         .assert();
@@ -224,8 +224,8 @@ fn restore_quiet() -> TestResult {
         .stderr(predicates::str::is_empty());
 
     // verify
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&dest_dir).arg("verify").assert();
+    let assert =
+        datashed_cmd().current_dir(&dest_dir).arg("verify").assert();
 
     assert
         .success()

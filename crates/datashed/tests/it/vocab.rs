@@ -9,8 +9,7 @@ fn vocab_default() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "-o", output.to_str().unwrap()])
         .assert();
@@ -48,8 +47,7 @@ fn vocab_bigrams() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "--bigrams"])
         .args(["-o", output.to_str().unwrap()])
@@ -84,8 +82,7 @@ fn vocab_trigrams() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "--trigrams"])
         .args(["-o", output.to_str().unwrap()])
@@ -129,8 +126,7 @@ fn vocab_stopwords() -> TestResult {
     let stopwords = datashed_dir.child("STOPWORDS.txt");
     stopwords.write_str("DIE\nund\n")?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q"])
         .args(["-S", stopwords.to_str().unwrap()])
@@ -170,8 +166,7 @@ fn vocab_ucs_category_letter() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "-La"])
         .args(["-o", output.to_str().unwrap()])
@@ -206,8 +201,7 @@ fn vocab_ucs_category_lower() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "-Ll"])
         .args(["-o", output.to_str().unwrap()])
@@ -242,8 +236,7 @@ fn vocab_ucs_category_upper() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "-Lu"])
         .args(["-o", output.to_str().unwrap()])
@@ -278,8 +271,7 @@ fn vocab_ucs_category_title() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "-Lt"])
         .args(["-o", output.to_str().unwrap()])
@@ -302,8 +294,7 @@ fn vocab_ucs_category_modifier() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "-Lm"])
         .args(["-o", output.to_str().unwrap()])
@@ -326,8 +317,7 @@ fn vocab_ucs_category_other() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "-Lo"])
         .args(["-o", output.to_str().unwrap()])
@@ -350,8 +340,7 @@ fn vocab_min_term_length() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "--min-term-length", "7"])
         .args(["-o", output.to_str().unwrap()])
@@ -386,8 +375,7 @@ fn vocab_min_term_freq() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "--min-term-freq", "7"])
         .args(["-o", output.to_str().unwrap()])
@@ -422,8 +410,7 @@ fn vocab_min_doc_freq() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "--min-doc-freq", "3"])
         .args(["-o", output.to_str().unwrap()])
@@ -462,8 +449,7 @@ fn vocab_limit() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
     let output = datashed_dir.join("tmp").join("vocab.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "--limit", "2"])
         .args(["-o", output.to_str().unwrap()])
@@ -500,8 +486,7 @@ fn vocab_allow_list() -> TestResult {
     let allow = datashed_dir.child("tmp/ALLOW.csv");
     allow.write_str("path\n0/dnb.txt")?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "--limit", "1"])
         .args(["-A", allow.to_str().unwrap()])
@@ -523,8 +508,7 @@ fn vocab_deny_list() -> TestResult {
     let deny = datashed_dir.child("tmp/DENY.csv");
     deny.write_str("path\n0/tib.txt\n1/zbw.txt")?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "--limit", "1"])
         .args(["-D", deny.to_str().unwrap()])
@@ -558,8 +542,7 @@ fn vocab_index() -> TestResult {
 
     let index = datashed_dir.child("tmp/index.ipc");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["vocab", "-q", "--limit", "1"])
         .args(["-I", index.to_str().unwrap()])

@@ -14,12 +14,14 @@ fn archive_default() -> TestResult {
 
     let archive = temp_dir.join("archive.tar.gz");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&datashed_dir).arg("index").assert();
+    let assert = datashed_cmd()
+        .current_dir(&datashed_dir)
+        .arg("index")
+        .assert();
+
     assert.success();
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["archive", "-q"])
         .args(["-o", archive.to_str().unwrap()])
@@ -64,12 +66,14 @@ fn archive_fast() -> TestResult {
 
     let archive = temp_dir.join("archive.tar.gz");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&datashed_dir).arg("index").assert();
+    let assert = datashed_cmd()
+        .current_dir(&datashed_dir)
+        .arg("index")
+        .assert();
+
     assert.success();
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["archive", "-q", "--fast"])
         .args(["-o", archive.to_str().unwrap()])
@@ -113,12 +117,14 @@ fn archive_best() -> TestResult {
     let dest_dir = TempDir::new()?;
     let archive = temp_dir.join("archive.tar.gz");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&datashed_dir).arg("index").assert();
+    let assert = datashed_cmd()
+        .current_dir(&datashed_dir)
+        .arg("index")
+        .assert();
+
     assert.success();
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["archive", "-q", "--best"])
         .args(["-o", archive.to_str().unwrap()])

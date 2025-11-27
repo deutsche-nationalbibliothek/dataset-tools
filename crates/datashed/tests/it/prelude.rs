@@ -12,6 +12,11 @@ pub(crate) use datashed::{Config, Datashed};
 pub(crate) use polars::prelude::*;
 pub(crate) use predicates::prelude::*;
 
+#[inline(always)]
+pub(crate) fn datashed_cmd() -> Command {
+    Command::new(assert_cmd::cargo::cargo_bin!("datashed"))
+}
+
 pub(crate) fn data_dir() -> &'static PathBuf {
     static DATA_DIR: LazyLock<PathBuf> = LazyLock::new(|| {
         current_dir()
@@ -26,10 +31,10 @@ pub(crate) fn data_dir() -> &'static PathBuf {
 }
 
 pub(crate) fn create_datashed() -> anyhow::Result<TempDir> {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd.current_dir(&temp_dir).arg("init").assert();
+    let assert =
+        datashed_cmd().current_dir(&temp_dir).arg("init").assert();
     assert
         .success()
         .code(0)
@@ -66,8 +71,7 @@ pub(crate) fn create_datashed() -> anyhow::Result<TempDir> {
 pub(crate) fn create_datashed_with_index() -> anyhow::Result<TempDir> {
     let datashed_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .arg("index")
         .args(["-q"])

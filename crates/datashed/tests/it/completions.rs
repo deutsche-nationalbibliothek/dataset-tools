@@ -7,11 +7,10 @@ use crate::prelude::*;
 
 #[test]
 fn completions_bash() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
     let out = temp_dir.join("out.sh");
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .args(["completions", "bash"])
         .args(["-o", out.to_str().unwrap()])
         .assert();
@@ -33,11 +32,10 @@ fn completions_bash() -> TestResult {
 
 #[test]
 fn completions_elvish() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
     let out = temp_dir.join("out.sh");
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .args(["completions", "elvish"])
         .args(["-o", out.to_str().unwrap()])
         .assert();
@@ -55,11 +53,10 @@ fn completions_elvish() -> TestResult {
 
 #[test]
 fn completions_fish() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
     let out = temp_dir.join("out.sh");
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .args(["completions", "fish"])
         .args(["-o", out.to_str().unwrap()])
         .assert();
@@ -77,11 +74,10 @@ fn completions_fish() -> TestResult {
 
 #[test]
 fn completions_zsh() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
     let out = temp_dir.join("out.sh");
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .args(["completions", "zsh"])
         .args(["-o", out.to_str().unwrap()])
         .assert();

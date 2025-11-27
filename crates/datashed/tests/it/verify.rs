@@ -8,8 +8,7 @@ use crate::prelude::*;
 fn verify_default() -> TestResult {
     let datashed_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .arg("index")
         .args(["-q"])
@@ -21,8 +20,10 @@ fn verify_default() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd.current_dir(&datashed_dir).arg("verify").assert();
+    let assert = datashed_cmd()
+        .current_dir(&datashed_dir)
+        .arg("verify")
+        .assert();
 
     assert
         .success()
@@ -37,8 +38,7 @@ fn verify_default() -> TestResult {
 fn verify_permissive() -> TestResult {
     let datashed_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "--quiet"])
         .assert();
@@ -49,8 +49,7 @@ fn verify_permissive() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["verify", "--mode", "permissive"])
         .assert();
@@ -68,8 +67,7 @@ fn verify_permissive() -> TestResult {
 fn verify_strict() -> TestResult {
     let datashed_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "--quiet"])
         .assert();
@@ -80,8 +78,7 @@ fn verify_strict() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["verify", "--mode", "strict"])
         .assert();
@@ -99,8 +96,7 @@ fn verify_strict() -> TestResult {
 fn verify_missing_file() -> TestResult {
     let datashed_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "--quiet"])
         .assert();
@@ -113,8 +109,7 @@ fn verify_missing_file() -> TestResult {
 
     remove_file(datashed_dir.join("data").join("0/dnb.txt"))?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["verify", "--mode", "permissive"])
         .assert();
@@ -130,8 +125,7 @@ fn verify_missing_file() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::ord::eq(error));
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["verify", "--mode", "strict"])
         .assert();
@@ -159,8 +153,7 @@ fn verify_hash_mismatch() -> TestResult {
         "Dies ist ein kuzer Text.",
     )?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["verify", "--mode", "permissive"])
         .assert();
@@ -176,8 +169,7 @@ fn verify_hash_mismatch() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::ord::eq(error.clone()));
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["verify", "--mode", "strict"])
         .assert();
@@ -196,8 +188,7 @@ fn verify_hash_mismatch() -> TestResult {
 fn verify_mtime_mismatch() -> TestResult {
     let datashed_dir = create_datashed()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "--quiet"])
         .assert();
@@ -213,8 +204,7 @@ fn verify_mtime_mismatch() -> TestResult {
     let contents = read_to_string(data_dir().join("dnb.txt"))?;
     fs::write(datashed_dir.join("data/0/dnb.txt"), contents)?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["verify", "--mode", "permissive"])
         .assert();
@@ -230,8 +220,7 @@ fn verify_mtime_mismatch() -> TestResult {
         datashed_dir.display()
     );
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["verify", "--mode", "strict"])
         .assert();

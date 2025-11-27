@@ -6,8 +6,7 @@ fn check_default() -> TestResult {
     let checks = datashed_dir.child("checks.toml");
     checks.write_str("")?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["check", "-q"])
         .assert();
@@ -29,8 +28,7 @@ fn check_pass() -> TestResult {
     checks.write_str("[check.001]\nquery = 'SELECT COUNT(*) == 0 FROM index WHERE size <= 0'",
     )?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["check", "-q"])
         .assert();
@@ -50,8 +48,7 @@ fn check_fail() -> TestResult {
     let checks = datashed_dir.child("checks.toml");
     checks.write_str("[check.001]\nquery = 'SELECT COUNT(*) == 0 FROM index WHERE size > 0'")?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["check", "-q"])
         .assert();
@@ -73,8 +70,7 @@ fn check_skip() -> TestResult {
     checks.write_str("[check.001]\nskip = true\nquery = 'SELECT COUNT(*) == 0 FROM index WHERE size > 0'",
     )?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["check", "-q"])
         .assert();

@@ -12,8 +12,7 @@ const DNB_ISBN: &str = "Deutsche Nationalbibliothek (Hrsg.): \
 fn bibrefs_default() -> TestResult {
     let datashed_dir = create_datashed_with_index()?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["bibrefs", "-q"])
         .assert();
@@ -36,8 +35,7 @@ fn bibrefs_output_csv() -> TestResult {
 
     fs::write(datashed_dir.join("data").join("0/dnb.txt"), DNB_ISBN)?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "-q"])
         .assert();
@@ -48,8 +46,7 @@ fn bibrefs_output_csv() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["bibrefs", "-q", "-o", output.to_str().unwrap()])
         .assert();
@@ -98,8 +95,7 @@ fn bibrefs_output_ipc() -> TestResult {
 
     fs::write(datashed_dir.join("data").join("0/dnb.txt"), DNB_ISBN)?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "-q"])
         .assert();
@@ -110,8 +106,7 @@ fn bibrefs_output_ipc() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["bibrefs", "-q", "-o", output.to_str().unwrap()])
         .assert();
@@ -156,8 +151,7 @@ fn bibrefs_isbn() -> TestResult {
 
     fs::write(datashed_dir.join("data").join("0/dnb.txt"), DNB_ISBN)?;
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["index", "-q"])
         .assert();
@@ -168,8 +162,7 @@ fn bibrefs_isbn() -> TestResult {
         .stdout(predicates::str::is_empty())
         .stderr(predicates::str::is_empty());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&datashed_dir)
         .args(["bibrefs", "-q"])
         .assert();

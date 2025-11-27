@@ -4,10 +4,9 @@ use crate::prelude::*;
 
 #[test]
 fn init_default() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .arg("test-data")
@@ -34,10 +33,9 @@ fn init_default() -> TestResult {
 
 #[test]
 fn init_set_name() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .args(["--name", "foobar"])
@@ -65,10 +63,9 @@ fn init_set_name() -> TestResult {
 
 #[test]
 fn init_set_author() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .args(["--author", "Max Mustermann <m.muster@example.com>"])
@@ -128,12 +125,12 @@ fn init_derive_author() -> TestResult {
             .success()
     );
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .arg("--verbose")
         .assert();
+
     assert
         .success()
         .code(0)
@@ -157,10 +154,9 @@ fn init_derive_author() -> TestResult {
 
 #[test]
 fn init_set_description() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .args(["--description", "foobar"])
@@ -188,10 +184,9 @@ fn init_set_description() -> TestResult {
 
 #[test]
 fn init_set_version() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .args(["--version", "0.2.0"])
@@ -215,10 +210,9 @@ fn init_set_version() -> TestResult {
     assert!(config.metadata.description.is_none());
 
     // invalid version
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .args(["--version", "X.2.0"])
@@ -238,10 +232,9 @@ fn init_set_version() -> TestResult {
 
 #[test]
 fn init_vcs_git() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .args(["--vcs", "git"])
@@ -260,10 +253,9 @@ fn init_vcs_git() -> TestResult {
     assert!(temp_dir.join("test-data").join(".git").exists());
     assert!(temp_dir.join("test-data").join(".gitignore").exists());
 
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .arg("test-data")
@@ -286,10 +278,9 @@ fn init_vcs_git() -> TestResult {
 
 #[test]
 fn init_vcs_none() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .args(["--vcs", "none"])
@@ -313,10 +304,9 @@ fn init_vcs_none() -> TestResult {
 
 #[test]
 fn init_force() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .arg("test-data")
@@ -336,8 +326,7 @@ fn init_force() -> TestResult {
 
     assert_eq!(config.metadata.name, "test-data");
 
-    let mut cmd = Command::cargo_bin("datashed")?;
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .args(["--name", "foobar"])
@@ -364,10 +353,9 @@ fn init_force() -> TestResult {
 
 #[test]
 fn init_quiet() -> TestResult {
-    let mut cmd = Command::cargo_bin("datashed")?;
     let temp_dir = TempDir::new()?;
 
-    let assert = cmd
+    let assert = datashed_cmd()
         .current_dir(&temp_dir)
         .arg("init")
         .arg("--quiet")
