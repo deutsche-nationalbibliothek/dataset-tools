@@ -1,0 +1,38 @@
+use std::fmt::{self, Display};
+
+use serde::{Deserialize, Serialize};
+
+use crate::refinement::Refinements;
+
+pub type GenreRefinements = Refinements<Genre>;
+
+pub(crate) const GENRES: [&str; 5] = [
+    "belles-lettres",
+    "childrens-and-youth",
+    "non-fiction",
+    "reference-work",
+    "other",
+];
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Genre {
+    BellesLettres,
+    ChildrensAndYouth,
+    NonFiction,
+    ReferenceWork,
+    #[default]
+    Other,
+}
+
+impl Display for Genre {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::BellesLettres => write!(f, "belles-lettres"),
+            Self::ChildrensAndYouth => write!(f, "childrens-and-youth"),
+            Self::NonFiction => write!(f, "non-fiction"),
+            Self::ReferenceWork => write!(f, "reference-work"),
+            Self::Other => write!(f, "other"),
+        }
+    }
+}

@@ -1,11 +1,10 @@
 use std::ffi::OsStr;
 use std::fs::read_to_string;
 use std::path::PathBuf;
-use std::str::FromStr;
 
 use datashed::{
-    Doctype, Document, Refinements, doctype_dtype, iso6392b_dtype,
-    translit,
+    Doctype, DoctypeRefinements, Document, GenreRefinements,
+    doctype_dtype, genre_dtype, iso6392b_dtype, translit,
 };
 use indicatif::ParallelProgressIterator;
 use pica_record::prelude::*;
@@ -22,6 +21,15 @@ pub(crate) struct Index {
 
     #[arg(long, default_value = "other")]
     doctype: String,
+
+    #[arg(long, default_value = "other")]
+    genre: String,
+
+    #[arg(long)]
+    with_genre: bool,
+
+    #[arg(long, short, default_value = "0")]
+    limit: usize,
 
     #[arg(long, short)]
     output: Option<PathBuf>,
@@ -48,22 +56,28 @@ impl Index {
         let base_dir = datashed.base_dir();
         let config = datashed.config()?;
 
-        let Ok(default_doctype) = Doctype::from_str(&self.doctype)
-        else {
-            bail!("Invalid doctype '{}'", self.doctype);
-        };
+        let mut doctype_refinements = DoctypeRefinements::default();
+        let mut genre_refinements = GenreRefinements::default();
 
-        let mut doctype_refinements = Refinements::default();
+        if let Some(refinements) = config.refinements {
+            if let Some(path) = refinements.genre {
+                let mut content = read_to_string(path)?;
+                if let Some(ref runtime) = config.runtime {
+                    content = translit(runtime.normalization)(content);
+                }
 
-        if let Some(refinements) = config.refinements
-            && let Some(path) = refinements.doctype
-        {
-            let mut content = read_to_string(path)?;
-            if let Some(ref runtime) = config.runtime {
-                content = translit(runtime.normalization)(content);
+                genre_refinements = toml_edit::de::from_str(&content)?;
             }
 
-            doctype_refinements = toml_edit::de::from_str(&content)?;
+            if let Some(path) = refinements.doctype {
+                let mut content = read_to_string(path)?;
+                if let Some(ref runtime) = config.runtime {
+                    content = translit(runtime.normalization)(content);
+                }
+
+                doctype_refinements =
+                    toml_edit::de::from_str(&content)?;
+            }
         }
 
         if let Some(path) = self.metadata {
@@ -79,8 +93,14 @@ impl Index {
                     continue;
                 };
 
+                if self.with_genre {
+                    genre_refinements
+                        .process_record(record, &Default::default());
+                }
+
                 doctype_refinements
                     .process_record(record, &Default::default());
+
                 pbar.inc(1);
             }
 
@@ -88,6 +108,7 @@ impl Index {
         }
 
         let mut doctype_map = doctype_refinements.finish();
+        let mut genre_map = genre_refinements.finish();
 
         let is_arrow = if let Some(ref path) = self.output {
             path.extension()
@@ -105,6 +126,11 @@ impl Index {
         let files = WalkDir::new(&data_dir)
             .into_iter()
             .filter_map(Result::ok)
+            .take(if self.limit > 0 {
+                self.limit
+            } else {
+                usize::MAX
+            })
             .map(|dirent| dirent.into_path())
             .filter(|path| {
                 path.to_str()
@@ -136,6 +162,7 @@ impl Index {
         let mut paths: Vec<String> = vec![];
         let mut hashes: Vec<String> = vec![];
         let mut names: Vec<String> = vec![];
+        let mut genres: Vec<String> = vec![];
         let mut doctypes: Vec<String> = vec![];
         let mut lang_codes: Vec<Option<String>> = vec![];
         let mut lang_scores: Vec<Option<f64>> = vec![];
@@ -149,9 +176,16 @@ impl Index {
 
             let doctype = doc
                 .doctype
+                .map(|dt: Doctype| dt.to_string())
                 .or(doctype_map.remove(&name))
-                .unwrap_or(default_doctype)
-                .to_string();
+                .unwrap_or(self.doctype.clone());
+
+            if self.with_genre {
+                let genre = genre_map
+                    .remove(&name)
+                    .unwrap_or(self.genre.clone());
+                genres.push(genre);
+            }
 
             paths.push(doc.path);
             hashes.push(doc.hash);
@@ -172,6 +206,10 @@ impl Index {
 
         if let Some(name) = self.filename_column {
             columns.push(col!(name, names));
+        }
+
+        if self.with_genre {
+            columns.push(col!("genre", genres).cast(&genre_dtype())?);
         }
 
         columns.push(col!("doctype", doctypes).cast(&doctype_dtype())?);
