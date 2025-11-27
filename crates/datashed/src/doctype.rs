@@ -4,24 +4,25 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
-pub(crate) const DOCTYPES: [&str; 15] = [
-    // article
-    "review",
-    // thesis
+use crate::refinement::Refinements;
+
+pub type DoctypeRefinements = Refinements<Doctype>;
+
+pub(crate) const DOCTYPES: [&str; 16] = [
     "bachelor-thesis",
+    "blurb",
+    "conference-paper",
+    "correction",
     "diploma-thesis",
     "doctoral-thesis",
     "magister-thesis",
     "master-thesis",
-    "postdoctoral-thesis",
-    "study-thesis",
-    // paratext
-    "blurb",
-    "correction",
-    "preface",
-    "toc",
-    // other
     "policy-paper",
+    "postdoctoral-thesis",
+    "preface",
+    "review",
+    "study-thesis",
+    "toc",
     "working-paper",
     "other",
 ];
@@ -31,26 +32,20 @@ pub(crate) const DOCTYPES: [&str; 15] = [
 )]
 #[serde(rename_all = "kebab-case")]
 pub enum Doctype {
-    // article
-    Review,
-
-    // thesis
     BachelorThesis,
+    Blurb,
+    ConferencePaper,
+    Correction,
     DiplomaThesis,
     DoctoralThesis,
     MagisterThesis,
     MasterThesis,
-    PostdoctoralThesis,
-    StudyThesis,
-
-    // paratext
-    Blurb,
-    Correction,
-    Preface,
-    Toc,
-
-    // other
     PolicyPaper,
+    PostdoctoralThesis,
+    Preface,
+    Review,
+    StudyThesis,
+    Toc,
     WorkingPaper,
     #[default]
     Other,
@@ -72,28 +67,22 @@ impl FromStr for Doctype {
 impl Display for Doctype {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            // Article
-            Self::Review => write!(f, "review"),
-
-            // Thesis
             Self::BachelorThesis => write!(f, "bachelor-thesis"),
+            Self::Blurb => write!(f, "blurb"),
+            Self::ConferencePaper => write!(f, "conference-paper"),
+            Self::Correction => write!(f, "correction"),
             Self::DiplomaThesis => write!(f, "diploma-thesis"),
             Self::DoctoralThesis => write!(f, "doctoral-thesis"),
             Self::MagisterThesis => write!(f, "magister-thesis"),
             Self::MasterThesis => write!(f, "master-thesis"),
+            Self::PolicyPaper => write!(f, "policy-paper"),
             Self::PostdoctoralThesis => {
                 write!(f, "postdoctoral-thesis")
             }
-            Self::StudyThesis => write!(f, "study-thesis"),
-
-            // Paratexts
-            Self::Blurb => write!(f, "blurb"),
-            Self::Correction => write!(f, "correction"),
             Self::Preface => write!(f, "preface"),
+            Self::Review => write!(f, "review"),
+            Self::StudyThesis => write!(f, "study-thesis"),
             Self::Toc => write!(f, "toc"),
-
-            // Other
-            Self::PolicyPaper => write!(f, "policy-paper"),
             Self::WorkingPaper => write!(f, "working-paper"),
             Self::Other => write!(f, "other"),
         }
