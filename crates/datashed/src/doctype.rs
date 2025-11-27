@@ -4,11 +4,7 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
-use crate::refinement::Refinements;
-
-pub type DoctypeRefinements = Refinements<Doctype>;
-
-pub(crate) const DOCTYPES: [&str; 16] = [
+pub(crate) const DOCTYPES: [&str; 15] = [
     // article
     "review",
     // thesis
@@ -22,7 +18,6 @@ pub(crate) const DOCTYPES: [&str; 16] = [
     // paratext
     "blurb",
     "correction",
-    "editorial",
     "preface",
     "toc",
     // other
@@ -51,7 +46,6 @@ pub enum Doctype {
     // paratext
     Blurb,
     Correction,
-    Editorial,
     Preface,
     Toc,
 
@@ -95,7 +89,6 @@ impl Display for Doctype {
             // Paratexts
             Self::Blurb => write!(f, "blurb"),
             Self::Correction => write!(f, "correction"),
-            Self::Editorial => write!(f, "editorial"),
             Self::Preface => write!(f, "preface"),
             Self::Toc => write!(f, "toc"),
 
