@@ -65,6 +65,9 @@ pub struct IfExpr<T: Default + ToString + 'static> {
 
     #[serde(rename = "then")]
     output: T,
+
+    #[serde(default)]
+    comment: Option<String>,
 }
 
 impl<T: ToString + Default> IfExpr<T> {
@@ -103,6 +106,9 @@ struct MatchArm<T: Default + ToString + 'static> {
 
     #[serde(rename = "then")]
     output: T,
+
+    #[serde(default)]
+    comment: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
