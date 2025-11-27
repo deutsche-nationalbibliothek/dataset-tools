@@ -4,6 +4,10 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
+use crate::refinement::Refinements;
+
+pub type DoctypeRefinements = Refinements<Doctype>;
+
 pub(crate) const DOCTYPES: [&str; 16] = [
     "bachelor-thesis",
     "blurb",
