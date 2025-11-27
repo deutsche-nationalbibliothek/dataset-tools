@@ -128,5 +128,6 @@ pub struct Server {
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Refinements {
+    pub genre: Option<PathBuf>,
     pub doctype: Option<PathBuf>,
 }
