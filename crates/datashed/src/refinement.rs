@@ -10,6 +10,8 @@ pub struct Refinements<T: Default + ToString + 'static> {
     #[serde(skip_serializing_if = "Vec::is_empty", default)]
     refinements: Vec<Refinement<T>>,
 
+    scope: Option<RecordMatcher>,
+
     #[serde(skip)]
     map: HashMap<String, String>,
 }
@@ -20,6 +22,12 @@ impl<T: Default + ToString> Refinements<T> {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) {
+        if let Some(ref scope) = self.scope {
+            if !scope.is_match(record, options) {
+                return;
+            }
+        }
+
         for refinement in self.refinements.iter_mut() {
             if let Some(output) = refinement.is_match(record, options) {
                 let Some(ppn) = record.ppn() else { return };
@@ -63,6 +71,8 @@ pub struct IfExpr<T: Default + ToString + 'static> {
     #[serde(rename = "if")]
     predicate: RecordMatcher,
 
+    scope: Option<RecordMatcher>,
+
     #[serde(rename = "then")]
     output: T,
 
@@ -76,6 +86,12 @@ impl<T: ToString + Default> IfExpr<T> {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) -> Option<&T> {
+        if let Some(ref scope) = self.scope {
+            if !scope.is_match(record, options) {
+                return None;
+            }
+        }
+
         if self.predicate.is_match(record, options) {
             Some(&self.output)
         } else {
@@ -90,6 +106,8 @@ impl<T: ToString + Default> IfExpr<T> {
 pub struct MatchExpr<T: Default + ToString + 'static> {
     #[serde(rename = "match")]
     head: Path,
+
+    scope: Option<RecordMatcher>,
 
     #[serde(rename = "cases", default)]
     arms: Vec<MatchArm<T>>,
@@ -125,6 +143,12 @@ impl<T: Default + ToString + 'static> MatchExpr<T> {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) -> Option<&T> {
+        if let Some(ref scope) = self.scope {
+            if !scope.is_match(record, options) {
+                return None;
+            }
+        }
+
         let values =
             record.path(&self.head, options).collect::<Vec<_>>();
 
