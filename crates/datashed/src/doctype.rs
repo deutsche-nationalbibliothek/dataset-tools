@@ -24,7 +24,7 @@ pub(crate) const DOCTYPES: [&str; 18] = [
     "preface",
     "review",
     "study-thesis",
-    "toc",
+    "table-of-contents",
     "working-paper",
     "other",
 ];
@@ -49,7 +49,7 @@ pub enum Doctype {
     Preface,
     Review,
     StudyThesis,
-    Toc,
+    TableOfContents,
     WorkingPaper,
     #[default]
     Other,
@@ -62,7 +62,7 @@ impl FromStr for Doctype {
         Ok(match s {
             "blurb" => Self::Blurb,
             "other" => Self::Other,
-            "toc" => Self::Toc,
+            "toc" => Self::TableOfContents,
             _ => return Err(()),
         })
     }
@@ -90,7 +90,7 @@ impl Display for Doctype {
             Self::Preface => write!(f, "preface"),
             Self::Review => write!(f, "review"),
             Self::StudyThesis => write!(f, "study-thesis"),
-            Self::Toc => write!(f, "toc"),
+            Self::TableOfContents => write!(f, "table-of-contents"),
             Self::WorkingPaper => write!(f, "working-paper"),
             Self::Other => write!(f, "other"),
         }
