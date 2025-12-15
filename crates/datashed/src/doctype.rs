@@ -8,7 +8,8 @@ use crate::refinement::Refinements;
 
 pub type DoctypeRefinements = Refinements<Doctype>;
 
-pub(crate) const DOCTYPES: [&str; 18] = [
+pub(crate) const DOCTYPES: [&str; 19] = [
+    "abstract",
     "bachelor-thesis",
     "blurb",
     "conference-object",
@@ -34,6 +35,7 @@ pub(crate) const DOCTYPES: [&str; 18] = [
 )]
 #[serde(rename_all = "kebab-case")]
 pub enum Doctype {
+    Abstract,
     BachelorThesis,
     Blurb,
     ConferenceObject,
@@ -60,6 +62,7 @@ impl FromStr for Doctype {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(match s {
+            "abstract" => Self::Abstract,
             "blurb" => Self::Blurb,
             "other" => Self::Other,
             "toc" => Self::TableOfContents,
@@ -71,6 +74,7 @@ impl FromStr for Doctype {
 impl Display for Doctype {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::Abstract => write!(f, "abstract"),
             Self::BachelorThesis => write!(f, "bachelor-thesis"),
             Self::Blurb => write!(f, "blurb"),
             Self::ConferenceObject => write!(f, "conference-object"),
