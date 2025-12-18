@@ -23,6 +23,7 @@ pub(crate) const DOCTYPES: [&str; 19] = [
     "policy-paper",
     "postdoctoral-thesis",
     "preface",
+    "research-article",
     "review",
     "study-thesis",
     "table-of-contents",
@@ -49,6 +50,7 @@ pub enum Doctype {
     PolicyPaper,
     PostdoctoralThesis,
     Preface,
+    ResearchArticle,
     Review,
     StudyThesis,
     TableOfContents,
@@ -92,6 +94,7 @@ impl Display for Doctype {
                 write!(f, "postdoctoral-thesis")
             }
             Self::Preface => write!(f, "preface"),
+            Self::ResearchArticle => write!(f, "research-article")
             Self::Review => write!(f, "review"),
             Self::StudyThesis => write!(f, "study-thesis"),
             Self::TableOfContents => write!(f, "table-of-contents"),
