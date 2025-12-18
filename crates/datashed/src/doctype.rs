@@ -94,7 +94,7 @@ impl Display for Doctype {
                 write!(f, "postdoctoral-thesis")
             }
             Self::Preface => write!(f, "preface"),
-            Self::ResearchArticle => write!(f, "research-article")
+            Self::ResearchArticle => write!(f, "research-article"),
             Self::Review => write!(f, "review"),
             Self::StudyThesis => write!(f, "study-thesis"),
             Self::TableOfContents => write!(f, "table-of-contents"),
