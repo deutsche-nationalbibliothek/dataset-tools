@@ -60,7 +60,9 @@ pub(crate) fn write_df(
             }
             _ => {
                 let mut writer = IpcWriter::new(File::create(path)?)
-                    .with_compression(Some(IpcCompression::ZSTD));
+                    .with_compression(Some(IpcCompression::ZSTD(
+                        Default::default(),
+                    )));
                 writer.finish(df)?;
             }
         }
@@ -73,16 +75,11 @@ pub(crate) fn write_df(
 
 #[inline]
 pub(crate) fn unnest_index(df: LazyFrame) -> LazyFrame {
-    df.with_column(
-        col("lang")
-            .struct_()
-            .rename_fields(["lang_code", "lang_score"]),
-    )
-    .unnest(by_name(["lang"], true))
-    .with_columns([
-        col("lang_code").cast(DataType::String),
-        col("doctype").cast(DataType::String),
-    ])
+    df.unnest(by_name(["lang"], true), Some("_".into()))
+        .with_columns([
+            col("lang_code").cast(DataType::String),
+            col("doctype").cast(DataType::String),
+        ])
 }
 
 pub(crate) fn read_index(

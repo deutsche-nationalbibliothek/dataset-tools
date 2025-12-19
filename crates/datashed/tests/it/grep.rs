@@ -369,7 +369,7 @@ fn grep_index() -> TestResult {
     IpcWriter::new(File::create(
         datashed_dir.join("tmp").join("index.ipc"),
     )?)
-    .with_compression(Some(IpcCompression::ZSTD))
+    .with_compression(Some(IpcCompression::ZSTD(Default::default())))
     .finish(&mut tmp_index)?;
 
     let index = datashed_dir.child("tmp/index.ipc");
