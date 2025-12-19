@@ -9,7 +9,7 @@ license = "EUPL-1.2"
 edition = "2024"
 
 [workspace.dependencies]
-actix-web = { version = "4.11", features = ["openssl"] }
+actix-web = { version = "4.12", features = ["openssl"] }
 actix-files = { version = "0.6" }
 anyhow = { version = "1.0" }
 approx = { version = "0.5" }
