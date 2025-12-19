@@ -55,17 +55,18 @@ default-features = false
 features = ["zlib-rs"]
 
 [workspace.dependencies.polars]
-version = "0.51"
+version = "0.52"
 features = [
   "decompress",
   "dtype-slim",
-  "dtype-u8",
   "dtype-u16",
+  "dtype-u8",
   "ipc",
   "is_in",
   "lazy",
   "semi_anti_join",
   "sql",
+  "timezones",
 ]
 
 [profile.release]
