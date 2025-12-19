@@ -1925,9 +1925,9 @@ checksum = "a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695"
 
 [[package]]
 name = "isbn"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9453fa60f42de77ba9bf54e3628a20390cba0fbf0932799dad81e7ce4e12ed20"
+checksum = "b1ec2030097c0970a46eded00296e4afb8f1ef1a508a9eb0712b6624af010036"
 dependencies = [
  "arrayvec",
  "codegen",
