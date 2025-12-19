@@ -27,6 +27,7 @@ ndarray = { version = "0.17" }
 openssl = { version = "0.10" }
 owo-colors = { version = "4.2" }
 predicates = { version = "3.1" }
+rand = { version = "0.9" }
 rayon = { version = "1.11" }
 regex = { version = "1.12" }
 semver = { version = "1.0", features = ["serde"] }

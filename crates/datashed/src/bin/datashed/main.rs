@@ -51,6 +51,7 @@ async fn main() -> ExitCode {
         Command::Check(cmd) => cmd.execute(),
         Command::Completions(cmd) => cmd.execute(),
         Command::Config(cmd) => cmd.execute(),
+        Command::Docsim(cmd) => cmd.execute(),
         Command::Grep(cmd) => cmd.execute(),
         Command::Index(cmd) => cmd.execute(),
         Command::Init(cmd) => cmd.execute(),
