@@ -33,7 +33,6 @@ indexmap = { workspace = true }
 indicatif = { workspace = true }
 isbn = { workspace = true }
 lingua = { workspace = true }
-ndarray-stats = { workspace = true }
 ndarray = { workspace = true }
 openssl = { workspace = true }
 owo-colors = { workspace = true }
