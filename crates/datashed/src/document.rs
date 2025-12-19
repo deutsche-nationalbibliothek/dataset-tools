@@ -9,8 +9,7 @@ use std::time::UNIX_EPOCH;
 use bstr::{BStr, ByteSlice};
 use hashbrown::HashMap;
 use lingua::{Language, LanguageDetector, LanguageDetectorBuilder};
-use ndarray::Array1;
-use ndarray_stats::DeviationExt;
+use ndarray::{Array1, Zip};
 use sha2::{Digest, Sha256};
 use unicode_normalization::UnicodeNormalization;
 
@@ -170,7 +169,14 @@ fn lfreq(code: &str, data: &BStr) -> Option<f64> {
             Array1::zeros(alphabet.len())
         };
 
-        x.l2_dist(frequencies).ok()
+        let mut diff: Array1<f64> = Array1::zeros(alphabet.len());
+        Zip::from(&mut diff).and(&x).and(frequencies).for_each(
+            |diff, &x, &y| {
+                *diff = (x - y).powi(2);
+            },
+        );
+
+        Some(diff.sum().sqrt())
     }
 
     match code {
