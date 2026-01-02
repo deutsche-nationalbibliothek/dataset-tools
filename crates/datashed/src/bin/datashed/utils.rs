@@ -58,6 +58,16 @@ pub(crate) fn write_df(
                 let mut writer = CsvWriter::new(File::create(path)?);
                 writer.finish(df)?;
             }
+            Some("txt") => {
+                if df.column("ppn").is_ok() {
+                    let mut writer =
+                        CsvWriter::new(File::create(path)?)
+                            .include_header(false);
+                    writer.finish(&mut df.select(["ppn"])?)?;
+                } else {
+                    bail!("missing `ppn` column");
+                }
+            }
             _ => {
                 let mut writer = IpcWriter::new(File::create(path)?)
                     .with_compression(Some(IpcCompression::ZSTD(
@@ -70,6 +80,7 @@ pub(crate) fn write_df(
         let mut writer = CsvWriter::new(stdout().lock());
         writer.finish(df)?;
     }
+
     Ok(())
 }
 
