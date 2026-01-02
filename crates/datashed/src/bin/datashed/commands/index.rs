@@ -228,7 +228,7 @@ impl Index {
 
         let mut index = DataFrame::new(columns)?.lazy();
         if !is_arrow {
-            index = unnest_index(index);
+            index = unnest_index(index, self.with_genre);
         }
 
         let mut df =

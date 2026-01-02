@@ -106,11 +106,12 @@ impl Grep {
             DataFrame::new(vec![Column::new("path".into(), &matches)])?
                 .lazy();
 
+        let with_genre = index.column("genre").is_ok();
         let mut index =
             index.lazy().semi_join(matches, col("path"), col("path"));
 
         if !is_arrow {
-            index = unnest_index(index);
+            index = unnest_index(index, with_genre);
         }
 
         let mut df =
