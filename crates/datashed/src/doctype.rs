@@ -8,7 +8,7 @@ use crate::refinement::Refinements;
 
 pub type DoctypeRefinements = Refinements<Doctype>;
 
-pub(crate) const DOCTYPES: [&str; 23] = [
+pub(crate) const DOCTYPES: [&str; 24] = [
     "abstract",
     "bachelor-thesis",
     "blurb",
@@ -18,6 +18,7 @@ pub(crate) const DOCTYPES: [&str; 23] = [
     "correction",
     "diploma-thesis",
     "doctoral-thesis",
+    "letter-to-the-editor",
     "magister-thesis",
     "master-thesis",
     "musical-notation",
@@ -48,6 +49,7 @@ pub enum Doctype {
     Correction,
     DiplomaThesis,
     DoctoralThesis,
+    LetterToTheEditor,
     MagisterThesis,
     MasterThesis,
     MusicalNotation,
@@ -93,6 +95,9 @@ impl Display for Doctype {
             Self::Correction => write!(f, "correction"),
             Self::DiplomaThesis => write!(f, "diploma-thesis"),
             Self::DoctoralThesis => write!(f, "doctoral-thesis"),
+            Self::LetterToTheEditor => {
+                write!(f, "letter-to-the-editor")
+            }
             Self::MagisterThesis => write!(f, "magister-thesis"),
             Self::MasterThesis => write!(f, "master-thesis"),
             Self::MusicalNotation => write!(f, "musical-notation"),
