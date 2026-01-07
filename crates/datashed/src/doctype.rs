@@ -18,7 +18,7 @@ pub(crate) const DOCTYPES: [&str; 26] = [
     "correction",
     "diploma-thesis",
     "doctoral-thesis",
-    "journal-obejct",
+    "journal-object",
     "letter-to-the-editor",
     "magister-thesis",
     "master-thesis",
