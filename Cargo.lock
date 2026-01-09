@@ -1000,6 +1000,7 @@ dependencies = [
  "pica-record",
  "polars",
  "predicates",
+ "rand",
  "rayon",
  "regex",
  "semver",

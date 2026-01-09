@@ -37,6 +37,7 @@ pub(crate) enum Command {
     Check(Check),
     Completions(Completions),
     Config(Config),
+    Docsim(Docsim),
     Grep(Grep),
     Index(Index),
     Init(Init),

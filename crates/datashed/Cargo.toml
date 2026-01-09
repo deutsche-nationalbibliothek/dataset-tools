@@ -38,6 +38,7 @@ openssl = { workspace = true }
 owo-colors = { workspace = true }
 pica-record = { workspace = true }
 polars = { workspace = true }
+rand = { workspace = true }
 rayon = { workspace = true }
 regex = { workspace = true }
 semver = { workspace = true }
