@@ -213,6 +213,7 @@ A very low `alpha` value may indicate a corrupt document.
 With the help of the `bibrefs` command, bibliographic identifiers can be
 found in documents. The following identifiers are supported:
 
+* [arXiv Identifier (arXiv)](https://info.arxiv.org/help/arxiv_identifier.html) — `arxiv`
 * [Dewey Decimal Classification (DDC)](https://en.wikipedia.org/wiki/Dewey_Decimal_Classification) — `ddc`
 * [Digital Object Identifier (DOI)](https://en.wikipedia.org/wiki/Digital_object_identifier) — `doi`
 * [International Standard Book Number (ISBN)](https://en.wikipedia.org/wiki/ISBN) — `isbn`
