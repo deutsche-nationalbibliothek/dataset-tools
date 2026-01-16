@@ -15,8 +15,10 @@ use orcid::OrcidMatcher;
 use udc::UdcMatcher;
 
 use crate::cli::FilterOpts;
+use crate::commands::bibrefs::arxiv::ArxivMatcher;
 use crate::prelude::*;
 
+mod arxiv;
 mod ddc;
 mod doi;
 mod isbn;
@@ -42,6 +44,7 @@ pub(crate) struct Reference {
 
 #[derive(Debug, PartialEq)]
 pub(crate) enum ReferenceType {
+    Arxiv,
     Ddc,
     Doi,
     Isbn,
@@ -58,6 +61,7 @@ pub(crate) enum ReferenceType {
 impl Display for ReferenceType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::Arxiv => write!(f, "arxiv"),
             Self::Ddc => write!(f, "ddc"),
             Self::Doi => write!(f, "doi"),
             Self::Isbn => write!(f, "isbn"),
@@ -74,9 +78,9 @@ impl Display for ReferenceType {
 }
 
 pub fn reftype_dtype() -> DataType {
-    const CODES: [&str; 11] = [
-        "isbn", "issn", "ismn", "doi", "orcid", "isni", "jelc", "udc",
-        "msc", "ddc", "lcc",
+    const CODES: [&str; 12] = [
+        "arxiv", "isbn", "issn", "ismn", "doi", "orcid", "isni",
+        "jelc", "udc", "msc", "ddc", "lcc",
     ];
 
     DataType::from_frozen_categories(
@@ -142,6 +146,7 @@ impl Bibrefs {
                 .build();
 
         let matchers: &[Box<dyn Matcher>] = &[
+            Box::new(ArxivMatcher::new(self.normalize)),
             Box::new(DoiMatcher::new(
                 self.normalize,
                 self.crossref,
