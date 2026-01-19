@@ -35,17 +35,17 @@ impl Matcher for ArxivMatcher {
     fn matches(&self, data: &[u8]) -> Vec<Reference> {
         arxiv_re()
             .captures_iter(data.as_ref())
-            .filter_map(|caps| {
+            .map(|caps| {
                 let m = caps.get(0).unwrap();
                 let (_, [value]) = caps.extract();
                 let v = value.to_str().unwrap();
 
-                Some(Reference {
+                Reference {
                     reftype: ReferenceType::Arxiv,
                     start: m.start(),
                     end: m.end(),
                     value: v.to_string(),
-                })
+                }
             })
             .collect()
     }

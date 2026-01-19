@@ -22,10 +22,10 @@ impl<T: Default + ToString> Refinements<T> {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) {
-        if let Some(ref scope) = self.scope {
-            if !scope.is_match(record, options) {
-                return;
-            }
+        if let Some(ref scope) = self.scope
+            && !scope.is_match(record, options)
+        {
+            return;
         }
 
         for refinement in self.refinements.iter_mut() {
@@ -86,10 +86,10 @@ impl<T: ToString + Default> IfExpr<T> {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) -> Option<&T> {
-        if let Some(ref scope) = self.scope {
-            if !scope.is_match(record, options) {
-                return None;
-            }
+        if let Some(ref scope) = self.scope
+            && !scope.is_match(record, options)
+        {
+            return None;
         }
 
         if self.predicate.is_match(record, options) {
@@ -143,10 +143,10 @@ impl<T: Default + ToString + 'static> MatchExpr<T> {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) -> Option<&T> {
-        if let Some(ref scope) = self.scope {
-            if !scope.is_match(record, options) {
-                return None;
-            }
+        if let Some(ref scope) = self.scope
+            && !scope.is_match(record, options)
+        {
+            return None;
         }
 
         let values =
