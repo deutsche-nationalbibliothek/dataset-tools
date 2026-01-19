@@ -60,6 +60,7 @@ async fn main() -> ExitCode {
         Command::Summary(cmd) => cmd.execute(),
         Command::Verify(cmd) => cmd.execute(),
         Command::Version(cmd) => cmd.execute(),
+        Command::Vloss(cmd) => cmd.execute(),
         Command::Vocab(cmd) => cmd.execute(),
     };
 
