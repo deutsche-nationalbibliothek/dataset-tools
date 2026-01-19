@@ -81,8 +81,7 @@ impl Config {
             }
         };
 
-        if self.value.is_some() {
-            let value = self.value.unwrap();
+        if let Some(value) = self.value {
             match name {
                 "runtime.num-jobs" => {
                     set_rt_option!(config, num_jobs, value, usize);
