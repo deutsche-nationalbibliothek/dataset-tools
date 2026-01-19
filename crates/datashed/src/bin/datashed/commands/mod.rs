@@ -12,6 +12,7 @@ pub(crate) use serve::Serve;
 pub(crate) use summary::Summary;
 pub(crate) use verify::Verify;
 pub(crate) use version::Version;
+pub(crate) use vloss::Vloss;
 pub(crate) use vocab::Vocab;
 
 mod archive;
@@ -28,4 +29,5 @@ mod serve;
 mod summary;
 mod verify;
 mod version;
+mod vloss;
 mod vocab;
