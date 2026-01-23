@@ -1,6 +1,7 @@
 use std::fs::read_to_string;
 use std::path::PathBuf;
 
+use actix_web::rt::task::spawn_blocking;
 use bstr::ByteSlice;
 use datashed::{Document, translit};
 use hashbrown::HashSet;
@@ -30,8 +31,17 @@ pub(crate) struct Vloss {
     )]
     categories: Vec<UnicodeCategory>,
 
-    #[arg(long, default_value = "0.1")]
-    increment: f64,
+    #[arg(long, requires_all = ["step_width"])]
+    absolute: bool,
+
+    #[arg(long)]
+    start: Option<usize>,
+
+    #[arg(long)]
+    end: Option<usize>,
+
+    #[arg(long, default_value_t = 10)]
+    step_width: usize,
 
     /// Ignore tokens with a length less than <n>
     #[arg(long, default_value = "2", value_name = "n")]
@@ -53,12 +63,18 @@ pub(crate) struct Vloss {
 struct Record {
     path: String,
     hash: String,
+    threshold: f64,
     vloss: f64,
-    n: f64,
+}
+
+#[derive(Debug)]
+struct Step {
+    threshold: f64,
+    end: usize,
 }
 
 impl Vloss {
-    pub(crate) fn execute(self) -> CommandResult {
+    pub(crate) async fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
         let config = datashed.config()?;
@@ -133,34 +149,59 @@ impl Vloss {
                     .collect();
 
                 let mut result: Vec<Record> = Vec::new();
-                let mut n = 0f64;
+                let mut steps: Vec<Step> = Vec::new();
 
                 if vocab.is_empty() {
                     return result;
                 }
 
-                loop {
-                    if n >= 1.0 {
-                        break;
-                    }
+                if self.absolute {
+                    let end = self.end.unwrap();
+                    let start = self.start.unwrap_or_default();
+                    let mut p = if start == 0 {
+                        self.step_width
+                    } else {
+                        start
+                    };
 
-                    let end = (data.len() as f64 * n).floor() as usize;
-                    let vocab_n: HashSet<String> = data[0..end]
+                    while p <= end {
+                        if p <= data.len() {
+                            steps.push(Step {
+                                threshold: p as f64,
+                                end: p,
+                            });
+                        } else {
+                            steps.push(Step {
+                                threshold: p as f64,
+                                end: data.len(),
+                            });
+                        }
+
+                        p += self.step_width;
+                    }
+                } else {
+                    let step_with = 100 / self.step_width;
+                    let mut p = step_with;
+
+                    while p < 100 {
+                        let threshold = p as f64 / 100f64;
+
+                        steps.push(Step {
+                            threshold,
+                            end: (threshold * data.len() as f64)
+                                as usize,
+                        });
+
+                        p += step_with;
+                    }
+                }
+
+                // eprintln!("{steps:?}");
+
+                for step in steps.into_iter() {
+                    let vocab_n: HashSet<String> = data[0..step.end]
                         .words()
                         .map(str::to_lowercase)
-                        .filter(|word| {
-                            if !self.categories.is_empty() {
-                                predicates
-                                    .iter()
-                                    .any(|f| word.chars().any(f))
-                            } else {
-                                true
-                            }
-                        })
-                        .filter(|word| {
-                            word.chars().count() >= self.min_term_length
-                        })
-                        .filter(|word| !stopwords.contains(word))
                         .filter(|word| vocab.contains(word))
                         .collect();
 
@@ -170,11 +211,9 @@ impl Vloss {
                     result.push(Record {
                         path: doc.path.clone(),
                         hash: doc.hash.clone(),
-                        n,
+                        threshold: step.threshold,
                         vloss,
                     });
-
-                    n += self.increment;
                 }
 
                 result
@@ -184,28 +223,53 @@ impl Vloss {
 
         let mut paths = Vec::new();
         let mut hashes = Vec::new();
+        let mut thresholds = Vec::new();
         let mut vloss = Vec::new();
-        let mut ns = Vec::new();
 
         for row in records.into_iter() {
             paths.push(row.path);
             hashes.push(row.hash);
+            thresholds.push(row.threshold);
             vloss.push(row.vloss);
-            ns.push(row.n);
         }
 
-        let mut df = DataFrame::new(vec![
-            col!("path", paths),
-            col!("hash", hashes),
-            col!("n", ns),
-            col!("vloss", vloss),
-        ])?;
+        let mut columns = vec![];
 
-        df.sort_in_place(["path"], Default::default())?;
-        df.shrink_to_fit();
+        columns.push(col!("path", paths));
+        columns.push(col!("hash", hashes));
+        if !self.absolute {
+            columns.push(col!("threshold", thresholds));
+        } else {
+            columns.push(
+                col!("threshold", thresholds)
+                    .cast(&DataType::UInt64)?,
+            );
+        }
+        columns.push(col!("vloss", vloss));
 
+        let mut lf = DataFrame::new(columns)?
+            .lazy()
+            .inner_join(index.lazy(), col("path"), col("path"))
+            .group_by([col("doctype"), col("threshold")])
+            .agg([
+                col("vloss").mean().alias("vloss_mean"),
+                col("doctype").count().alias("N"),
+            ])
+            .sort(["doctype", "threshold"], Default::default())
+            .select([
+                col("doctype"),
+                col("N"),
+                col("threshold"),
+                col("vloss_mean"),
+            ]);
+
+        if !is_arrow(&self.output).unwrap_or_default() {
+            lf = lf
+                .with_columns([col("doctype").cast(DataType::String)]);
+        }
+
+        let mut df = spawn_blocking(move || lf.collect()).await??;
         write_df(&mut df, self.output)?;
-
         Ok(SUCCESS)
     }
 }
