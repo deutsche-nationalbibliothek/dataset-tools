@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use actix_web::rt::task::spawn_blocking;
 use bstr::ByteSlice;
 use datashed::Document;
 use hashbrown::HashMap;
@@ -39,11 +40,11 @@ struct Row {
 }
 
 impl Lfreq {
-    pub(crate) fn execute(self) -> CommandResult {
+    pub(crate) async fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
 
-        let index = read_index(&datashed, &self.filter)?;
+        let index = read_index(&datashed, &self.filter).await?;
         let paths = index.column("path")?.str()?;
 
         let mut alphabet = self
@@ -117,6 +118,8 @@ impl Lfreq {
             totals.push(row.total);
         }
 
+        let len = paths.len();
+
         let mut series = vec![
             Column::new("path".into(), paths),
             Column::new("hash".into(), hashes),
@@ -130,11 +133,11 @@ impl Lfreq {
             ));
         }
 
-        let mut df: DataFrame = DataFrame::new(series)?
+        let lf = DataFrame::new(len, series)?
             .lazy()
-            .sort(["path"], Default::default())
-            .collect()?;
+            .sort(["path"], Default::default());
 
+        let mut df = spawn_blocking(move || lf.collect()).await??;
         write_df(&mut df, self.output)?;
         Ok(SUCCESS)
     }

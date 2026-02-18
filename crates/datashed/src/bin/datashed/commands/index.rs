@@ -2,6 +2,7 @@ use std::ffi::OsStr;
 use std::fs::read_to_string;
 use std::path::PathBuf;
 
+use actix_web::rt::task::spawn_blocking;
 use datashed::{
     Doctype, DoctypeRefinements, Document, GenreRefinements,
     doctype_dtype, genre_dtype, iso6392b_dtype, translit,
@@ -50,7 +51,7 @@ const PBAR_INDEX: &str = "Indexing documents: {human_pos} ({percent}%) | \
         elapsed: {elapsed_precise}{msg}";
 
 impl Index {
-    pub(crate) fn execute(self) -> CommandResult {
+    pub(crate) async fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
         let base_dir = datashed.base_dir();
@@ -200,6 +201,7 @@ impl Index {
         }
 
         let mut columns = vec![];
+        let len = paths.len();
 
         columns.push(col!("path", paths));
         columns.push(col!("hash", hashes));
@@ -215,7 +217,7 @@ impl Index {
         columns.push(col!("doctype", doctypes).cast(&doctype_dtype())?);
         columns.push(col!("size", sizes));
 
-        let lang = DataFrame::new(vec![
+        let lang = DataFrame::new(len, vec![
             col!("code", lang_codes).cast(&iso6392b_dtype())?,
             col!("score", lang_scores),
         ])?
@@ -226,14 +228,14 @@ impl Index {
         columns.push(col!("alpha", alphas));
         columns.push(col!("mtime", mtimes));
 
-        let mut index = DataFrame::new(columns)?.lazy();
+        let mut index = DataFrame::new(len, columns)?.lazy();
         if !is_arrow {
             index = unnest_index(index, self.with_genre);
         }
 
-        let mut df =
-            index.sort(["path"], Default::default()).collect()?;
+        index = index.sort(["path"], Default::default());
 
+        let mut df = spawn_blocking(move || index.collect()).await??;
         let output =
             self.output.or(Some(base_dir.join(Datashed::INDEX)));
         write_df(&mut df, output)?;

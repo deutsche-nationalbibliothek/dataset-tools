@@ -97,7 +97,7 @@ pub(crate) struct Vocab {
 }
 
 impl Vocab {
-    pub(crate) fn execute(self) -> CommandResult {
+    pub(crate) async fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
         let config = datashed.config()?;
@@ -143,7 +143,7 @@ impl Vocab {
             );
         }
 
-        let index = read_index(&datashed, &self.filter)?;
+        let index = read_index(&datashed, &self.filter).await?;
         let paths = index.column("path")?.str()?;
 
         let pbar =
@@ -215,13 +215,16 @@ impl Vocab {
             docs.push(df);
         }
 
-        let mut result = DataFrame::new(vec![
-            Column::new("term".into(), tokens),
-            Column::new("tf".into(), freqs),
-            Column::new("df".into(), docs),
-        ])?;
+        let mut result = DataFrame::new(
+            tokens.len(),
+            vec![
+                Column::new("term".into(), tokens),
+                Column::new("tf".into(), freqs),
+                Column::new("df".into(), docs),
+            ],
+        )?;
 
-        result = result.lazy().collect()?;
+        // result = result.lazy().collect()?;
 
         let options = SortMultipleOptions::default()
             .with_order_descending_multi([true, true, false]);
