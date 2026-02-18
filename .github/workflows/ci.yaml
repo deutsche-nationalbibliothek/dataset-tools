@@ -57,10 +57,10 @@ jobs:
         run: cargo nextest run --profile ci --workspace
       - name: Compile tests (nightly)
         if: ${{ matrix.target.toolchain == 'nightly' }}
-        run: cargo nextest run --profile ci --workspace -F nightly --no-run
+        run: cargo nextest run --profile ci --workspace --no-run
       - name: Run tests (nightly)
         if: ${{ matrix.target.toolchain == 'nightly' }}
-        run: cargo nextest run --profile ci --workspace -F nightly
+        run: cargo nextest run --profile ci --workspace
 
   features:
     runs-on: ubuntu-latest

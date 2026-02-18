@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::stdout;
 use std::path::{Path, PathBuf};
 
+use actix_web::rt::task::spawn_blocking;
 use datashed::{Datashed, DatashedResult};
 use polars::prelude::*;
 use polars::sql::SQLContext;
@@ -90,7 +91,7 @@ pub(crate) fn unnest_index(
     with_genre: bool,
 ) -> LazyFrame {
     let mut lf = lf
-        .unnest(by_name(["lang"], true), Some("_".into()))
+        .unnest(by_name(["lang"], true, false), Some("_".into()))
         .with_columns([
             col("lang_code").cast(DataType::String),
             col("doctype").cast(DataType::String),
@@ -103,7 +104,7 @@ pub(crate) fn unnest_index(
     lf
 }
 
-pub(crate) fn read_index(
+pub(crate) async fn read_index(
     datashed: &Datashed,
     filter: &FilterOpts,
 ) -> DatashedResult<DataFrame> {
@@ -176,9 +177,10 @@ pub(crate) fn read_index(
     if let Some(ref predicate) = filter.predicate {
         let mut ctx = SQLContext::new();
         ctx.register("df", index);
-        index = ctx
-            .execute(&format!("SELECT * FROM df WHERE {predicate}"))?;
+
+        let query = format!("SELECT * FROM df WHERE {predicate}");
+        index = spawn_blocking(move || ctx.execute(&query)).await??;
     }
 
-    Ok(index.collect()?)
+    Ok(spawn_blocking(move || index.collect()).await??)
 }
