@@ -2,6 +2,7 @@ use polars::prelude::*;
 
 use crate::doctype::DOCTYPES;
 use crate::genre::GENRES;
+use crate::group::GROUPS;
 
 const ISO639_CODES: [&str; 486] = [
     "aar", "abk", "ace", "ach", "ada", "ady", "afa", "afh", "afr",
@@ -75,5 +76,11 @@ pub fn doctype_dtype() -> DataType {
 pub fn genre_dtype() -> DataType {
     DataType::from_frozen_categories(
         FrozenCategories::new(GENRES).unwrap(),
+    )
+}
+
+pub fn group_dtype() -> DataType {
+    DataType::from_frozen_categories(
+        FrozenCategories::new(GROUPS).unwrap(),
     )
 }

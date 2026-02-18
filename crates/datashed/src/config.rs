@@ -130,4 +130,5 @@ pub struct Server {
 pub struct Refinements {
     pub genre: Option<PathBuf>,
     pub doctype: Option<PathBuf>,
+    pub group: Option<PathBuf>,
 }

@@ -5,6 +5,7 @@ pub mod document;
 mod dtypes;
 mod error;
 mod genre;
+mod group;
 mod refinement;
 mod unicode;
 
@@ -15,4 +16,5 @@ pub use document::Document;
 pub use dtypes::*;
 pub use error::DatashedResult;
 pub use genre::{Genre, GenreRefinements};
+pub use group::{Group, GroupRefinements};
 pub use unicode::{NormalizationForm, translit};
