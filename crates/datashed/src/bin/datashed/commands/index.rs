@@ -217,10 +217,13 @@ impl Index {
         columns.push(col!("doctype", doctypes).cast(&doctype_dtype())?);
         columns.push(col!("size", sizes));
 
-        let lang = DataFrame::new(len, vec![
-            col!("code", lang_codes).cast(&iso6392b_dtype())?,
-            col!("score", lang_scores),
-        ])?
+        let lang = DataFrame::new(
+            len,
+            vec![
+                col!("code", lang_codes).cast(&iso6392b_dtype())?,
+                col!("score", lang_scores),
+            ],
+        )?
         .into_struct("lang".into());
 
         columns.push(col!("lang", lang));
