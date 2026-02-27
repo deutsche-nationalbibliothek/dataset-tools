@@ -44,7 +44,7 @@ pub(crate) struct Index {
 const PBAR_METADATA: &str = "Processing metadata: {human_pos} | \
         elapsed: {elapsed_precise}{msg}";
 
-const PBAR_COLLECT: &str = "Collecting documents: {human_pos} | \
+const PBAR_COLLECT: &str = "Enumerating documents: {human_pos} | \
         elapsed: {elapsed_precise}{msg}";
 
 const PBAR_INDEX: &str = "Indexing documents: {human_pos} ({percent}%) | \
