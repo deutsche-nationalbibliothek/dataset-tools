@@ -91,7 +91,7 @@ A new index can be created as follows:
 
 ```console
 $ datashed index
-Collecting documents: 3 | elapsed: 00:00:00, done.
+Enumerating documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
@@ -102,7 +102,7 @@ which contains the file name (without file extension):
 
 ```console
 $ datashed index --filename-column "ppn"
-Collecting documents: 3 | elapsed: 00:00:00, done.
+Enumerating documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
@@ -138,7 +138,7 @@ dump is specified as a comma line option:
 ```console
 $ datashed index --filename-column "ppn" DUMP.dat.gz
 Processing metadata: 100 | elapsed: 00:00:00, done.
-Collecting documents: 3 | elapsed: 00:00:00, done.
+Enumerating documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
