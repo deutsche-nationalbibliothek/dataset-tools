@@ -6,11 +6,11 @@
 
 The `datashed` tool is a _reverse ETL_ program that indexes the
 documents it contains. Based on this index, data analyses can be carried
-out, for example to identify corrupt documents or to build subsets based
-on text statistical characteristics. Finally, the tool offers a GraphQL
-API to use the index and the documents as a data source for building
-datasets. The API can also be used to evaluate the quality of the
-documents or to carry out further annotations.
+out, for example to identify corrupt documents or to build subsets
+based on text statistical characteristics. Finally, the tool offers a
+HTTP/REST API to use the index and the documents as a data source for
+building datasets. The API can also be used to evaluate the quality of
+the documents or to carry out further annotations.
 
 # Tour
 
@@ -38,7 +38,7 @@ An empty project consists of the following files and directories:
 ```console
 $ tree demo
 ├── data
-├── datashed.toml
+├── config.toml
 └── tmp
 ```
 
@@ -50,7 +50,7 @@ the `data` directory.
 
 ### Configuration
 
-The `datashed.toml` contains metadata about the project and important
+The `config.toml` contains metadata about the project and important
 runtime options.
 
 ```toml
