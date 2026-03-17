@@ -22,7 +22,7 @@ hashbrown = { version = "0.16" }
 indexmap = { version = "2.12", features = ["serde"] }
 indicatif = { version = "0.18", features = ["rayon"] }
 isbn = { version = "0.7" }
-lingua = { version = "1.7" }
+lingua = { version = "1.8" }
 ndarray = { version = "0.17" }
 openssl = { version = "0.10" }
 owo-colors = { version = "4.2" }
