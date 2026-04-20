@@ -5,7 +5,8 @@ use std::path::PathBuf;
 use actix_web::rt::task::spawn_blocking;
 use datashed::{
     Doctype, DoctypeRefinements, Document, GenreRefinements,
-    doctype_dtype, genre_dtype, iso6392b_dtype, translit,
+    GroupRefinements, doctype_dtype, genre_dtype, group_dtype,
+    iso6392b_dtype, translit,
 };
 use indicatif::ParallelProgressIterator;
 use pica_record::prelude::*;
@@ -28,6 +29,12 @@ pub(crate) struct Index {
 
     #[arg(long)]
     with_genre: bool,
+
+    #[arg(long, default_value = "other")]
+    group: String,
+
+    #[arg(long)]
+    with_group: bool,
 
     #[arg(long, short, default_value = "0")]
     limit: usize,
@@ -59,6 +66,7 @@ impl Index {
 
         let mut doctype_refinements = DoctypeRefinements::default();
         let mut genre_refinements = GenreRefinements::default();
+        let mut group_refinements = GroupRefinements::default();
 
         if let Some(refinements) = config.refinements {
             if let Some(path) = refinements.genre {
@@ -68,6 +76,15 @@ impl Index {
                 }
 
                 genre_refinements = toml_edit::de::from_str(&content)?;
+            }
+
+            if let Some(path) = refinements.group {
+                let mut content = read_to_string(path)?;
+                if let Some(ref runtime) = config.runtime {
+                    content = translit(runtime.normalization)(content);
+                }
+
+                group_refinements = toml_edit::de::from_str(&content)?;
             }
 
             if let Some(path) = refinements.doctype {
@@ -99,6 +116,11 @@ impl Index {
                         .process_record(record, &Default::default());
                 }
 
+                if self.with_group {
+                    group_refinements
+                        .process_record(record, &Default::default());
+                }
+
                 doctype_refinements
                     .process_record(record, &Default::default());
 
@@ -110,6 +132,7 @@ impl Index {
 
         let mut doctype_map = doctype_refinements.finish();
         let mut genre_map = genre_refinements.finish();
+        let mut group_map = group_refinements.finish();
 
         let is_arrow = if let Some(ref path) = self.output {
             path.extension()
@@ -164,6 +187,7 @@ impl Index {
         let mut hashes: Vec<String> = vec![];
         let mut names: Vec<String> = vec![];
         let mut genres: Vec<String> = vec![];
+        let mut groups: Vec<String> = vec![];
         let mut doctypes: Vec<String> = vec![];
         let mut lang_codes: Vec<Option<String>> = vec![];
         let mut lang_scores: Vec<Option<f64>> = vec![];
@@ -186,6 +210,14 @@ impl Index {
                     .remove(&name)
                     .unwrap_or(self.genre.clone());
                 genres.push(genre);
+            }
+
+            if self.with_group {
+                groups.push(
+                    group_map
+                        .remove(&name)
+                        .unwrap_or(self.group.clone()),
+                );
             }
 
             paths.push(doc.path);
@@ -212,6 +244,10 @@ impl Index {
 
         if self.with_genre {
             columns.push(col!("genre", genres).cast(&genre_dtype())?);
+        }
+
+        if self.with_group {
+            columns.push(col!("group", groups).cast(&group_dtype())?);
         }
 
         columns.push(col!("doctype", doctypes).cast(&doctype_dtype())?);
