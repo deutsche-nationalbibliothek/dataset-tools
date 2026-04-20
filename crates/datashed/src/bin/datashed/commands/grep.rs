@@ -2,6 +2,7 @@ use std::ffi::OsStr;
 use std::fs;
 use std::path::PathBuf;
 
+use actix_web::rt::task::spawn_blocking;
 use datashed::translit;
 use regex::bytes::RegexSetBuilder;
 
@@ -45,12 +46,12 @@ pub(crate) struct Grep {
 }
 
 impl Grep {
-    pub(crate) fn execute(self) -> CommandResult {
+    pub(crate) async fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
         let config = datashed.config()?;
 
-        let index = read_index(&datashed, &self.filter)?;
+        let index = read_index(&datashed, &self.filter).await?;
 
         let is_arrow = if let Some(ref path) = self.output {
             path.extension()
@@ -102,9 +103,11 @@ impl Grep {
             })
             .collect();
 
-        let matches =
-            DataFrame::new(vec![Column::new("path".into(), &matches)])?
-                .lazy();
+        let matches = DataFrame::new(
+            matches.len(),
+            vec![Column::new("path".into(), &matches)],
+        )?
+        .lazy();
 
         let with_genre = index.column("genre").is_ok();
         let mut index =
@@ -114,9 +117,9 @@ impl Grep {
             index = unnest_index(index, with_genre);
         }
 
-        let mut df =
-            index.sort(["path"], Default::default()).collect()?;
+        index = index.sort(["path"], Default::default());
 
+        let mut df = spawn_blocking(move || index.collect()).await??;
         write_df(&mut df, self.output)?;
 
         Ok(SUCCESS)

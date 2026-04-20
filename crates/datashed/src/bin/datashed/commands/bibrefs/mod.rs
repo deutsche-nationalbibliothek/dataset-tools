@@ -2,6 +2,7 @@ use std::fmt::{self, Display};
 use std::fs;
 use std::path::PathBuf;
 
+use actix_web::rt::task::spawn_blocking;
 use ddc::DdcMatcher;
 use doi::DoiMatcher;
 use isbn::IsbnMatcher;
@@ -132,11 +133,11 @@ struct Row {
 }
 
 impl Bibrefs {
-    pub(crate) fn execute(self) -> CommandResult {
+    pub(crate) async fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
         let data_dir = datashed.data_dir();
 
-        let index = read_index(&datashed, &self.filter)?;
+        let index = read_index(&datashed, &self.filter).await?;
         let paths = index.column("path")?.str()?;
         let hashes = index.column("hash")?.str()?;
 
@@ -203,22 +204,25 @@ impl Bibrefs {
             ends.push(row.end as u64);
         }
 
-        let mut df = DataFrame::new(vec![
-            col!("path", paths),
-            col!("hash", hashes),
-            if is_arrow(&self.output).unwrap_or_default() {
-                col!("reftype", reftypes).cast(&reftype_dtype())?
-            } else {
-                col!("reftype", reftypes)
-            },
-            col!("value", values),
-            col!("start", starts),
-            col!("end", ends),
-        ])?
+        let lf = DataFrame::new(
+            paths.len(),
+            vec![
+                col!("path", paths),
+                col!("hash", hashes),
+                if is_arrow(&self.output).unwrap_or_default() {
+                    col!("reftype", reftypes).cast(&reftype_dtype())?
+                } else {
+                    col!("reftype", reftypes)
+                },
+                col!("value", values),
+                col!("start", starts),
+                col!("end", ends),
+            ],
+        )?
         .lazy()
-        .sort(["path", "start"], Default::default())
-        .collect()?;
+        .sort(["path", "start"], Default::default());
 
+        let mut df = spawn_blocking(move || lf.collect()).await??;
         write_df(&mut df, self.output)?;
 
         Ok(SUCCESS)

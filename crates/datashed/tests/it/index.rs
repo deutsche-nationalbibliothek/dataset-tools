@@ -33,7 +33,7 @@ where
     assert_eq!(df.height(), 3);
     // eprintln!("{df:?}");
 
-    let columns = df.take_columns();
+    let columns = df.columns();
 
     let mut idx = 0;
 

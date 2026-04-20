@@ -20,9 +20,9 @@ pub(crate) struct Summary {
 }
 
 impl Summary {
-    pub(crate) fn execute(self) -> CommandResult {
+    pub(crate) async fn execute(self) -> CommandResult {
         let datashed = Datashed::discover()?;
-        let index = read_index(&datashed, &self.filter)?;
+        let index = read_index(&datashed, &self.filter).await?;
 
         let sizes = index.column("size")?.cast(&DataType::UInt64)?;
         let sizes = sizes.u64()?;

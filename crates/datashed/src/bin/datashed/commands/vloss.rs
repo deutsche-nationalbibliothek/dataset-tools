@@ -79,7 +79,7 @@ impl Vloss {
         let data_dir = datashed.data_dir();
         let config = datashed.config()?;
 
-        let index = read_index(&datashed, &self.filter)?;
+        let index = read_index(&datashed, &self.filter).await?;
 
         let predicates: Vec<fn(char) -> bool> = self
             .categories
@@ -234,6 +234,7 @@ impl Vloss {
         }
 
         let mut columns = vec![];
+        let height = paths.len();
 
         columns.push(col!("path", paths));
         columns.push(col!("hash", hashes));
@@ -247,7 +248,7 @@ impl Vloss {
         }
         columns.push(col!("vloss", vloss));
 
-        let mut lf = DataFrame::new(columns)?
+        let mut lf = DataFrame::new(height, columns)?
             .lazy()
             .inner_join(index.lazy(), col("path"), col("path"))
             .group_by([col("doctype"), col("threshold")])

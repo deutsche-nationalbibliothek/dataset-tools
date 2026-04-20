@@ -6,11 +6,11 @@
 
 The `datashed` tool is a _reverse ETL_ program that indexes the
 documents it contains. Based on this index, data analyses can be carried
-out, for example to identify corrupt documents or to build subsets based
-on text statistical characteristics. Finally, the tool offers a GraphQL
-API to use the index and the documents as a data source for building
-datasets. The API can also be used to evaluate the quality of the
-documents or to carry out further annotations.
+out, for example to identify corrupt documents or to build subsets
+based on text statistical characteristics. Finally, the tool offers a
+HTTP/REST API to use the index and the documents as a data source for
+building datasets. The API can also be used to evaluate the quality of
+the documents or to carry out further annotations.
 
 # Tour
 
@@ -38,7 +38,7 @@ An empty project consists of the following files and directories:
 ```console
 $ tree demo
 ├── data
-├── datashed.toml
+├── config.toml
 └── tmp
 ```
 
@@ -50,7 +50,7 @@ the `data` directory.
 
 ### Configuration
 
-The `datashed.toml` contains metadata about the project and important
+The `config.toml` contains metadata about the project and important
 runtime options.
 
 ```toml
@@ -91,7 +91,7 @@ A new index can be created as follows:
 
 ```console
 $ datashed index
-Collecting documents: 3 | elapsed: 00:00:00, done.
+Enumerating documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
@@ -102,7 +102,7 @@ which contains the file name (without file extension):
 
 ```console
 $ datashed index --filename-column "ppn"
-Collecting documents: 3 | elapsed: 00:00:00, done.
+Enumerating documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
@@ -138,7 +138,7 @@ dump is specified as a comma line option:
 ```console
 $ datashed index --filename-column "ppn" DUMP.dat.gz
 Processing metadata: 100 | elapsed: 00:00:00, done.
-Collecting documents: 3 | elapsed: 00:00:00, done.
+Enumerating documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 

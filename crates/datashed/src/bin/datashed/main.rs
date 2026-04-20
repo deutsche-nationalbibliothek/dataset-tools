@@ -47,21 +47,21 @@ async fn main() -> ExitCode {
 
     let result = match *args.cmd {
         Command::Archive(cmd) => cmd.execute(),
-        Command::Bibrefs(cmd) => cmd.execute(),
-        Command::Check(cmd) => cmd.execute(),
+        Command::Bibrefs(cmd) => cmd.execute().await,
+        Command::Check(cmd) => cmd.execute().await,
         Command::Completions(cmd) => cmd.execute(),
         Command::Config(cmd) => cmd.execute(),
-        Command::Grep(cmd) => cmd.execute(),
-        Command::Index(cmd) => cmd.execute(),
+        Command::Grep(cmd) => cmd.execute().await,
+        Command::Index(cmd) => cmd.execute().await,
         Command::Init(cmd) => cmd.execute(),
-        Command::Lfreq(cmd) => cmd.execute(),
+        Command::Lfreq(cmd) => cmd.execute().await,
         Command::Restore(cmd) => cmd.execute(),
         Command::Serve(cmd) => cmd.execute().await,
-        Command::Summary(cmd) => cmd.execute(),
+        Command::Summary(cmd) => cmd.execute().await,
         Command::Verify(cmd) => cmd.execute(),
         Command::Version(cmd) => cmd.execute(),
         Command::Vloss(cmd) => cmd.execute().await,
-        Command::Vocab(cmd) => cmd.execute(),
+        Command::Vocab(cmd) => cmd.execute().await,
     };
 
     match result {

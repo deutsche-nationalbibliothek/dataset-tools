@@ -2,6 +2,7 @@ use std::fs::{File, read_to_string};
 use std::path::PathBuf;
 use std::time::Instant;
 
+use actix_web::rt::task::spawn_blocking;
 use indexmap::IndexMap;
 use owo_colors::OwoColorize;
 use polars::sql::SQLContext;
@@ -49,14 +50,14 @@ pub(crate) struct Check {
 }
 
 impl Check {
-    pub(crate) fn execute(self) -> CommandResult {
+    pub(crate) async fn execute(self) -> CommandResult {
         let content = read_to_string(self.config.unwrap())?;
         let config: Config = toml_edit::de::from_str(&content)?;
 
         let datashed = Datashed::discover()?;
-        let index = read_index(&datashed, &self.filter)?;
+        let index = read_index(&datashed, &self.filter).await?;
 
-        let mut ctx = SQLContext::new();
+        let ctx = SQLContext::new();
         ctx.register("index", index.lazy());
 
         if let Some(path) = self.bibrefs {
@@ -83,13 +84,20 @@ impl Check {
                 continue;
             }
 
-            let Ok(result) = ctx.execute(&check.query) else {
+            let ctx = ctx.clone();
+            let query = check.query.clone();
+
+            let result =
+                spawn_blocking(move || ctx.clone().execute(&query))
+                    .await?;
+
+            let Ok(lf) = result else {
                 eprintln!("invalid query: {}", check.query);
                 return Ok(FAILURE);
             };
 
-            let result = result.collect()?;
-            let column = result.column_iter().nth(0).unwrap();
+            let result = spawn_blocking(move || lf.collect()).await??;
+            let column = result.columns().first().unwrap();
 
             let info = if let Some(ref desc) = check.description {
                 desc.to_string()

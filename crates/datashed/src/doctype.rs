@@ -8,31 +8,24 @@ use crate::refinement::Refinements;
 
 pub type DoctypeRefinements = Refinements<Doctype>;
 
-pub(crate) const DOCTYPES: [&str; 30] = [
+pub(crate) const DOCTYPES: [&str; 23] = [
     "abstract",
-    "bachelor-thesis",
     "blog-post",
     "blurb",
     "conference-object",
     "conference-paper",
     "conference-proceedings",
     "correction",
-    "diploma-thesis",
     "doctoral-thesis",
     "journal-object",
     "letter-to-the-editor",
-    "magister-thesis",
-    "master-thesis",
     "musical-notation",
     "other",
     "policy-paper",
-    "postdoctoral-thesis",
     "preface",
     "preprint-article",
-    "research-article",
     "retraction-note",
     "review",
-    "review-article",
     "scientific-article",
     "statistical-report",
     "study-thesis",
@@ -47,28 +40,21 @@ pub(crate) const DOCTYPES: [&str; 30] = [
 #[serde(rename_all = "kebab-case")]
 pub enum Doctype {
     Abstract,
-    BachelorThesis,
     BlogPost,
     Blurb,
     ConferenceObject,
     ConferencePaper,
     ConferenceProceedings,
     Correction,
-    DiplomaThesis,
     DoctoralThesis,
     JournalObject,
     LetterToTheEditor,
-    MagisterThesis,
-    MasterThesis,
     MusicalNotation,
     PolicyPaper,
-    PostdoctoralThesis,
     Preface,
     PreprintArticle,
-    ResearchArticle,
     RetractionNote,
     Review,
-    ReviewArticle,
     ScientificArticle,
     StatisticalReport,
     StudyThesis,
@@ -97,7 +83,6 @@ impl Display for Doctype {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Abstract => write!(f, "abstract"),
-            Self::BachelorThesis => write!(f, "bachelor-thesis"),
             Self::BlogPost => write!(f, "blog-post"),
             Self::Blurb => write!(f, "blurb"),
             Self::ConferenceObject => write!(f, "conference-object"),
@@ -106,25 +91,17 @@ impl Display for Doctype {
                 write!(f, "conference-proceedings")
             }
             Self::Correction => write!(f, "correction"),
-            Self::DiplomaThesis => write!(f, "diploma-thesis"),
             Self::DoctoralThesis => write!(f, "doctoral-thesis"),
             Self::JournalObject => write!(f, "journal-object"),
             Self::LetterToTheEditor => {
                 write!(f, "letter-to-the-editor")
             }
-            Self::MagisterThesis => write!(f, "magister-thesis"),
-            Self::MasterThesis => write!(f, "master-thesis"),
             Self::MusicalNotation => write!(f, "musical-notation"),
             Self::PolicyPaper => write!(f, "policy-paper"),
-            Self::PostdoctoralThesis => {
-                write!(f, "postdoctoral-thesis")
-            }
             Self::Preface => write!(f, "preface"),
             Self::PreprintArticle => write!(f, "preprint-article"),
-            Self::ResearchArticle => write!(f, "research-article"),
             Self::RetractionNote => write!(f, "retraction-note"),
             Self::Review => write!(f, "review"),
-            Self::ReviewArticle => write!(f, "review-article"),
             Self::ScientificArticle => write!(f, "scientific-article"),
             Self::StatisticalReport => write!(f, "statistical-report"),
             Self::StudyThesis => write!(f, "study-thesis"),
