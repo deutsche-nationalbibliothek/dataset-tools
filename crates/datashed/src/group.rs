@@ -13,9 +13,9 @@ pub(crate) const GROUPS: [&str; 5] =
 #[serde(rename_all = "kebab-case")]
 pub enum Group {
     Article,
-    Paratext,
     Monograph,
     Collection,
+    Paratext,
     #[default]
     Other,
 }
