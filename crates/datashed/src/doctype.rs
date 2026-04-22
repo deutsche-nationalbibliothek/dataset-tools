@@ -102,7 +102,7 @@ impl Display for Doctype {
                 write!(f, "letter-to-the-editor")
             }
             Self::MusicalNotation => write!(f, "musical-notation"),
-            Self::NonFictionBook => write!(f, "nonfiction-book"),
+            Self::NonfictionBook => write!(f, "nonfiction-book"),
             Self::PolicyPaper => write!(f, "policy-paper"),
             Self::Preface => write!(f, "preface"),
             Self::PreprintArticle => write!(f, "preprint-article"),
