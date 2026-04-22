@@ -39,7 +39,7 @@ jobs:
         target:
           - { os: ubuntu-latest, toolchain: stable, triple: x86_64-unknown-linux-gnu }
           - { os: ubuntu-latest, toolchain: beta, triple: x86_64-unknown-linux-gnu }
-          - { os: ubuntu-latest, toolchain: nightly, triple: x86_64-unknown-linux-gnu }
+          - { os: ubuntu-latest, toolchain: nightly-2026-04-01, triple: x86_64-unknown-linux-gnu }
     runs-on: ${{ matrix.target.os }}
     steps:
       - uses: actions/checkout@v4
@@ -67,7 +67,7 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@nightly-2026-04-01
       - uses: taiki-e/install-action@cargo-hack
       - run: cargo hack check --all --feature-powerset
 
@@ -76,7 +76,7 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@nightly-2026-04-01
         with:
           components: rustfmt
       - uses: Swatinem/rust-cache@v2
@@ -87,7 +87,7 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@nightly-2026-04-01
       - uses: Swatinem/rust-cache@v2
       - run: cargo doc --no-deps
 
@@ -96,7 +96,7 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@nightly-2026-04-01
         with:
           components: clippy
       - uses: Swatinem/rust-cache@v2
@@ -130,7 +130,7 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@nightly-2026-04-01
       - uses: Swatinem/rust-cache@v2
       - run: cargo install --locked cargo-udeps
       - run: cargo udeps --workspace
@@ -159,7 +159,7 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@nightly-2026-04-01
       - uses: Swatinem/rust-cache@v2
       - run: cargo install --locked cargo-careful
       - run: cargo careful test --workspace --all-features
