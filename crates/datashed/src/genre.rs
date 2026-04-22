@@ -11,7 +11,7 @@ pub(crate) const GENRES: [&str; 5] = [
     "childrens-and-youth",
     "non-fiction",
     "reference-work",
-    "other",
+    "none",
 ];
 
 #[derive(Debug, Default, Serialize, Deserialize)]
@@ -19,10 +19,10 @@ pub(crate) const GENRES: [&str; 5] = [
 pub enum Genre {
     BellesLettres,
     ChildrensAndYouth,
-    NonFiction,
+    Nonfiction,
     ReferenceWork,
     #[default]
-    Other,
+    None,
 }
 
 impl Display for Genre {
@@ -30,9 +30,9 @@ impl Display for Genre {
         match self {
             Self::BellesLettres => write!(f, "belles-lettres"),
             Self::ChildrensAndYouth => write!(f, "childrens-and-youth"),
-            Self::NonFiction => write!(f, "non-fiction"),
+            Self::Nonfiction => write!(f, "nonfiction"),
             Self::ReferenceWork => write!(f, "reference-work"),
-            Self::Other => write!(f, "other"),
+            Self::None => write!(f, "none"),
         }
     }
 }
