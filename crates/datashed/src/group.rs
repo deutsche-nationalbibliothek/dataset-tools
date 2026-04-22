@@ -6,8 +6,14 @@ use crate::refinement::Refinements;
 
 pub type GroupRefinements = Refinements<Group>;
 
-pub(crate) const GROUPS: [&str; 5] =
-    ["article", "paratext", "monograph", "collection", "other"];
+pub(crate) const GROUPS: [&str; 6] = [
+    "article",
+    "paratext",
+    "monograph",
+    "collection",
+    "other",
+    "none",
+];
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -16,8 +22,9 @@ pub enum Group {
     Monograph,
     Collection,
     Paratext,
-    #[default]
     Other,
+    #[default]
+    None,
 }
 
 impl Display for Group {
@@ -28,6 +35,7 @@ impl Display for Group {
             Self::Monograph => write!(f, "monograph"),
             Self::Collection => write!(f, "collection"),
             Self::Other => write!(f, "other"),
+            Self::None => write!(f, "none"),
         }
     }
 }
