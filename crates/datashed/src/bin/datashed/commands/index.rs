@@ -21,16 +21,16 @@ pub(crate) struct Index {
     #[arg(long)]
     filename_column: Option<String>,
 
-    #[arg(long, default_value = "other")]
+    #[arg(long, default_value = "none")]
     doctype: String,
 
-    #[arg(long, default_value = "other")]
+    #[arg(long, default_value = "none")]
     genre: String,
 
     #[arg(long)]
     with_genre: bool,
 
-    #[arg(long, default_value = "other")]
+    #[arg(long, default_value = "none")]
     group: String,
 
     #[arg(long)]

@@ -68,9 +68,9 @@ where
     let doctypes: Vec<_> = doctypes.str()?.iter().collect();
     idx += 1;
 
-    assert_eq!(doctypes[0], Some("other"));
-    assert_eq!(doctypes[1], Some("other"));
-    assert_eq!(doctypes[2], Some("other"));
+    assert_eq!(doctypes[0], Some("none"));
+    assert_eq!(doctypes[1], Some("none"));
+    assert_eq!(doctypes[2], Some("none"));
 
     // SIZE
     let sizes: Vec<_> = columns[idx]
