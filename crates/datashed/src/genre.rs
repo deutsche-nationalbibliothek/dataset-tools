@@ -9,7 +9,7 @@ pub type GenreRefinements = Refinements<Genre>;
 pub(crate) const GENRES: [&str; 5] = [
     "belles-lettres",
     "childrens-and-youth",
-    "non-fiction",
+    "nonfiction",
     "reference-work",
     "none",
 ];
