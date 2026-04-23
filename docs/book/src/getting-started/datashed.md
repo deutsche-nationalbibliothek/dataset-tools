@@ -1,8 +1,10 @@
-<p align="center">
-  <img  height="250" width="250" src="../.github/datashed.svg" />
+<p style="text-align: center;">
+  <img  height="200" width="200" src="../img/datashed.svg" />
 </p>
 
-<hr />
+_tba_
+
+<!--
 
 The `datashed` tool is a _reverse ETL_ program that indexes the
 documents it contains. Based on this index, data analyses can be carried
@@ -568,3 +570,5 @@ Verify consistency with `datashed verify`.
 [lingua]: https://github.com/pemistahl/lingua-rs
 [Unicode Standard]: https://www.unicode.org/versions/latest/
 [euclidian distance]: https://en.wikipedia.org/wiki/Euclidean_distance
+
+-->
