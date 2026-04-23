@@ -11,13 +11,13 @@ the [German National Library].
 
 ## Tools
 
-The [datashed](./docs/datashed.md) tool is a _reverse ETL_ program that
-indexes the documents it contains. Based on this index, data analyses
-can be carried out, for example to identify corrupt documents or to
-build subsets based on text statistical characteristics. Finally, the
-tool offers a HTTP/REST API to use the index and the documents as a data
-source for building datasets. The API can also be used to evaluate the
-quality of the documents or to carry out further annotations.
+The [datashed] tool is a _reverse ETL_ program that indexes the
+documents it contains. Based on this index, data analyses can be carried
+out, for example to identify corrupt documents or to build subsets
+based on text statistical characteristics. Finally, the tool offers a
+HTTP/REST API to use the index and the documents as a data source for
+building datasets. The API can also be used to evaluate the quality of
+the documents or to carry out further annotations.
 
 
 ## Contributing
@@ -43,3 +43,4 @@ The [test data] were taken from the Wikipedia articles [DNB], [TIB] and
 [TIB]: https://de.wikipedia.org/wiki/TIB_%E2%80%93_Leibniz-Informationszentrum_Technik_und_Naturwissenschaften
 [ZBW]: https://en.wikipedia.org/wiki/German_National_Library_of_Economics
 [CC BY-SA]: https://creativecommons.org/licenses/by-sa/4.0/
+[datashed]: https://deutsche-nationalbibliothek.github.io/dataset-tools/getting-started/datashed.html
