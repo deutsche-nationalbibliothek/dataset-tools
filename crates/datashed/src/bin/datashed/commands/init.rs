@@ -28,7 +28,7 @@ pub(crate) struct Init {
     /// A list of people or organizations, which are considered as the
     /// authors of the datashed. By default the list is populated with
     /// the git identity (if available).
-    #[arg(short, long = "author")]
+    #[arg(short, long = "author", value_name = "AUTHOR")]
     authors: Vec<String>,
 
     /// Initialize the datashed for the given version control system
