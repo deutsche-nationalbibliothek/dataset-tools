@@ -191,6 +191,7 @@ impl Index {
         let mut doctypes: Vec<String> = vec![];
         let mut lang_codes: Vec<Option<String>> = vec![];
         let mut lang_scores: Vec<Option<f64>> = vec![];
+        let mut chars: Vec<u64> = vec![];
         let mut sizes: Vec<u64> = vec![];
         let mut lfreqs: Vec<Option<f64>> = vec![];
         let mut alphas: Vec<f64> = vec![];
@@ -226,6 +227,7 @@ impl Index {
             doctypes.push(doctype);
             lang_codes.push(doc.lang_code);
             lang_scores.push(doc.lang_score);
+            chars.push(doc.chars);
             sizes.push(doc.size);
             lfreqs.push(doc.lfreq);
             alphas.push(doc.alpha);
@@ -251,6 +253,7 @@ impl Index {
         }
 
         columns.push(col!("doctype", doctypes).cast(&doctype_dtype())?);
+        columns.push(col!("chars", chars));
         columns.push(col!("size", sizes));
 
         let lang = DataFrame::new(

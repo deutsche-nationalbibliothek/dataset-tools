@@ -72,6 +72,18 @@ where
     assert_eq!(doctypes[1], Some("none"));
     assert_eq!(doctypes[2], Some("none"));
 
+    // CHARS
+    let chars: Vec<_> = columns[idx]
+        .cast(&DataType::UInt64)?
+        .u64()?
+        .iter()
+        .collect();
+    idx += 1;
+
+    assert_eq!(chars[0], Some(767));
+    assert_eq!(chars[1], Some(1432));
+    assert_eq!(chars[2], Some(904));
+
     // SIZE
     let sizes: Vec<_> = columns[idx]
         .cast(&DataType::UInt64)?
