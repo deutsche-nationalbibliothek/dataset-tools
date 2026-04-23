@@ -6,8 +6,7 @@ use polars::prelude::*;
 
 use crate::prelude::*;
 
-const HEADER: &str =
-    "path,hash,doctype,size,lang_code,lang_score,lfreq,alpha,mtime\n";
+const HEADER: &str = "path,hash,doctype,chars,size,lang_code,lang_score,lfreq,alpha,mtime\n";
 
 #[test]
 fn grep_default() -> TestResult {
