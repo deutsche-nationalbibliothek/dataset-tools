@@ -2,23 +2,20 @@
   <img  height="200" width="200" src="../img/datashed.svg" />
 </p>
 
-_tba_
-
-<!--
-
-The `datashed` tool is a _reverse ETL_ program that indexes the
-documents it contains. Based on this index, data analyses can be carried
-out, for example to identify corrupt documents or to build subsets
-based on text statistical characteristics. Finally, the tool offers a
-HTTP/REST API to use the index and the documents as a data source for
-building datasets. The API can also be used to evaluate the quality of
-the documents or to carry out further annotations.
+The `datashed` tool helps with the creation and maintenance of large
+collections of text documents. The tool indexes the documents it
+contains. Based on this index, data analyses can be carried out, for
+example to identify corrupt documents or to build subsets based on text
+statistical characteristics. Finally, the tool offers a HTTP/REST API to
+use the index and the documents as a data source for building datasets.
+The API can also be used to evaluate the quality of the documents or to
+carry out further annotations.
 
 # Tour
 
 ## Initialization
 
-The `init` command is used to create a new datashed project. The
+The [init] command is used to create a new datashed project. The
 following command creates a new project `demo`.
 
 ```console
@@ -49,6 +46,11 @@ must be in plain text format and end with the file extension `.txt`.
 It is up to the user to set up an ingest process, e.g. in the form of a
 Python script. Documents can be structured in any subdirectories within
 the `data` directory.
+
+
+[init]: ../reference/datashed/commands/datashed-init.md
+
+<!--
 
 ### Configuration
 
