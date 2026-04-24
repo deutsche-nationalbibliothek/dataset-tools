@@ -47,12 +47,7 @@ It is up to the user to set up an ingest process, e.g. in the form of a
 Python script. Documents can be structured in any subdirectories within
 the `data` directory.
 
-
-[init]: ../reference/datashed/commands/datashed-init.md
-
-<!--
-
-### Configuration
+## Configuration
 
 The `config.toml` contains metadata about the project and important
 runtime options.
@@ -71,7 +66,7 @@ identity (if possible). The project is also automatically initialized
 as a Git repository. This behavior can be deactivated using the `--vcs
 none` option.
 
-Some configuration options can be set using the `config` command:
+Some configuration options can be set using the [config] command:
 
 ```console
 $ datashed config runtime.normalization nfd
@@ -79,11 +74,12 @@ $ datashed config runtime.num-jobs 42
 ````
 
 The `normalization` option specifies the Unicode normal form in which
-the data is encoded. Configuration options and command line parameters
-are then transliterated into the corresponding normal form if necessary.
-The `num-jobs` option defines the maximum number of CPU cores used by
-the application.
+the documents are encoded. Configuration options and command line
+parameters are then transliterated into the corresponding normal form if
+necessary. The `num-jobs` option defines the maximum number of CPU cores
+used by the application.
 
+<!--
 
 ## Indexing
 
@@ -574,3 +570,6 @@ Verify consistency with `datashed verify`.
 [euclidian distance]: https://en.wikipedia.org/wiki/Euclidean_distance
 
 -->
+
+[init]: ../reference/datashed/commands/datashed-init.md
+[config]: ../reference/datashed/commands/datashed-config.md
