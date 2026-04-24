@@ -1,19 +1,18 @@
-# datashed-init(1)
+# dataset-init(1)
 
 ## NAME
 
-*datashed-init* --- Create a new datashed or re-initialize an existing
-one
+*dataset-init* --- Create a new dataset or re-initialize an existing one
 
 ## SYNOPSIS
 
-`datashed init` [_OPTIONS_] [_DIRECTORY_]
+`dataset init` [_OPTIONS_] [_DIRECTORY_]
 
 ## DESCRIPTION
 
-This command creates a new datashed project that contains all the
+This command creates a new dataset project that contains all the
 necessary files and directories. If the command is run within an
-existing datashed project, it simply reinitializes the project, meaning
+existing dataset project, it simply reinitializes the project, meaning
 that any missing artifacts are created.
 
 If a `directory` is specified as an argument, it is created
@@ -27,27 +26,27 @@ is created.
 ## ARGUMENTS
 
 `DIRECTORY`
-: The location of the new datashed (default `.`).
+: The location of the new dataset (default `.`).
 
 ## OPTIONS
 
 `-n`, `--name` `<NAME>`
-: The name of the datashed.
+: The name of the dataset.
 
 `--version` `<VERSION>`
-: The version of the datashed (default `0.1.0`).
+: The version of the dataset (default `0.1.0`).
 
 `-d`, `--description` `<DESCRIPTION>`
-: A short blurb about the datashed.
+: A short blurb about the dataset.
 
 `-a`, `--author` `<AUTHOR>`
 : A list of people or organizations, which are considered as the authors
-of the datashed. By default the list is populated with the git identity
+of the dataset. By default the list is populated with the git identity
 (if available).
 
 `--vcs` `<VCS>`
-: Initialize the datashed for the given version control system (VCS).
-Possible values are `git` and `none`.
+: Initialize the dataser for the given version control system (VCS).
+Possible values are `git` and `none` (default `git`).
 
 `-f`, `--force`
 : Whether to overwrite config with default values or not.
@@ -69,7 +68,7 @@ Possible values are `git` and `none`.
 The following command creates a new project `demo`:
 
 ```console
-$ datashed init demo
+$ dataset init demo
 ```
 
 Alternatively, a project can be initialized inside an existing
@@ -77,7 +76,7 @@ directory:
 
 ```console
 $ mkdir demo && cd demo
-$ datashed init .
+$ dataset init .
 ```
 
 [Git]: https://git-scm.com

@@ -20,11 +20,17 @@ use the index and the documents as a data source for building datasets.
 The API can also be used to evaluate the quality of the documents or to
 carry out further annotations.
 
+### Dataset
+
+The [dataset] tool creates [Annif]-compatible corpora from the documents
+in one or more datasheds.
+
 ## License
 
 The source code is licensed under the [European Union Public License 1.2].
 
 [Annif]: https://annif.org
+[dataset]: ./getting-started/dataset.md
 [datashed]: ./getting-started/datashed.md
 [German National Library]: https://www.dnb.de
 [European Union Public License 1.2]: https://github.com/deutsche-nationalbibliothek/dataset-tools/blob/main/LICENSE

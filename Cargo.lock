@@ -1009,6 +1009,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "dataset"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "polars",
+ "semver",
+ "serde",
+ "toml_edit",
+]
+
+[[package]]
 name = "datashed"
 version = "0.1.0"
 dependencies = [

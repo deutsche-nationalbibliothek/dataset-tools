@@ -5,6 +5,7 @@
 * [Getting Started](getting-started/index.md)
   * [Installation](getting-started/installation.md)
   * [Datashed](getting-started/datashed.md)
+  * [Dataset](getting-started/dataset.md)
 
 * [Reference](reference/index.md)
   * [Datashed](reference/datashed/commands/index.md)
@@ -23,5 +24,7 @@
     * [version](reference/datashed/commands/datashed-version.md)
     * [vloss](reference/datashed/commands/datashed-vloss.md)
     * [vocab](reference/datashed/commands/datashed-vocab.md)
+  * [Dataset](reference/dataset/commands/index.md)
+    * [init](reference/dataset/commands/dataset-init.md)
 
 
