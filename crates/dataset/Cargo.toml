@@ -25,3 +25,4 @@ polars = { workspace = true }
 semver = { workspace = true }
 serde = { workspace = true }
 toml_edit = { workspace = true }
+url = { workspace = true }

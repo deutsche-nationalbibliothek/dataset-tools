@@ -32,6 +32,7 @@ pub(crate) struct Args {
 pub(crate) enum Command {
     Config(Config),
     Init(Init),
+    Remote(Remote),
     Version(Version),
 }
 

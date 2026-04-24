@@ -27,6 +27,7 @@
   * [Dataset](reference/dataset/commands/index.md)
     * [config](reference/dataset/commands/dataset-config.md)
     * [init](reference/dataset/commands/dataset-init.md)
+    * [remote](reference/dataset/commands/dataset-remote.md)
     * [version](reference/dataset/commands/dataset-version.md)
 
 

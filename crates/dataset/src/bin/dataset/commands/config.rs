@@ -34,7 +34,7 @@ macro_rules! set_rt_option {
             } else {
                 $config.runtime = Some(Runtime {
                     $name: Some(value),
-                    ..Default::default()
+                    // ..Default::default()
                 });
             }
 
