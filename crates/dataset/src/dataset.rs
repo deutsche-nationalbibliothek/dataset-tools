@@ -28,9 +28,9 @@ impl Dataset {
         let mut root_dir = env::current_dir()?;
 
         loop {
-            if let Ok(metadata) =
-                fs::metadata(root_dir.join(Self::CONFIG))
-                && metadata.is_file()
+            if let Ok(metadata) = fs::metadata(
+                root_dir.join(Self::DOT_DIR).join(Self::CONFIG),
+            ) && metadata.is_file()
             {
                 break;
             }

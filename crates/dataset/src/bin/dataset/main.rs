@@ -12,6 +12,7 @@ fn main() -> ExitCode {
 
     let result = match *args.cmd {
         Command::Init(cmd) => cmd.execute(),
+        Command::Version(cmd) => cmd.execute(),
     };
 
     match result {

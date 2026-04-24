@@ -26,5 +26,6 @@
     * [vocab](reference/datashed/commands/datashed-vocab.md)
   * [Dataset](reference/dataset/commands/index.md)
     * [init](reference/dataset/commands/dataset-init.md)
+    * [version](reference/dataset/commands/dataset-version.md)
 
 

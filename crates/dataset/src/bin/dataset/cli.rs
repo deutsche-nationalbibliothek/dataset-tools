@@ -31,6 +31,7 @@ pub(crate) struct Args {
 #[derive(Debug, Subcommand)]
 pub(crate) enum Command {
     Init(Init),
+    Version(Version),
 }
 
 #[derive(Debug, clap::Args)]
