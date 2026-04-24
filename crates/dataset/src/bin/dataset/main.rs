@@ -11,6 +11,7 @@ fn main() -> ExitCode {
     let args = Args::parse();
 
     let result = match *args.cmd {
+        Command::Config(cmd) => cmd.execute(),
         Command::Init(cmd) => cmd.execute(),
         Command::Version(cmd) => cmd.execute(),
     };
