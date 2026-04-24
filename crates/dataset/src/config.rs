@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::fs::{self, File};
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -5,6 +6,7 @@ use std::path::{Path, PathBuf};
 use semver::Version;
 use serde::{Deserialize, Serialize};
 
+use crate::Remote;
 use crate::error::DatasetResult;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
@@ -20,6 +22,13 @@ pub struct Config {
 
     /// Runtime options.
     pub runtime: Option<Runtime>,
+
+    #[serde(
+        rename = "remote",
+        skip_serializing_if = "BTreeMap::is_empty",
+        default
+    )]
+    pub remotes: BTreeMap<String, Remote>,
 
     /// This structure should always be constructed using a public
     /// constructor or using the update syntax:

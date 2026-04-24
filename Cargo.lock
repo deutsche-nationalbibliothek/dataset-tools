@@ -1018,6 +1018,7 @@ dependencies = [
  "semver",
  "serde",
  "toml_edit",
+ "url",
 ]
 
 [[package]]
@@ -5242,6 +5243,7 @@ dependencies = [
  "idna",
  "percent-encoding",
  "serde",
+ "serde_derive",
 ]
 
 [[package]]
