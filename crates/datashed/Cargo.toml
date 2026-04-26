@@ -25,6 +25,7 @@ anyhow = { workspace = true }
 bstr = { workspace = true }
 clap_complete = { workspace = true }
 clap = { workspace = true }
+dataset-core = { workspace = true }
 env_logger = { workspace = true }
 flate2 = { workspace = true }
 hashbrown = { workspace = true }
