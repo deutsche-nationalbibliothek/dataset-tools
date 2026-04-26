@@ -21,6 +21,7 @@ performant = []
 [dependencies]
 anyhow = { workspace = true }
 clap = { workspace = true }
+dataset-core = { workspace = true }
 polars = { workspace = true }
 semver = { workspace = true }
 serde = { workspace = true }

@@ -1014,12 +1014,17 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
+ "dataset-core",
  "polars",
  "semver",
  "serde",
  "toml_edit",
  "url",
 ]
+
+[[package]]
+name = "dataset-core"
+version = "0.1.0"
 
 [[package]]
 name = "datashed"
@@ -1034,6 +1039,7 @@ dependencies = [
  "bstr",
  "clap",
  "clap_complete",
+ "dataset-core",
  "env_logger",
  "flate2",
  "hashbrown 0.16.1",
