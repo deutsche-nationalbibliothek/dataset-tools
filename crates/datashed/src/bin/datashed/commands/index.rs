@@ -17,35 +17,52 @@ use crate::prelude::*;
 /// Create an index of all available documents
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Index {
-    /// Write the filename into the specified column.
-    #[arg(long)]
+    /// Optionally, the index can be enriched with the genre, group,
+    /// and doctype columns using a metadata extract (PICA+ format).
+    metadata: Option<PathBuf>,
+
+    /// Write the filename (without extension) into the specified
+    /// column.
+    #[arg(long, value_name = "COLUMN")]
     filename_column: Option<String>,
 
+    /// Whether to add a doctype column or not.
+    #[arg(long)]
+    with_doctype: bool,
+
+    /// The default document type if the metadata could not be used to
+    /// determine the document's type.
     #[arg(long, default_value = "none")]
     doctype: String,
 
-    #[arg(long, default_value = "none")]
-    genre: String,
-
+    /// Whether to add a `genre` column or not.
     #[arg(long)]
     with_genre: bool,
 
+    /// The default genre if the metadata could not be used to
+    /// determine the document's genre.
     #[arg(long, default_value = "none")]
-    group: String,
+    genre: String,
 
+    /// Whether to add a `group` column or not.
     #[arg(long)]
     with_group: bool,
 
-    #[arg(long, short, default_value = "0")]
+    /// The default group if the metadata could not be used to
+    /// determine the document's group.
+    #[arg(long, default_value = "none")]
+    group: String,
+
+    /// Stop processing after <N> documents.
+    #[arg(long, short, default_value = "0", value_name = "N")]
     limit: usize,
 
+    /// Write the index to <OUTPUT> instead to `index.ipc`
     #[arg(long, short)]
     output: Option<PathBuf>,
 
     #[command(flatten, next_help_heading = "Common options")]
     pub(crate) common: CommonOpts,
-
-    metadata: Option<PathBuf>,
 }
 
 const PBAR_METADATA: &str = "Processing metadata: {human_pos} | \

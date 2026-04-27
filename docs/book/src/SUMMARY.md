@@ -7,6 +7,11 @@
   * [Datashed](getting-started/datashed.md)
   * [Dataset](getting-started/dataset.md)
 
+* [Concepts](concepts/index.md)
+  * [Datashed Index](concepts/datashed-index.md)
+  * [Document types](concepts/document-types.md)
+  * [Refinements](concepts/datashed-refinements.md)
+
 * [Reference](reference/index.md)
   * [Datashed](reference/datashed/commands/index.md)
     * [archive](reference/datashed/commands/datashed-archive.md)
@@ -30,5 +35,3 @@
     * [init](reference/dataset/commands/dataset-init.md)
     * [remote](reference/dataset/commands/dataset-remote.md)
     * [version](reference/dataset/commands/dataset-version.md)
-
-
