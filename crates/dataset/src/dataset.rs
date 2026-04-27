@@ -14,6 +14,7 @@ pub struct Dataset {
 
 impl Dataset {
     pub const DOT_DIR: &'static str = ".dataset";
+    pub const REMOTES_DIR: &'static str = "remotes";
     pub const DATA_DIR: &'static str = "data";
     pub const TMP_DIR: &'static str = "tmp";
 
@@ -60,6 +61,18 @@ impl Dataset {
     /// Returns the data directory of the dataset.
     pub fn data_dir(&self) -> PathBuf {
         self.root_dir.join(Self::DATA_DIR)
+    }
+
+    /// Returns the remotes directory of the dataset.
+    #[inline]
+    pub fn dot_dir(&self) -> PathBuf {
+        self.root_dir.join(Self::DOT_DIR)
+    }
+
+    /// Returns the remotes directory of the dataset.
+    #[inline]
+    pub fn remotes_dir(&self) -> PathBuf {
+        self.dot_dir().join(Self::REMOTES_DIR)
     }
 
     /// Returns the index associated with the dataset.

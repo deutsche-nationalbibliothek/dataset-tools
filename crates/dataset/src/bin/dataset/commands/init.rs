@@ -123,6 +123,7 @@ impl Init {
         };
 
         let dot_dir = root_dir.join(Dataset::DOT_DIR);
+        let remotes_dir = dot_dir.join(Dataset::REMOTES_DIR);
         let config = dot_dir.join(Dataset::CONFIG);
 
         if !root_dir.exists() {
@@ -131,6 +132,10 @@ impl Init {
 
         if !dot_dir.exists() {
             fs::create_dir_all(&dot_dir)?;
+        }
+
+        if !remotes_dir.exists() {
+            fs::create_dir_all(&remotes_dir)?;
         }
 
         if self.vcs == Vcs::Git {

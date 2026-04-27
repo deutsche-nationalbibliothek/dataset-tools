@@ -19,10 +19,14 @@ default = []
 performant = []
 
 [dependencies]
+actix-web = { workspace = true }
 anyhow = { workspace = true }
 clap = { workspace = true }
 dataset-core = { workspace = true }
+indicatif = { workspace = true }
 polars = { workspace = true }
+rayon = { workspace = true }
+reqwest = { workspace = true }
 semver = { workspace = true }
 serde = { workspace = true }
 toml_edit = { workspace = true }
