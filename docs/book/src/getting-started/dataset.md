@@ -44,21 +44,54 @@ To use the documents from a datashed, you must add them to the project
 using their URL via the [remote] command:
 
 ```console
-$ dataset remote add arxiv-data https://example.com:1234
-$ dataset remote add wikipedia-data https://example.com:2345
+$ dataset remote add arxiv-data https://example.com:9500
+$ dataset remote add wp-data https://example.com:9400
 ```
 
-Optionally, you can specify a filter expression to be applied to a
+Optionally, you can specify a pre-filter expression to be applied to a
 datashed's index. For example, the following command will only include
 documents from the `arxiv-data` datashed that have a file size greater
 than 1 KiB:
 
 ```console
-$ dataset remote add arxiv-data https://example.com:1234 --where "size > 1024"
+$ dataset remote add arxiv-data https://example.com:9500 --where "size > 1024"
 ```
 
+### Fetch
+
+Once the remotes have been added, the indices can be downloaded using
+the [fetch] command. If a remote has a pre-filter, it will be applied to
+the index. These indices form the population from which corpora can
+be created.
+
+```console
+$ dataset fetch
+arxiv-data: 2,011,265 documents (108.17 GiB, delta 2011265), done.
+wp-data: 665,915 documents (4.99 GiB, delta 665915), done.
+```
+
+The individual indices are stored in the `.dataset/remotes` directory:
+
+```console
+$ tree --noreport .dataset/remotes
+.dataset/remotes
+├── arxiv-data.ipc
+└── wp-data.ipc
+```
+
+The `delta` value indicates the difference from a previously retrieved
+index. If no index has been retrieved yet, the value corresponds to
+the size of the initial index. To simply check whether a remote has new
+documents, you can use the `--dry-run` option:
+
+```console
+$ dataset fetch --dry-run
+arxiv-data: 2,011,265 documents (108.17 GiB, delta 0), done.
+wp-data: 665,915 documents (4.99 GiB, delta 0), done.
+```
 
 [Annif]: https://annif.org
 
 [init]: ../reference/dataset/commands/dataset-init.md
+[fetch]: ../reference/dataset/commands/dataset-fetch.md
 [remote]: ../reference/dataset/commands/dataset-remote.md

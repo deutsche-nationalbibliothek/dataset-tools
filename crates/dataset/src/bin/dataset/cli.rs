@@ -31,6 +31,7 @@ pub(crate) struct Args {
 #[derive(Debug, Subcommand)]
 pub(crate) enum Command {
     Config(Config),
+    Fetch(Fetch),
     Init(Init),
     Remote(Remote),
     Version(Version),

@@ -9,6 +9,7 @@ install the program with the default features:
 
 ```console
 $ cargo install --path crates/datashed
+$ cargo install --path crates/dataset
 ```
 
 The binary can be built with the following features as needed:

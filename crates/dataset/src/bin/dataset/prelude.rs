@@ -1,5 +1,6 @@
 use std::process::ExitCode;
 
+pub(crate) use actix_web::rt::task::spawn_blocking;
 pub(crate) use dataset::{Config, Dataset};
 pub(crate) use dataset_core::{CommandResult, bail};
 

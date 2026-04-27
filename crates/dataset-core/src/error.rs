@@ -38,6 +38,12 @@ impl From<JoinError> for DatasetError {
     }
 }
 
+impl From<reqwest::Error> for DatasetError {
+    fn from(err: reqwest::Error) -> Self {
+        Self::Other(format!("{err}"))
+    }
+}
+
 pub type DatasetResult<T> = Result<T, DatasetError>;
 
 pub type CommandResult = DatasetResult<ExitCode>;

@@ -4,8 +4,8 @@ use url::Url;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Remote {
-    pub(crate) url: Url,
-    pub(crate) predicate: Option<String>,
+    pub url: Url,
+    pub predicate: Option<String>,
 }
 
 impl Remote {
