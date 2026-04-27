@@ -1,14 +1,10 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+mod error;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub use error::{CommandResult, DatasetError, DatasetResult};
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[macro_export]
+macro_rules! bail {
+    ($($arg:tt)*) => {
+        return Err($crate::DatasetError::Other(format!($($arg)*)));
+    };
 }

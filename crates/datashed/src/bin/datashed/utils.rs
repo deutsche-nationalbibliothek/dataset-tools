@@ -4,7 +4,8 @@ use std::io::stdout;
 use std::path::{Path, PathBuf};
 
 use actix_web::rt::task::spawn_blocking;
-use datashed::{Datashed, DatashedResult};
+use dataset_core::DatasetResult;
+use datashed::Datashed;
 use polars::prelude::*;
 use polars::sql::SQLContext;
 
@@ -34,7 +35,7 @@ pub(crate) fn is_arrow<P: AsRef<Path>>(
 
 pub(crate) fn read_df<P: AsRef<Path>>(
     path: P,
-) -> DatashedResult<DataFrame> {
+) -> DatasetResult<DataFrame> {
     let path = path.as_ref().to_path_buf();
 
     Ok(match path.extension().and_then(OsStr::to_str) {
@@ -52,7 +53,7 @@ pub(crate) fn read_df<P: AsRef<Path>>(
 pub(crate) fn write_df(
     df: &mut DataFrame,
     path: Option<PathBuf>,
-) -> DatashedResult<()> {
+) -> DatasetResult<()> {
     if let Some(path) = path {
         match path.extension().and_then(OsStr::to_str) {
             Some("csv") => {
@@ -107,7 +108,7 @@ pub(crate) fn unnest_index(
 pub(crate) async fn read_index(
     datashed: &Datashed,
     filter: &FilterOpts,
-) -> DatashedResult<DataFrame> {
+) -> DatasetResult<DataFrame> {
     let index = if let Some(ref path) = filter.index {
         IpcReader::new(File::open(path)?)
             .memory_mapped(None)

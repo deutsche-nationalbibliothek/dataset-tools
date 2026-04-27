@@ -3,11 +3,11 @@ use std::fs::{self, File};
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 
+use dataset_core::DatasetResult;
 use semver::Version;
 use serde::{Deserialize, Serialize};
 
 use crate::Remote;
-use crate::error::DatasetResult;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]

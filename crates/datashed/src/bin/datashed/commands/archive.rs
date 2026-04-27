@@ -73,7 +73,7 @@ impl Archive {
                 .append_file(Path::new("data").join(path), &mut file)
                 .unwrap();
 
-            Ok::<(), anyhow::Error>(())
+            Ok::<(), DatasetError>(())
         })?;
 
         let mut index = File::open(base_dir.join(Datashed::INDEX))?;

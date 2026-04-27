@@ -64,7 +64,7 @@ impl Lfreq {
         let rows = (0..index.height())
             .into_par_iter()
             .progress_with(pbar)
-            .map(|idx| -> DatashedResult<Row> {
+            .map(|idx| -> DatasetResult<Row> {
                 let path = paths.get(idx).unwrap();
                 let (doc, data) = Document::from_path(
                     data_dir.join(path),

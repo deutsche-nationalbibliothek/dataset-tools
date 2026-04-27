@@ -3,11 +3,11 @@ use std::io::{self, Write};
 use std::net::IpAddr;
 use std::path::{Path, PathBuf};
 
+use dataset_core::DatasetResult;
 use semver::Version;
 use serde::{Deserialize, Serialize};
 
 use crate::NormalizationForm;
-use crate::error::DatashedResult;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -53,7 +53,7 @@ impl Config {
     }
 
     /// Loads an existing config from a path.
-    pub fn from_path<P>(path: P) -> DatashedResult<Self>
+    pub fn from_path<P>(path: P) -> DatasetResult<Self>
     where
         P: AsRef<Path>,
     {
@@ -66,7 +66,7 @@ impl Config {
     }
 
     /// Saves the config.
-    pub fn save(&self) -> DatashedResult<()> {
+    pub fn save(&self) -> DatasetResult<()> {
         let content = toml_edit::ser::to_string_pretty(self)?;
         let mut out = File::create(&self.path)?;
         out.write_all(content.as_bytes())?;
