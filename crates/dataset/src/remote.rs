@@ -1,8 +1,6 @@
-use anyhow::bail;
+use dataset_core::{DatasetError, DatasetResult};
 use serde::{Deserialize, Serialize};
 use url::Url;
-
-use crate::DatasetResult;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Remote {
@@ -19,7 +17,9 @@ impl Remote {
         let scheme = url.scheme();
 
         if scheme != "https" {
-            bail!("unsupported scheme {scheme}");
+            return Err(DatasetError::Other(format!(
+                "unsupported scheme {scheme}"
+            )));
         }
 
         Ok(Self {
@@ -36,7 +36,9 @@ impl Remote {
         let scheme = url.scheme();
 
         if scheme != "https" {
-            bail!("unsupported scheme {scheme}");
+            return Err(DatasetError::Other(format!(
+                "unsupported scheme {scheme}"
+            )));
         }
 
         self.url = url;

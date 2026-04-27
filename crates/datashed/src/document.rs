@@ -7,13 +7,14 @@ use std::sync::{LazyLock, OnceLock};
 use std::time::UNIX_EPOCH;
 
 use bstr::{BStr, ByteSlice};
+use dataset_core::DatasetResult;
 use hashbrown::HashMap;
 use lingua::{Language, LanguageDetector, LanguageDetectorBuilder};
 use ndarray::{Array1, Zip};
 use sha2::{Digest, Sha256};
 use unicode_normalization::UnicodeNormalization;
 
-use crate::{DatashedResult, Doctype};
+use crate::Doctype;
 
 pub struct Document {
     pub path: String,
@@ -191,7 +192,7 @@ impl Document {
     pub fn from_path<P, Q>(
         path: P,
         data_dir: Q,
-    ) -> DatashedResult<(Self, Vec<u8>)>
+    ) -> DatasetResult<(Self, Vec<u8>)>
     where
         P: AsRef<Path>,
         Q: AsRef<Path>,

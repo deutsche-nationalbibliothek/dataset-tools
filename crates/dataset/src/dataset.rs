@@ -2,10 +2,10 @@ use std::fs::File;
 use std::path::PathBuf;
 use std::{env, fs};
 
-use anyhow::bail;
+use dataset_core::{DatasetError, DatasetResult};
 use polars::prelude::*;
 
-use crate::{Config, DatasetResult};
+use crate::Config;
 
 pub struct Dataset {
     /// The root directory of the dataset.
@@ -36,7 +36,9 @@ impl Dataset {
             }
 
             if !root_dir.pop() {
-                bail!("not a dataset (or any parent directory)");
+                return Err(DatasetError::Other(
+                    "not a dataset (or any parent directory)".into(),
+                ));
             }
         }
 

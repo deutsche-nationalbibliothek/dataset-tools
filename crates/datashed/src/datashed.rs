@@ -2,10 +2,10 @@ use std::fs::File;
 use std::path::PathBuf;
 use std::{env, fs};
 
-use anyhow::bail;
+use dataset_core::{DatasetResult, bail};
 use polars::prelude::*;
 
-use crate::{Config, DatashedResult};
+use crate::Config;
 
 pub struct Datashed {
     /// The root directory of the datashed.
@@ -23,7 +23,7 @@ impl Datashed {
     ///
     /// This function fails, if neither the current directory nor any
     /// parent directory contains a datashed [Config].
-    pub fn discover() -> DatashedResult<Self> {
+    pub fn discover() -> DatasetResult<Self> {
         let mut root_dir = env::current_dir()?;
 
         loop {
@@ -43,7 +43,7 @@ impl Datashed {
     }
 
     /// Returns the config associated with the datashed.
-    pub fn config(&self) -> DatashedResult<Config> {
+    pub fn config(&self) -> DatasetResult<Config> {
         Config::from_path(self.root_dir.join(Self::CONFIG))
     }
 
@@ -58,7 +58,7 @@ impl Datashed {
     }
 
     /// Returns the index associated with the datashed.
-    pub fn index(&self) -> DatashedResult<DataFrame> {
+    pub fn index(&self) -> DatasetResult<DataFrame> {
         Ok(IpcReader::new(File::open(
             self.base_dir().join(Self::INDEX),
         )?)

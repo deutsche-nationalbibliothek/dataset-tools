@@ -7,3 +7,9 @@ license.workspace = true
 edition.workspace = true
 
 [dependencies]
+bstr = { workspace = true }
+polars = { workspace = true }
+regex = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
+toml_edit = { workspace = true, features = ["serde"] }

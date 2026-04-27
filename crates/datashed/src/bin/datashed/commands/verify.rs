@@ -2,6 +2,7 @@ use std::fs;
 use std::time::UNIX_EPOCH;
 
 use clap::ValueEnum;
+use dataset_core::DatasetError;
 use datashed::document::sha256;
 
 use crate::prelude::*;
@@ -47,7 +48,7 @@ impl Verify {
         (0..index.height())
             .into_par_iter()
             .progress_with(pbar)
-            .try_for_each(|idx| -> Result<(), anyhow::Error> {
+            .try_for_each(|idx| -> Result<(), DatasetError> {
                 let path = data_dir.join(paths.get(idx).unwrap());
 
                 let Ok(data) = fs::read(&path) else {
