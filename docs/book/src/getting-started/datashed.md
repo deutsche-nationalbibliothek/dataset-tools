@@ -79,8 +79,6 @@ parameters are then transliterated into the corresponding normal form if
 necessary. The `num-jobs` option defines the maximum number of CPU cores
 used by the application.
 
-<!--
-
 ## Indexing
 
 The core of a datashed is the index of all documents. It contains
@@ -106,107 +104,11 @@ Enumerating documents: 3 | elapsed: 00:00:00, done.
 Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
-In order to derive the document type from metadata, a PICA+ dump
-can optionally be specified. The rule file must be specified in the
-`refinements` section:
-
-```toml
-[refinements]
-doctype = "doctype.toml"
-```
-
-A refinement can either be formulated as an `if-then` or as a `match`
-expression:
-
-```toml
-[[refinements]]
-match = '037C.d'
-cases = [
-  { pattern = 'Bachelorarbeit', then = 'bachelor-thesis' },
-  { pattern = 'Dissertation', then = 'doctoral-thesis' },
-  { pattern = 'Masterarbeit', then = 'master-thesis' },
-]
-
-[[refinements]]
-if = '017A.a == "nt"'
-then = 'musical-notation'
-```
-
-The document type is derived from the metadata if a corresponding PICA+
-dump is specified as a comma line option:
-
-```console
-$ datashed index --filename-column "ppn" DUMP.dat.gz
-Processing metadata: 100 | elapsed: 00:00:00, done.
-Enumerating documents: 3 | elapsed: 00:00:00, done.
-Indexing documents: 3 (100%) | elapsed: 00:00:00, done.
-```
+See [Datashed Index] for more information on the use and structure of
+the index.
 
 
-### Metadata and Metrics
-
-#### Hash
-
-The `hash` column contains a six-byte hexadecimal hash of the document.
-The hash value is derived from the document's SHA256 checksum, by taking
-the first six bytes and format them as a hexadecimal string. Documents
-that have the same `hash` value are very likely to have the same content
-and should be treated as duplicates.
-
-#### Document Type
-
-The document type is specified in the `doctype` column. It can either be
-derived from metadata or from the path of the document.
-
-#### Language
-
-The language of the document is given as an ISO-639-2 (B) language
-code in the `lang_code` column. The `lang_score` column contains the
-confidence value. If the index is in [Apache Arrow] format, which is the
-default, the two columns are combined into one column `lang`. Language
-detection is performed with [lingua] in high-accuracy mode.
-
-#### Letter Frequency
-
-The `lfreq` score contains a measure of how far the document deviates
-from the letter distribution of the respective language. To get the
-value, a vector $x$ of relative letter frequencies is first calculated
-over the characters of a fixed alphabet. Then the [euclidian distance]
-to th reference vector $y$ of the respective language is calculated
-($\ell^2$-norm).
-
-$$
-\text{lfreq} \triangleq \left \lVert x - y \right \rVert_2
-$$
-
-Letters that are not part of the language's alphabet are ignored. So far
-only English and German are supported. If the language of the document
-is not supported, the `lfreq` value is set to `null`.
-
-> [!NOTE]
-> If you need the support of another language, please create a GitHub
-> issue with a reference to the alphabet of the language and a reference
-> vector containing the relative frequencies.
-
-#### Alpha
-
-The `alpha` score of a document is the ratio of alphabetic characters to
-the total number of characters. An alphabetic character is a character
-which satisfy the _Alphabetic_ property of the [Unicode Standard]
-described in Chapter 4 (Character Properties). The score is defined as
-
-$$
-\text{alpha} \triangleq \frac{1}{N}\sum_{i = 1}^{N} \mathbf{1}_A(c_i)
-$$
-
-where $N$ is total number of characters of the document, $c_i$ is the
-i-th character of the document, $A$ is the subset of all characters,
-which satisfy the _Alphabetic_ property and $\mathbf{1}_A$ is the
-indicator function, which returns 1 if the i-th character is alphabetic
-and otherwise 0. The range of the function is $[0, 1]$ and the score of
-an empty  document is defined to $0.0$.
-
-A very low `alpha` value may indicate a corrupt document.
+<!--
 
 ## Bibliographic References
 
@@ -561,15 +463,14 @@ Verify consistency with `datashed verify`.
 ```
 
 
-[Apache Arrow]: https://arrow.apache.org/
 [Crossref]: https://www.crossref.org/learning/public-data-file/
 [Datacite]: https://datafiles.datacite.org/
 [DVC]: https://dvc.org/
-[lingua]: https://github.com/pemistahl/lingua-rs
-[Unicode Standard]: https://www.unicode.org/versions/latest/
-[euclidian distance]: https://en.wikipedia.org/wiki/Euclidean_distance
 
 -->
+
+[Apache Arrow]: https://arrow.apache.org/
+[Datashed Index]: ../concepts/datashed-index.md
 
 [init]: ../reference/datashed/commands/datashed-init.md
 [config]: ../reference/datashed/commands/datashed-config.md
