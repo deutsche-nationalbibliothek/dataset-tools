@@ -174,18 +174,18 @@ shape: (5, 6)
 └───────────────────────┴──────────────┴─────────┴────────────────────────┴────────┴────────┘
 ```
 
-<!--
 
 ## Vocabulary
 
-The `vocab` command can be used to create the vocabulary $\mathcal{V}$
-(dictionary or lexicon) of the entire datashed or of any subset. With
-the help of various filter options, the command can be used to create
-stop word lists that are tailored to the entire population. Also the
-(raw) features of subsets can be compared with each other.
+The [vocab] command can be used to create the vocabulary
+\\(\mathcal{V}\\) (dictionary or lexicon) of the entire datashed or
+of any subset. With the help of various filter options, the command
+can be used to create stop word lists that are tailored to the entire
+population. Also the (raw) features of subsets can be compared with
+each other.
 
-The output contains the terms with the corresponding term frequency
-(`tf`) and the document frequency (`df`).
+The output contains the terms with the corresponding _term frequency_
+`tf` and the _document frequency_ `df`.
 
 In the following example, the vocabulary of all documents in the datashed
 is created:
@@ -221,9 +221,9 @@ in,8,3
 the,8,1
 ```
 
-The option `--category` (`-L`) can be used to include only those
-terms where at least on character belongs to the specified unicode
-category. The following categories are available:
+The option `--category` (`-L`) can be used to include only those terms
+where at least on character belongs to the specified unicode category.
+The following categories are available:
 
 * `a` (`all`) —  "Letter" category _Lc_, _Ll_, _Lm_, _Lo_, _Lt_, _Lu_,
 * `l` (`lowercase`) — "Letter, Lowercase" category _Ll_,
@@ -234,6 +234,8 @@ category. The following categories are available:
 
 In addition, the vocabulary can be further restricted by the
 `--min-term-length`, `--min-term-freq`, or `--min-doc-freq` options.
+
+<!--
 
 
 ## Grepping
@@ -477,3 +479,4 @@ Verify consistency with `datashed verify`.
 [bibrefs]: ../reference/datashed/commands/datashed-bibrefs.md
 [config]: ../reference/datashed/commands/datashed-config.md
 [init]: ../reference/datashed/commands/datashed-init.md
+[vocab]: ../reference/datashed/commands/datashed-vocab.md
