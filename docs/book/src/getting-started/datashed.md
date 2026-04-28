@@ -360,12 +360,10 @@ stages:
       - index.ipc
 ```
 
-<!--
-
 ## Summary Statistics
 
-The `summary` command can be used to create a summary statistics of
-a datashed. The output is in JSON format.
+The [summary] command can be used to create a summary statistics of a
+datashed. The output is in JSON format.
 
 ```console
 $ datashed summary | jq .
@@ -387,6 +385,8 @@ stages:
     metrics:
       - summary.json
 ```
+
+<!--
 
 ## Data Verification
 
@@ -465,9 +465,6 @@ $ datashed restore ~/tmp/backup.tar.gz -C foobar
 Successfully restored archive.
 Verify consistency with `datashed verify`.
 ```
-
-
-
 -->
 
 [Apache Arrow]: https://arrow.apache.org
@@ -477,9 +474,10 @@ Verify consistency with `datashed verify`.
 [DVC]: https://dvc.org/
 
 [bibrefs]: ../reference/datashed/commands/datashed-bibrefs.md
-[config]: ../reference/datashed/commands/datashed-config.md
 [check]: ../reference/datashed/commands/datashed-check.md
+[config]: ../reference/datashed/commands/datashed-config.md
 [grep]: ../reference/datashed/commands/datashed-grep.md
 [init]: ../reference/datashed/commands/datashed-init.md
 [lfreq]: ../reference/datashed/commands/datashed-lfreq.md
+[summary]: ../reference/datashed/commands/datashed-summary.md
 [vocab]: ../reference/datashed/commands/datashed-vocab.md
