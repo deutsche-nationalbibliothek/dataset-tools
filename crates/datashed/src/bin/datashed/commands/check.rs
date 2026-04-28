@@ -36,9 +36,13 @@ struct CheckSpec {
 /// Executes checks to ensure the integrity of the index
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Check {
-    #[arg(long, short = 'B')]
+    /// Specify a file containing bibliographic identifiers so that
+    /// these can also be checked.
+    #[arg(long, short = 'B', value_name = "filename")]
     bibrefs: Option<PathBuf>,
 
+    /// The configuration file that contains the checks to be
+    /// performed.
     #[arg(default_value = "checks.toml")]
     config: Option<PathBuf>,
 
