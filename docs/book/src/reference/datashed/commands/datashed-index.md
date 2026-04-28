@@ -49,7 +49,7 @@ determine the document' group (default: `none`).
 : Stop processing after _N_ documents (default: 0).
 
 `-o`, `--output` `<OUTPUT>`
-: Write the index to <OUTPUT> instead to `index.ipc`.
+: Write the index to `<OUTPUT>` instead to `index.ipc`.
 
 
 `-h`, `--help`
