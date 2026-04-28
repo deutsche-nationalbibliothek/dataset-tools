@@ -437,11 +437,9 @@ $ datashed version --bump minor
 $ datashed version --bump patch
 ```
 
-<!--
-
 ## Archive and Restore
 
-The `archive` command can be used to create a backup of a datashed. It
+The [archive] command can be used to create a backup of a datashed. It
 creates a `tar.gz` archive containing all documents, the configuration
 and the current index. It is important to note, that only the documents
 contained in the index are archived. If there are documents that have
@@ -455,7 +453,7 @@ Archive documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
 An archive can be restored either via the `tar` program or by using
-the `restore` command. By default, the archive is restored inside the
+the [restore] command. By default, the archive is restored inside the
 current directory. If the archive is to be unpacked into a different
 directory, this can be specified with the `-C` (`--directory`) option.
 The new  directory is created automatically if it does not yet exist.
@@ -474,12 +472,14 @@ Verify consistency with `datashed verify`.
 [DVC]: https://dvc.org
 [Semantic Versioning]: https://semver.org
 
+[archive]: ../reference/datashed/commands/datashed-archive.md
 [bibrefs]: ../reference/datashed/commands/datashed-bibrefs.md
 [check]: ../reference/datashed/commands/datashed-check.md
 [config]: ../reference/datashed/commands/datashed-config.md
 [grep]: ../reference/datashed/commands/datashed-grep.md
 [init]: ../reference/datashed/commands/datashed-init.md
 [lfreq]: ../reference/datashed/commands/datashed-lfreq.md
+[restore]: ../reference/datashed/commands/datashed-restore.md
 [summary]: ../reference/datashed/commands/datashed-summary.md
 [verify]: ../reference/datashed/commands/datashed-verify.md
 [version]: ../reference/datashed/commands/datashed-version.md
