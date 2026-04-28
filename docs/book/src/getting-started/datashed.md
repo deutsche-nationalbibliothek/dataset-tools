@@ -386,11 +386,9 @@ stages:
       - summary.json
 ```
 
-<!--
-
 ## Data Verification
 
-The `verify` command is used to ensure that the index and the documents
+The [verify] command is used to ensure that the index and the documents
 are in a consistent state. It ensures that no documents have been
 deleted and that the contents of the documents have not changed. You can
 choose between two modes: In `permissive` mode, the SHA256 checksums of
@@ -407,6 +405,8 @@ Verifying documents: 3 (100%) | elapsed: 00:00:00, done.
 $ datashed verify --mode strict
 Verifying documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
+
+<!--
 
 ## Versioning
 
@@ -480,4 +480,5 @@ Verify consistency with `datashed verify`.
 [init]: ../reference/datashed/commands/datashed-init.md
 [lfreq]: ../reference/datashed/commands/datashed-lfreq.md
 [summary]: ../reference/datashed/commands/datashed-summary.md
+[verify]: ../reference/datashed/commands/datashed-verify.md
 [vocab]: ../reference/datashed/commands/datashed-vocab.md
