@@ -63,19 +63,19 @@ pub(crate) struct CommonOpts {
 
 #[derive(Debug, clap::Args)]
 pub(crate) struct FilterOpts {
-    /// Path to an allow list file
-    #[arg(long = "allow-list", short = 'A', value_name = "filename")]
+    /// Include only those documents that are on the allow list.
+    #[arg(long = "allow-list", short = 'A')]
     pub(crate) allow: Option<PathBuf>,
 
-    /// Path to a deny list file
-    #[arg(long = "deny-list", short = 'D', value_name = "filename")]
+    /// Ignore all documents that are on the deny list.
+    #[arg(long = "deny-list", short = 'D')]
     pub(crate) deny: Option<PathBuf>,
 
     /// Use an alternative index
-    #[arg(long, short = 'I', value_name = "filename")]
+    #[arg(long, short = 'I')]
     pub(crate) index: Option<PathBuf>,
 
     /// A predicate to filter the index set
-    #[arg(long = "where", value_name = "predicate")]
+    #[arg(long = "where")]
     pub(crate) predicate: Option<String>,
 }

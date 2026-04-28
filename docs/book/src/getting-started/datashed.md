@@ -108,29 +108,29 @@ See [Datashed Index] for more information on the use and structure of
 the index.
 
 
-<!--
-
 ## Bibliographic References
 
-With the help of the `bibrefs` command, bibliographic identifiers can be
+With the help of the [bibrefs] command, bibliographic identifiers can be
 found in documents. The following identifiers are supported:
 
-* [arXiv Identifier (arXiv)](https://info.arxiv.org/help/arxiv_identifier.html) — `arxiv`
-* [Dewey Decimal Classification (DDC)](https://en.wikipedia.org/wiki/Dewey_Decimal_Classification) — `ddc`
-* [Digital Object Identifier (DOI)](https://en.wikipedia.org/wiki/Digital_object_identifier) — `doi`
-* [International Standard Book Number (ISBN)](https://en.wikipedia.org/wiki/ISBN) — `isbn`
-* [International Standard Music Number (ISMN)](https://en.wikipedia.org/wiki/International_Standard_Music_Number) — `isnm`
-* [International Standard Name Identifier (ISNI)](https://en.wikipedia.org/wiki/International_Standard_Name_Identifier) — `isni`
-* [International Standard Serial Number (ISSN)](https://en.wikipedia.org/wiki/ISSN) — `issn`
-* [JEL Classification System (JEL)](https://www.aeaweb.org/econlit/jelCodes.php?view=jel) — `jel`
-* [Library of Congress Classification (LCC)](https://www.loc.gov/catdir/cpso/lcc.html) — `lcc`
-* [Mathematics Subject Classification (MSC)](https://mathscinet.ams.org/mathscinet/msc/msc2020.html) — `msc`
-* [Open Researcher and Contributor ID (ORCID)](https://en.wikipedia.org/wiki/ORCID) — `orcid`
-* [Universal Decimal Classification (UDC)](https://en.wikipedia.org/wiki/Universal_Decimal_Classification) — `udc`
+| Reftype | Description                                                                                                           |
+| ------- | --------------------------------------------------------------------------------------------------------------------- |
+| `arxiv` | [arXiv Identifier (arXiv)](https://info.arxiv.org/help/arxiv_identifier.html)                                         |
+| `ddc`   | [Dewey Decimal Classification (DDC)](https://en.wikipedia.org/wiki/Dewey_Decimal_Classification)                      |
+| `doi`   | [Digital Object Identifier (DOI)](https://en.wikipedia.org/wiki/Digital_object_identifier)                            |
+| `isbn`  | [International Standard Book Number (ISBN)](https://en.wikipedia.org/wiki/ISBN)                                       |
+| `ismn`  | [International Standard Music Number (ISMN)](https://en.wikipedia.org/wiki/International_Standard_Music_Number)       |
+| `isni`  | [International Standard Name Identifier (ISNI)](https://en.wikipedia.org/wiki/International_Standard_Name_Identifier) |
+| `issn`  | [International Standard Serial Number (ISSN)](https://en.wikipedia.org/wiki/ISSN)                                     |
+| `jel`   | [JEL Classification System (JEL)](https://www.aeaweb.org/econlit/jelCodes.php?view=jel)                               |
+| `lcc`   | [Library of Congress Classification (LCC)](https://www.loc.gov/catdir/cpso/lcc.html)                                  |
+| `msc`   | [Mathematics Subject Classification (MSC)](https://mathscinet.ams.org/mathscinet/msc/msc2020.html)                    |
+| `orcid` | [Open Researcher and Contributor ID (ORCID)](https://en.wikipedia.org/wiki/ORCID)                                     |
+| `udc`   | [Universal Decimal Classification (UDC)](https://en.wikipedia.org/wiki/Universal_Decimal_Classification)              |
 
 The implementation is carried out using regular expressions, whereby the
 expressions were formulated as strictly as possible in order to achieve
-a low error rate. If possible, the identifiers found are validated
+a very low error rate. If possible, the identifiers found are validated
 (checksum verification).
 
 For each match, the path (`path`), the hash (`hash`) and the location
@@ -138,7 +138,7 @@ within the document (`start` and `end`) are also recorded. The columns
 `path` and `hash` can be used to JOIN with the index in order to get
 additional metadata.
 
-The `--normalize` option can be used to convert identifiers into
+The `--normalize` flag can be used to convert identifiers into
 a normalized, canonical form. When finding DOIs, the results can
 be filtered by adding a path to a directory containing [Crossref]
 (`--crossref` option) and/or [Datacite] (`--datacite` option) public
@@ -148,7 +148,7 @@ In the following example the list of bibliographic identifiers is
 generated in normalized form using Crossref and Datacite allow lists:
 
 ```console
-$ datashed bibrefs --normalize --datacite ~/share/datacite --crossref ~/share/crossref -o bibrefs.ipc
+$ datashed bibrefs --normalize --datacite ~/datacite --crossref ~/crossref -o bibrefs.ipc
 Processing Datacite: 5,930 (100%) | elapsed: 00:05:13, done.
 Processing Crossref: 33,402 (100%) | elapsed: 00:05:54, done.
 Processing documents: 10,439,309 (100%) | elapsed: 00:21:37, done.
@@ -173,6 +173,8 @@ shape: (5, 6)
 │ ft/925/1256772925.txt ┆ 7affb2fb7c67 ┆ isbn    ┆ 978-3-8379-7673-1      ┆ 70964  ┆ 70982  │
 └───────────────────────┴──────────────┴─────────┴────────────────────────┴────────┴────────┘
 ```
+
+<!--
 
 ## Vocabulary
 
@@ -463,14 +465,15 @@ Verify consistency with `datashed verify`.
 ```
 
 
-[Crossref]: https://www.crossref.org/learning/public-data-file/
-[Datacite]: https://datafiles.datacite.org/
 [DVC]: https://dvc.org/
 
 -->
 
-[Apache Arrow]: https://arrow.apache.org/
+[Apache Arrow]: https://arrow.apache.org
+[Crossref]: https://www.crossref.org/learning/public-data-file
+[Datacite]: https://datafiles.datacite.org
 [Datashed Index]: ../concepts/datashed-index.md
 
-[init]: ../reference/datashed/commands/datashed-init.md
+[bibrefs]: ../reference/datashed/commands/datashed-bibrefs.md
 [config]: ../reference/datashed/commands/datashed-config.md
+[init]: ../reference/datashed/commands/datashed-init.md

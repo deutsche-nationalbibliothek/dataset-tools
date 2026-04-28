@@ -93,7 +93,7 @@ pub(crate) trait Matcher: Sync {
     fn matches(&self, data: &[u8]) -> Vec<Reference>;
 }
 
-/// Finds bibliographic identifiers in documents
+/// Extract bibliographic identifiers from documents
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Bibrefs {
     /// Whether to normalize bibliographic references or not.
@@ -112,7 +112,7 @@ pub(crate) struct Bibrefs {
 
     /// Write the result to <filename>. By default output will be
     /// written in CSV format to stdout
-    #[arg(short, long, value_name = "filename")]
+    #[arg(short, long)]
     output: Option<PathBuf>,
 
     #[command(flatten, next_help_heading = "Filter options")]
