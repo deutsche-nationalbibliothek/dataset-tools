@@ -406,14 +406,12 @@ $ datashed verify --mode strict
 Verifying documents: 3 (100%) | elapsed: 00:00:00, done.
 ```
 
-<!--
-
 ## Versioning
 
 It is good practice to track changes to a project's database with
-version numbers. Using the `version` command, the version of the project
+version numbers. Using the [version] command, the version of the project
 can either be changed or incremented. The version must follow the
-[Semantic Versioning](https://semver.org/) guidelines.
+[Semantic Versioning] guidelines.
 
 The current version of the project can be queried as follows:
 
@@ -438,6 +436,8 @@ $ datashed version --bump major
 $ datashed version --bump minor
 $ datashed version --bump patch
 ```
+
+<!--
 
 ## Archive and Restore
 
@@ -471,7 +471,8 @@ Verify consistency with `datashed verify`.
 [Crossref]: https://www.crossref.org/learning/public-data-file
 [Datacite]: https://datafiles.datacite.org
 [Datashed Index]: ../concepts/datashed-index.md
-[DVC]: https://dvc.org/
+[DVC]: https://dvc.org
+[Semantic Versioning]: https://semver.org
 
 [bibrefs]: ../reference/datashed/commands/datashed-bibrefs.md
 [check]: ../reference/datashed/commands/datashed-check.md
@@ -481,4 +482,5 @@ Verify consistency with `datashed verify`.
 [lfreq]: ../reference/datashed/commands/datashed-lfreq.md
 [summary]: ../reference/datashed/commands/datashed-summary.md
 [verify]: ../reference/datashed/commands/datashed-verify.md
+[version]: ../reference/datashed/commands/datashed-version.md
 [vocab]: ../reference/datashed/commands/datashed-vocab.md
