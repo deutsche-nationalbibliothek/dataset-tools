@@ -276,11 +276,9 @@ path,hash,size,mtime
 0/dnb.txt,71eb6431,769,1750321974
 ```
 
-<!--
-
 ## Letter Frequency
 
-The `lfreq` command generates a frequency table using a fixed
+The [lfreq] command generates a frequency table using a fixed
 alphabet. Both the specified alphabet and the documents themselves
 are transliterated in advance into the Uniode normal form NFC and
 converted into lower case letters. All characters that are not part
@@ -295,7 +293,6 @@ the individual letter frequencies generated.
 In the following example, a frequency table is created using the
 alphabet `a`, `b` and `c`:
 
-
 ```console
 $ datashed lfreq -q --alphabet "abc"
 path,hash,total,a,b,c
@@ -303,6 +300,8 @@ path,hash,total,a,b,c
 0/tib.txt,809239e5,135,56,35,44
 1/zbw.txt,a50f7e55,118,59,19,40
 ```
+
+<!--
 
 ## Check
 
@@ -477,6 +476,7 @@ Verify consistency with `datashed verify`.
 
 [bibrefs]: ../reference/datashed/commands/datashed-bibrefs.md
 [config]: ../reference/datashed/commands/datashed-config.md
-[init]: ../reference/datashed/commands/datashed-init.md
-[vocab]: ../reference/datashed/commands/datashed-vocab.md
 [grep]: ../reference/datashed/commands/datashed-grep.md
+[init]: ../reference/datashed/commands/datashed-init.md
+[lfreq]: ../reference/datashed/commands/datashed-lfreq.md
+[vocab]: ../reference/datashed/commands/datashed-vocab.md
