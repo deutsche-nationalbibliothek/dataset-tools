@@ -301,16 +301,16 @@ path,hash,total,a,b,c
 1/zbw.txt,a50f7e55,118,59,19,40
 ```
 
-<!--
 
 ## Check
 
 Invariants and constraints that the index (or the bibliographic
-identifiers) must fulfill can be checked with the `check` command. The
-command requires a configuration file containing a list of tests. A test
-specification requires a unique ID and a query formulated in SQL. The test
-fails if the SQL query does not evaluate to `true`. Unless otherwise
-specified, the tests are automatically read from the `checks.toml` file.
+identifiers) must fulfill can be checked with the [check] command.
+The command requires a configuration file containing a list of tests.
+A test specification requires a unique ID and a query formulated in
+SQL. The test fails if the SQL query does not evaluate to `true`.
+Unless otherwise specified, the tests are automatically read from the
+`checks.toml` file.
 
 Optionally, a test can contain a description that is included in the
 output. If a test is to be skipped, the `skip` flag can be set.
@@ -359,6 +359,8 @@ stages:
       - checks.toml
       - index.ipc
 ```
+
+<!--
 
 ## Summary Statistics
 
@@ -465,7 +467,6 @@ Verify consistency with `datashed verify`.
 ```
 
 
-[DVC]: https://dvc.org/
 
 -->
 
@@ -473,9 +474,11 @@ Verify consistency with `datashed verify`.
 [Crossref]: https://www.crossref.org/learning/public-data-file
 [Datacite]: https://datafiles.datacite.org
 [Datashed Index]: ../concepts/datashed-index.md
+[DVC]: https://dvc.org/
 
 [bibrefs]: ../reference/datashed/commands/datashed-bibrefs.md
 [config]: ../reference/datashed/commands/datashed-config.md
+[check]: ../reference/datashed/commands/datashed-check.md
 [grep]: ../reference/datashed/commands/datashed-grep.md
 [init]: ../reference/datashed/commands/datashed-init.md
 [lfreq]: ../reference/datashed/commands/datashed-lfreq.md
