@@ -235,17 +235,14 @@ The following categories are available:
 In addition, the vocabulary can be further restricted by the
 `--min-term-length`, `--min-term-freq`, or `--min-doc-freq` options.
 
-<!--
-
-
 ## Grepping
 
 A simple form of document retrieval is a linear search for patterns.
-This function is provided by the `grep` command. It works in a similar
+This function is provided by the [grep] command. It works in a similar
 way to the Unix `grep` or `rg` command, but it supports other practical
 functions.
 
-Only the documents that have been indexed in Datashed are searched.
+Only the documents that have been indexed in datashed are searched.
 The output contains all lines from the index where the corresponding
 document matches one of the specified patterns. By default, the output
 is written in CSV format on the console.
@@ -278,6 +275,8 @@ $ datashed grep -q -n 50 '\(DNB\)'
 path,hash,size,mtime
 0/dnb.txt,71eb6431,769,1750321974
 ```
+
+<!--
 
 ## Letter Frequency
 
@@ -480,3 +479,4 @@ Verify consistency with `datashed verify`.
 [config]: ../reference/datashed/commands/datashed-config.md
 [init]: ../reference/datashed/commands/datashed-init.md
 [vocab]: ../reference/datashed/commands/datashed-vocab.md
+[grep]: ../reference/datashed/commands/datashed-grep.md
