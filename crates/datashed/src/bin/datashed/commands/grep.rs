@@ -109,12 +109,20 @@ impl Grep {
         )?
         .lazy();
 
+        let with_doctype = index.column("doctype").is_ok();
         let with_genre = index.column("genre").is_ok();
+        let with_group = index.column("group").is_ok();
+
         let mut index =
             index.lazy().semi_join(matches, col("path"), col("path"));
 
         if !is_arrow {
-            index = unnest_index(index, with_genre);
+            index = unnest_index(
+                index,
+                with_doctype,
+                with_genre,
+                with_group,
+            );
         }
 
         index = index.sort(["path"], Default::default());

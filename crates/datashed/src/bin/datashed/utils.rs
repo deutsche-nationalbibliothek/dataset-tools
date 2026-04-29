@@ -89,17 +89,24 @@ pub(crate) fn write_df(
 #[inline]
 pub(crate) fn unnest_index(
     lf: LazyFrame,
+    with_doctype: bool,
     with_genre: bool,
+    with_group: bool,
 ) -> LazyFrame {
     let mut lf = lf
         .unnest(by_name(["lang"], true, false), Some("_".into()))
-        .with_columns([
-            col("lang_code").cast(DataType::String),
-            col("doctype").cast(DataType::String),
-        ]);
+        .with_columns([col("lang_code").cast(DataType::String)]);
+
+    if with_doctype {
+        lf = lf.with_columns([col("doctype").cast(DataType::String)]);
+    }
 
     if with_genre {
         lf = lf.with_columns([col("genre").cast(DataType::String)]);
+    }
+
+    if with_group {
+        lf = lf.with_columns([col("group").cast(DataType::String)]);
     }
 
     lf
