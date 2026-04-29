@@ -301,6 +301,48 @@ path,hash,total,a,b,c
 1/zbw.txt,a50f7e55,118,59,19,40
 ```
 
+## Serving Data
+
+The [serve] command is used to make the index and documents available
+via an HTTP interface. The parameters are specified in the [server]
+section of the configuration:
+
+```toml
+[server]
+address = "127.0.0.1"
+port = 9100
+workers = 2
+cert = "/etc/certs/cert.pem"
+key = "/etc/certs/key.pem"
+```
+
+Once the configuration is in place, the server can be started using the
+`serve` command:
+
+```console
+$ datashed serve
+[2026-04-29T07:10:22Z INFO ] starting 4 workers
+[2026-04-29T07:10:22Z INFO ] Actix runtime found; starting in Actix runtime
+[2026-04-29T07:10:22Z INFO ] starting service: "actix-web-service-127.0.0.1:9100", workers: 4, listening on: 127.0.0.1:9100
+...
+```
+
+You can check the server's availability by sending a HEAD request to the
+`/health-check` route:
+
+```console
+$ curl -I https://127.0.0.1:9100/health-check
+HTTP/2 200
+content-length: 0
+date: Wed, 29 Apr 2026 09:47:36 GMT
+```
+
+> [!WARNING]
+> Currently, users do not need to authenticate with the system to access
+> the data. Therefore, care must be taken to ensure that access to the
+> server is restricted at the network level if necessary. In one of the
+> upcoming versions, the system will switch to HTTP authentication using
+> [bearer tokens] to grant access to the resources.
 
 ## Check
 
@@ -463,9 +505,9 @@ $ datashed restore ~/tmp/backup.tar.gz -C foobar
 Successfully restored archive.
 Verify consistency with `datashed verify`.
 ```
--->
 
 [Apache Arrow]: https://arrow.apache.org
+[bearer tokens]: https://datatracker.ietf.org/doc/html/rfc6750
 [Crossref]: https://www.crossref.org/learning/public-data-file
 [Datacite]: https://datafiles.datacite.org
 [Datashed Index]: ../concepts/datashed-index.md
@@ -480,6 +522,7 @@ Verify consistency with `datashed verify`.
 [init]: ../reference/datashed/commands/datashed-init.md
 [lfreq]: ../reference/datashed/commands/datashed-lfreq.md
 [restore]: ../reference/datashed/commands/datashed-restore.md
+[serve]: ../reference/datashed/commands/datashed-serve.md
 [summary]: ../reference/datashed/commands/datashed-summary.md
 [verify]: ../reference/datashed/commands/datashed-verify.md
 [version]: ../reference/datashed/commands/datashed-version.md
