@@ -32,8 +32,8 @@ pub(crate) struct Index {
 
     /// The default document type if the metadata could not be used to
     /// determine the document's type.
-    #[arg(long, default_value = "none")]
-    doctype: String,
+    #[arg(long, default_value = "none", value_name = "doctype")]
+    default_doctype: String,
 
     /// Whether to add a `genre` column or not.
     #[arg(long)]
@@ -41,8 +41,8 @@ pub(crate) struct Index {
 
     /// The default genre if the metadata could not be used to
     /// determine the document's genre.
-    #[arg(long, default_value = "none")]
-    genre: String,
+    #[arg(long, default_value = "none", value_name = "genre")]
+    default_genre: String,
 
     /// Whether to add a `group` column or not.
     #[arg(long)]
@@ -50,8 +50,8 @@ pub(crate) struct Index {
 
     /// The default group if the metadata could not be used to
     /// determine the document's group.
-    #[arg(long, default_value = "none")]
-    group: String,
+    #[arg(long, default_value = "none", value_name = "group")]
+    default_group: String,
 
     /// Stop processing after <N> documents.
     #[arg(long, short, default_value = "0", value_name = "N")]
@@ -221,12 +221,12 @@ impl Index {
                 .doctype
                 .map(|dt: Doctype| dt.to_string())
                 .or(doctype_map.remove(&name))
-                .unwrap_or(self.doctype.clone());
+                .unwrap_or(self.default_doctype.clone());
 
             if self.with_genre {
                 let genre = genre_map
                     .remove(&name)
-                    .unwrap_or(self.genre.clone());
+                    .unwrap_or(self.default_genre.clone());
                 genres.push(genre);
             }
 
@@ -234,7 +234,7 @@ impl Index {
                 groups.push(
                     group_map
                         .remove(&name)
-                        .unwrap_or(self.group.clone()),
+                        .unwrap_or(self.default_group.clone()),
                 );
             }
 
@@ -261,6 +261,12 @@ impl Index {
             columns.push(col!(name, names));
         }
 
+        if self.with_doctype {
+            columns.push(
+                col!("doctype", doctypes).cast(&doctype_dtype())?,
+            );
+        }
+
         if self.with_genre {
             columns.push(col!("genre", genres).cast(&genre_dtype())?);
         }
@@ -269,7 +275,6 @@ impl Index {
             columns.push(col!("group", groups).cast(&group_dtype())?);
         }
 
-        columns.push(col!("doctype", doctypes).cast(&doctype_dtype())?);
         columns.push(col!("chars", chars));
         columns.push(col!("size", sizes));
 
@@ -289,7 +294,12 @@ impl Index {
 
         let mut index = DataFrame::new(len, columns)?.lazy();
         if !is_arrow {
-            index = unnest_index(index, self.with_genre);
+            index = unnest_index(
+                index,
+                self.with_doctype,
+                self.with_genre,
+                self.with_group,
+            );
         }
 
         index = index.sort(["path"], Default::default());

@@ -64,13 +64,13 @@ where
     }
 
     // DOCTYPES
-    let doctypes = columns[idx].cast(&DataType::String)?;
-    let doctypes: Vec<_> = doctypes.str()?.iter().collect();
-    idx += 1;
+    // let doctypes = columns[idx].cast(&DataType::String)?;
+    // let doctypes: Vec<_> = doctypes.str()?.iter().collect();
+    // idx += 1;
 
-    assert_eq!(doctypes[0], Some("none"));
-    assert_eq!(doctypes[1], Some("none"));
-    assert_eq!(doctypes[2], Some("none"));
+    // assert_eq!(doctypes[0], Some("none"));
+    // assert_eq!(doctypes[1], Some("none"));
+    // assert_eq!(doctypes[2], Some("none"));
 
     // CHARS
     let chars: Vec<_> = columns[idx]

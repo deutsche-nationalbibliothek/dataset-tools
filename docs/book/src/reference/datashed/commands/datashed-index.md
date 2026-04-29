@@ -27,21 +27,21 @@ information, see [Refinements].
 `--with-doctype`
 : Whether to add a doctype column or not
 
-`--doctype <DOCTYPE>`
+`--default-doctype <doctype>`
 : The default document type if the metadata could not be used to
 determine the document's type (default: `none`).
 
 `--with-genre`
 : Whether to add a `genre` column or not
 
-`--genre <GENRE>`
+`--default-genre <genre>`
 : The default genre if the metadata could not be used to
 determine the document's genre (default: `none`).
 
 `--with-group`
 : Whether to add a `group` column or not
 
-`--group <GROUP>`
+`--default-group <group>`
 : The default group if the metadata could not be used to
 determine the document' group (default: `none`).
 
