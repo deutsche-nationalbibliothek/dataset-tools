@@ -5,7 +5,7 @@ use std::{env, fs};
 use dataset_core::{DatasetError, DatasetResult};
 use polars::prelude::*;
 
-use crate::Config;
+use crate::config::Config;
 
 pub struct Dataset {
     /// The root directory of the dataset.

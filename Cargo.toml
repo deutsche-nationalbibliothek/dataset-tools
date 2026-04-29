@@ -1,6 +1,11 @@
 [workspace]
-members = ["crates/dataset", "crates/dataset-core","crates/datashed", "crates/unhyphen"]
 resolver = "3"
+members = [
+  "crates/dataset-cli",
+  "crates/dataset-core",
+  "crates/datashed",
+  "crates/unhyphen",
+]
 
 [workspace.package]
 authors = ["Nico Wagner <n.wagner@dnb.de>"]

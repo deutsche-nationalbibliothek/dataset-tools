@@ -1,22 +1,22 @@
 [package]
-name = "dataset"
+name = "dataset-cli"
 version = "0.1.0"
 authors.workspace = true
 rust-version.workspace = true
 license.workspace = true
 edition.workspace = true
 
-[lib]
-name = "dataset"
-path = "src/lib.rs"
-
 [[bin]]
 name = "dataset"
-path = "src/bin/dataset/main.rs"
+path = "src/main.rs"
 
 [features]
 default = []
-performant = []
+performant = [
+  "dataset-core/performant",
+  "polars/cse",
+  "polars/performant",
+]
 
 [dependencies]
 actix-web = { workspace = true }

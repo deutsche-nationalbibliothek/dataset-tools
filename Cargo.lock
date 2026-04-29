@@ -1066,7 +1066,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dataset"
+name = "dataset-cli"
 version = "0.1.0"
 dependencies = [
  "actix-web",
@@ -3543,6 +3543,7 @@ dependencies = [
  "chrono",
  "either",
  "fast-float2",
+ "half",
  "hashbrown 0.16.1",
  "itoa",
  "num-traits",
