@@ -1,6 +1,6 @@
 use clap::Parser;
-use dataset::Runtime;
 
+use crate::config::Runtime;
 use crate::prelude::*;
 
 /// Get and set dataset config options.

@@ -6,6 +6,14 @@ rust-version.workspace = true
 license.workspace = true
 edition.workspace = true
 
+[features]
+default = []
+performant = [
+  # "pica-record/performant",
+  "polars/cse",
+  "polars/performant",
+]
+
 [dependencies]
 bstr = { workspace = true }
 polars = { workspace = true }

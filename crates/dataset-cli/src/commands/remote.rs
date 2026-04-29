@@ -53,7 +53,7 @@ pub(crate) enum Command {
 
 impl Remote {
     pub(crate) fn execute(self) -> CommandResult {
-        use dataset::Remote;
+        use crate::remote::Remote;
 
         let dataset = Dataset::discover()?;
         let mut config = dataset.config()?;

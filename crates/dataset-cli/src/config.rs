@@ -7,7 +7,7 @@ use dataset_core::DatasetResult;
 use semver::Version;
 use serde::{Deserialize, Serialize};
 
-use crate::Remote;
+use crate::remote::Remote;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]

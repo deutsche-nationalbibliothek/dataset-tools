@@ -7,7 +7,10 @@ use rayon::ThreadPoolBuilder;
 
 pub(crate) mod cli;
 pub(crate) mod commands;
+pub(crate) mod config;
+pub(crate) mod dataset;
 pub(crate) mod prelude;
+pub(crate) mod remote;
 
 fn num_jobs(args: &Args) -> usize {
     if let Some(value) = args.num_jobs {
