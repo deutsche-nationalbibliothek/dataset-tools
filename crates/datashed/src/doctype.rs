@@ -41,7 +41,9 @@ pub(crate) const DOCTYPES: [&str; 30] = [
     "working-paper",
 ];
 
-#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[derive(
+    Debug, Default, Clone, Copy, PartialEq, Serialize, Deserialize,
+)]
 #[serde(rename_all = "kebab-case")]
 pub enum Doctype {
     Abstract,
@@ -60,6 +62,7 @@ pub enum Doctype {
     MagisterThesis,
     MasterThesis,
     MusicalNotation,
+    #[default]
     None,
     NonfictionBook,
     Other,
@@ -74,12 +77,6 @@ pub enum Doctype {
     TableOfContents,
     Textbook,
     WorkingPaper,
-}
-
-impl Default for Doctype {
-    fn default() -> Self {
-        Self::None
-    }
 }
 
 impl FromStr for Doctype {

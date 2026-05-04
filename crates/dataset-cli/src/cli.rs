@@ -34,6 +34,7 @@ pub(crate) enum Command {
     Fetch(Fetch),
     Init(Init),
     Remote(Remote),
+    Update(Update),
     Version(Version),
 }
 

@@ -9,6 +9,7 @@
 
 * [Concepts](concepts/index.md)
   * [Datashed Index](concepts/datashed-index.md)
+  * [Dataset Vocabulary](concepts/dataset-vocabulary.md)
   * [Document types](concepts/document-types.md)
   * [Refinements](concepts/datashed-refinements.md)
 

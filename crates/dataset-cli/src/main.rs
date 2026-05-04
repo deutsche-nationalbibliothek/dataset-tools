@@ -42,6 +42,7 @@ async fn main() -> ExitCode {
         Command::Fetch(cmd) => cmd.execute().await,
         Command::Init(cmd) => cmd.execute(),
         Command::Remote(cmd) => cmd.execute(),
+        Command::Update(cmd) => cmd.execute(),
         Command::Version(cmd) => cmd.execute(),
     };
 

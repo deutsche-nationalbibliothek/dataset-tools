@@ -19,6 +19,9 @@ bstr = { workspace = true }
 polars = { workspace = true }
 regex = { workspace = true }
 reqwest = { workspace = true }
+serde = { workspace = true }
+sophia = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
 toml_edit = { workspace = true, features = ["serde"] }
+url = { workspace = true }
