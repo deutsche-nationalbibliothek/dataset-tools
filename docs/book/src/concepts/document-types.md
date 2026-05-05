@@ -9,16 +9,20 @@
 ## List of document types
 
 - `abstract`
+- `bachelor-thesis`
 - `blog-post`
 - `blurb`
 - `conference-object`
 - `conference-paper`
 - `conference-proceedings`
 - `correction`
+- `diploma-thesis`
 - `doctoral-thesis`
 - `journal-article`
 - `journal-object`
 - `letter-to-the-editor`
+- `magister-thesis`
+- `master-thesis`
 - `musical-notation`
 - `none` (default)
 - `nonfiction-book`
