@@ -27,7 +27,7 @@ env_logger = { version = "0.11" }
 hashbrown = { version = "0.17" }
 indexmap = { version = "2.12", features = ["serde"] }
 indicatif = { version = "0.18", features = ["rayon"] }
-isbn = { version = "0.7" }
+isbn = { version = "0.8" }
 lingua = { version = "1.8" }
 ndarray = { version = "0.17" }
 openssl = { version = "0.10" }
