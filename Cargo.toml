@@ -39,7 +39,7 @@ reqwest = { version = "0.13", features = ["json"] }
 semver = { version = "1.0", features = ["serde"] }
 serde_json = { version = "1.0" }
 serde = { version = "1.0", features = ["derive"] }
-sha2 = { version = "0.10" }
+sha2 = { version = "0.11" }
 tar = { version = "0.4" }
 sophia = { version = "0.9" }
 thiserror = { version = "2.0" }
