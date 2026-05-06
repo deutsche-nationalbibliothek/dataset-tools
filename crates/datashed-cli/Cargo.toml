@@ -1,15 +1,25 @@
 [package]
 name = "datashed-cli"
-version = "0.1.0"
 authors.workspace = true
 edition.workspace = true
+homepage.workspace = true
 license.workspace = true
+repository.workspace = true
 rust-version.workspace = true
+categories = ["command-line-utilities", "text-processing"]
+keywords = ["dataset", "code4lib"]
 readme = "README.md"
+description = '''
+The datashed command-line tool helps with the creation and maintenance
+of large collections of text documents.
+'''
+version = "0.1.0"
+publish = false
 
 [lib]
 name = "datashed"
 path = "src/lib.rs"
+doc = false
 
 [[bin]]
 name = "datashed"

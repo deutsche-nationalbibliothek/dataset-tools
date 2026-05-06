@@ -3427,8 +3427,9 @@ dependencies = [
 
 [[package]]
 name = "pica-record"
-version = "1.3.0"
-source = "git+https://github.com/deutsche-nationalbibliothek/pica-rs.git#8c7a89efe9d65762fc36366121d05b4cf870be4a"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cf5d8efef9625f9ca36dfefc26cfafa5d6022aab3dc1500e7cc2e7fc4f02fcc9"
 dependencies = [
  "bstr",
  "flate2",
