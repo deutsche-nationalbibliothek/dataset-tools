@@ -3,7 +3,7 @@ resolver = "3"
 members = [
   "crates/dataset-cli",
   "crates/dataset-core",
-  "crates/datashed",
+  "crates/datashed-cli",
   "crates/unhyphen",
 ]
 

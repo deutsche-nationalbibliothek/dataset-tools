@@ -1,8 +1,8 @@
 [files]
 extend-exclude = [
-  "crates/datashed/tests/data/*.txt",
-  "crates/datashed/tests/it/*.rs",
-  "crates/datashed/src/document.rs",
-  "crates/datashed/src/dtypes.rs",
+  "crates/datashed-cli/tests/data/*.txt",
+  "crates/datashed-cli/tests/it/*.rs",
+  "crates/datashed-cli/src/document.rs",
+  "crates/datashed-cli/src/dtypes.rs",
   "crates/unhyphen/src/lib.rs",
 ]
