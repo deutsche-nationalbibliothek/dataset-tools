@@ -24,7 +24,7 @@ bstr = { version = "1.12" }
 clap_complete = { version = "4.5" }
 dataset-core = { path = "crates/dataset-core", version = "0.1.0" }
 env_logger = { version = "0.11" }
-hashbrown = { version = "0.16" }
+hashbrown = { version = "0.17" }
 indexmap = { version = "2.12", features = ["serde"] }
 indicatif = { version = "0.18", features = ["rayon"] }
 isbn = { version = "0.7" }

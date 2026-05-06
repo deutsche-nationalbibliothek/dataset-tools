@@ -1109,7 +1109,7 @@ dependencies = [
  "dataset-core",
  "env_logger",
  "flate2",
- "hashbrown 0.16.1",
+ "hashbrown 0.17.0",
  "indexmap",
  "indicatif",
  "isbn",
@@ -5561,7 +5561,7 @@ name = "unhyphen"
 version = "0.1.0"
 dependencies = [
  "bstr",
- "hashbrown 0.16.1",
+ "hashbrown 0.17.0",
 ]
 
 [[package]]
