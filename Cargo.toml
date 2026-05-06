@@ -41,6 +41,7 @@ serde_json = { version = "1.0" }
 serde = { version = "1.0", features = ["derive"] }
 sha2 = { version = "0.10" }
 tar = { version = "0.4" }
+sophia = { version = "0.9" }
 thiserror = { version = "2.0" }
 tokio = { version = "1.52", features = ["rt"] }
 toml_edit = { version = "0.25", features = ["serde"] }

@@ -4,6 +4,7 @@ use std::process::Stdio;
 use std::{env, fs, process};
 
 use clap::{Parser, ValueEnum};
+use dataset_core::Parameters;
 use semver::Version;
 
 use crate::prelude::*;
@@ -125,6 +126,7 @@ impl Init {
         let dot_dir = root_dir.join(Dataset::DOT_DIR);
         let remotes_dir = dot_dir.join(Dataset::REMOTES_DIR);
         let config = dot_dir.join(Dataset::CONFIG);
+        let params = root_dir.join(Dataset::PARAMS);
 
         if !root_dir.exists() {
             fs::create_dir_all(&root_dir)?;
@@ -175,6 +177,11 @@ impl Init {
             );
 
             config.save()?;
+        }
+
+        if !params.exists() || self.force {
+            let params = Parameters::create(params)?;
+            params.save()?;
         }
 
         if !self.common.quiet {

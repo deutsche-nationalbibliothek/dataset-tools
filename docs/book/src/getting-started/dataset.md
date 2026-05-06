@@ -37,7 +37,6 @@ $ tree -a
 The `.dataset` directory contains the configuration file as well as
 artifacts and metadata required for managing the data.
 
-
 ### Remotes
 
 To use the documents from a datashed, you must add them to the project
@@ -90,8 +89,34 @@ arxiv-data: 2,011,265 documents (108.17 GiB, delta 0), done.
 wp-data: 665,915 documents (4.99 GiB, delta 0), done.
 ```
 
+### Create & Update
+
+#### Vocabulary
+
+If a vocabulary is required in the dataset, it can be defined in the
+`[vocabulary]` section of the `params.toml` (see [Dataset Vocabulary]
+for more information). The following example creates a vocabulary from a
+fixed list and saves it in the file `vocab.ttl` ([RDF/SKOS] format):
+
+```toml
+[vocabulary]
+concepts = [
+  {
+    notation = "000",
+    labels = [
+      { kind = "preferred", label = "Allgemeines, Wissenschaft", lang = "de" },
+      { kind = "preferred", label = "Generalities, science", lang = "en" },
+    ]
+  },
+  ...
+]
+```
+
 [Annif]: https://annif.org
+[Dataset Vocabulary]: ../concepts/dataset-vocabulary.md
+[RDF/SKOS]: https://www.w3.org/TR/skos-primer/
 
 [init]: ../reference/dataset/commands/dataset-init.md
 [fetch]: ../reference/dataset/commands/dataset-fetch.md
 [remote]: ../reference/dataset/commands/dataset-remote.md
+
