@@ -8,8 +8,8 @@ compiler with a minimum version of 1.89. Use the following command to
 install the program with the default features:
 
 ```console
-$ cargo install -F performant --path crates/dataset-cli
-$ cargo install --path crates/datashed
+$ cargo install --path crates/datashed-cli
+$ cargo install --path crates/dataset-cli
 ```
 
 The binary can be built with the following features as needed:
