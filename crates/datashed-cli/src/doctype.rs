@@ -25,9 +25,7 @@ pub(crate) const DOCTYPES: [&str; 30] = [
     "magister-thesis",
     "master-thesis",
     "musical-notation",
-    "none",
     "nonfiction-book",
-    "other",
     "policy-paper",
     "preface",
     "preprint-article",
@@ -39,6 +37,9 @@ pub(crate) const DOCTYPES: [&str; 30] = [
     "table-of-contents",
     "textbook",
     "working-paper",
+    // --snip--
+    "other",
+    "none",
 ];
 
 #[derive(
