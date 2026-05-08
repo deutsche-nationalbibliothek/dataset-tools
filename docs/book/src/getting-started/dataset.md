@@ -1,5 +1,8 @@
 # Dataset
 
+> [!WARNING]
+> This tool is still incomplete and only a prototype.
+
 The `dataset` tool creates [Annif]-compatible corpora from the documents
 in one or more datasheds.
 
