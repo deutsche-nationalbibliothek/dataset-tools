@@ -19,14 +19,13 @@
 - `diploma-thesis`
 - `doctoral-thesis`
 - `journal-article`
+- `journal-issue`
 - `journal-object`
 - `letter-to-the-editor`
 - `magister-thesis`
 - `master-thesis`
 - `musical-notation`
-- `none` (default)
 - `nonfiction-book`
-- `other`
 - `policy-paper`
 - `preface`
 - `preprint-article`
@@ -38,6 +37,8 @@
 - `table-of-contents`
 - `textbook`
 - `working-paper`
+- `other`
+- `none` (default)
 
 
 [COAR resource types]: https://vocabularies.coar-repositories.org/resource_types/
