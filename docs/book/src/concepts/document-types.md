@@ -18,6 +18,7 @@
 - `correction`
 - `diploma-thesis`
 - `doctoral-thesis`
+- `instruction-manual`
 - `journal-article`
 - `journal-issue`
 - `journal-object`
