@@ -19,6 +19,7 @@
 - `correction`
 - `diploma-thesis`
 - `doctoral-thesis`
+- `illustrated-magazine`
 - `instruction-manual`
 - `journal-article`
 - `journal-issue`
