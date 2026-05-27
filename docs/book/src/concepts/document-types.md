@@ -12,6 +12,7 @@
 - `bachelor-thesis`
 - `blog-post`
 - `blurb`
+- `bulletin`
 - `conference-object`
 - `conference-paper`
 - `conference-proceedings`
