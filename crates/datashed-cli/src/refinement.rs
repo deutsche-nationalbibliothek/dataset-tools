@@ -37,8 +37,19 @@ impl<T: Default + ToString> Refinements<T> {
         }
     }
 
-    #[inline(always)]
-    pub fn finish(self) -> HashMap<String, String> {
+    pub fn finish(mut self) -> HashMap<String, String> {
+        for refinement in self.refinements.iter() {
+            if let Some(inheritance) = refinement.finish() {
+                for (src, dst) in inheritance.iter() {
+                    if let Some(doctype) = self.map.get(dst) {
+                        // eprintln!("src {src} -> dst {dst}");
+                        self.map
+                            .insert(src.to_owned(), doctype.to_owned());
+                    }
+                }
+            }
+        }
+
         self.map
     }
 }
@@ -62,6 +73,46 @@ impl<T: Default + ToString> Refinement<T> {
             Self::If(expr) => expr.is_match(record, options),
         }
     }
+
+    pub fn finish(&self) -> Option<&HashMap<String, String>> {
+        match self {
+            Self::Match(expr) => expr.finish(),
+            Self::If(expr) => expr.finish(),
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+#[serde(deny_unknown_fields)]
+struct Inherit {
+    path: Path,
+
+    #[serde(rename = "if")]
+    guard: Option<RecordMatcher>,
+
+    #[serde(skip)]
+    map: HashMap<String, String>,
+}
+
+impl Inherit {
+    pub fn process_record(
+        &mut self,
+        record: &ByteRecord,
+        options: &MatcherOptions,
+    ) {
+        if let Some(ref guard) = self.guard
+            && !guard.is_match(record, options)
+        {
+            return;
+        }
+
+        if let Some(key) = record.first(&self.path, options)
+            && let Some(value) = record.ppn()
+        {
+            self.map.insert(key.to_string(), value.to_string());
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -72,6 +123,7 @@ pub struct IfExpr<T: Default + ToString + 'static> {
     predicate: RecordMatcher,
 
     scope: Option<RecordMatcher>,
+    inherit: Option<Inherit>,
 
     #[serde(rename = "then")]
     output: T,
@@ -86,6 +138,10 @@ impl<T: ToString + Default> IfExpr<T> {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) -> Option<&T> {
+        if let Some(ref mut inherit) = self.inherit {
+            inherit.process_record(record, options)
+        }
+
         if let Some(ref scope) = self.scope
             && !scope.is_match(record, options)
         {
@@ -94,6 +150,14 @@ impl<T: ToString + Default> IfExpr<T> {
 
         if self.predicate.is_match(record, options) {
             Some(&self.output)
+        } else {
+            None
+        }
+    }
+
+    pub fn finish(&self) -> Option<&HashMap<String, String>> {
+        if let Some(ref inherit) = self.inherit {
+            Some(&inherit.map)
         } else {
             None
         }
@@ -108,6 +172,8 @@ pub struct MatchExpr<T: Default + ToString + 'static> {
     head: Path,
 
     scope: Option<RecordMatcher>,
+
+    inherit: Option<Inherit>,
 
     #[serde(rename = "cases", default)]
     arms: Vec<MatchArm<T>>,
@@ -143,6 +209,10 @@ impl<T: Default + ToString + 'static> MatchExpr<T> {
         record: &ByteRecord,
         options: &MatcherOptions,
     ) -> Option<&T> {
+        if let Some(ref mut inherit) = self.inherit {
+            inherit.process_record(record, options)
+        }
+
         if let Some(ref scope) = self.scope
             && !scope.is_match(record, options)
         {
@@ -177,5 +247,13 @@ impl<T: Default + ToString + 'static> MatchExpr<T> {
         }
 
         None
+    }
+
+    pub fn finish(&self) -> Option<&HashMap<String, String>> {
+        if let Some(ref inherit) = self.inherit {
+            Some(&inherit.map)
+        } else {
+            None
+        }
     }
 }
