@@ -25,6 +25,7 @@
 - `journal-issue`
 - `journal-object`
 - `letter-to-the-editor`
+- `magazine-issue`
 - `magister-thesis`
 - `master-thesis`
 - `musical-notation`
