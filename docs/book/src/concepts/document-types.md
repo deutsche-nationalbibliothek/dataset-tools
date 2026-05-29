@@ -29,6 +29,7 @@
 - `magister-thesis`
 - `master-thesis`
 - `musical-notation`
+- `newspaper`
 - `nonfiction-book`
 - `policy-paper`
 - `preface`
