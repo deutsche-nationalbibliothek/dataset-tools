@@ -119,6 +119,8 @@ impl Inherit {
 #[serde(rename_all = "kebab-case")]
 #[serde(deny_unknown_fields)]
 pub struct IfExpr<T: Default + ToString + 'static> {
+    description: Option<String>,
+
     #[serde(rename = "if")]
     predicate: RecordMatcher,
 
@@ -168,6 +170,8 @@ impl<T: ToString + Default> IfExpr<T> {
 #[serde(rename_all = "kebab-case")]
 #[serde(deny_unknown_fields)]
 pub struct MatchExpr<T: Default + ToString + 'static> {
+    description: Option<String>,
+
     #[serde(rename = "match")]
     head: Path,
 
