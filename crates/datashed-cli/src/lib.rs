@@ -6,6 +6,7 @@ mod dtypes;
 mod genre;
 mod group;
 mod refinement;
+mod tags;
 mod unicode;
 
 pub use config::{Config, Runtime};
@@ -15,4 +16,5 @@ pub use document::Document;
 pub use dtypes::*;
 pub use genre::{Genre, GenreRefinements};
 pub use group::{Group, GroupRefinements};
+pub use tags::TagsRefinements;
 pub use unicode::{NormalizationForm, translit};

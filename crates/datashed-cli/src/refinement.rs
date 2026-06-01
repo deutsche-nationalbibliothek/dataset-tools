@@ -1,5 +1,6 @@
 use bstr::ByteSlice;
 use hashbrown::HashMap;
+use hashbrown::hash_map::Entry;
 use pica_record::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -7,13 +8,16 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "kebab-case")]
 #[serde(deny_unknown_fields)]
 pub struct Refinements<T: Default + ToString + 'static> {
+    #[serde(rename = "dtype-list", default)]
+    list: bool,
+
     #[serde(skip_serializing_if = "Vec::is_empty", default)]
     refinements: Vec<Refinement<T>>,
 
     scope: Option<RecordMatcher>,
 
     #[serde(skip)]
-    map: HashMap<String, String>,
+    map: HashMap<String, Vec<String>>,
 }
 
 impl<T: Default + ToString> Refinements<T> {
@@ -28,23 +32,56 @@ impl<T: Default + ToString> Refinements<T> {
             return;
         }
 
+        let Some(ppn) = record.ppn() else { return };
+
         for refinement in self.refinements.iter_mut() {
-            if let Some(output) = refinement.is_match(record, options) {
-                let Some(ppn) = record.ppn() else { return };
-                self.map.insert(ppn.to_string(), output.to_string());
-                break;
+            if let Some(value) =
+                refinement.process_record(record, options)
+            {
+                let value = value.to_string();
+                if value.is_empty() {
+                    continue;
+                }
+
+                match self.map.entry(ppn.to_string()) {
+                    Entry::Vacant(entry) => {
+                        let _ = entry.insert(vec![value]);
+                        if !self.list {
+                            break;
+                        }
+                    }
+                    Entry::Occupied(ref mut entry) => {
+                        assert!(self.list);
+                        let values = entry.get_mut();
+                        values.push(value);
+                        values.sort_unstable();
+                        values.dedup();
+                    }
+                }
             }
         }
     }
 
-    pub fn finish(mut self) -> HashMap<String, String> {
+    pub fn finish(mut self) -> HashMap<String, Vec<String>> {
         for refinement in self.refinements.iter() {
-            if let Some(inheritance) = refinement.finish() {
-                for (src, dst) in inheritance.iter() {
-                    if let Some(doctype) = self.map.get(dst) {
-                        // eprintln!("src {src} -> dst {dst}");
-                        self.map
-                            .insert(src.to_owned(), doctype.to_owned());
+            let Some(inherit_map) = refinement.finish() else {
+                continue;
+            };
+
+            for (src, dst) in inherit_map.iter() {
+                if let Some(values) = self.map.remove(dst) {
+                    match self.map.entry(src.to_string()) {
+                        Entry::Vacant(entry) => {
+                            let _ = entry.insert(values);
+                        }
+                        Entry::Occupied(ref mut entry) => {
+                            if self.list {
+                                let vals = entry.get_mut();
+                                vals.extend(values);
+                                vals.sort_unstable();
+                                vals.dedup();
+                            }
+                        }
                     }
                 }
             }
@@ -63,14 +100,14 @@ pub(crate) enum Refinement<T: Default + ToString + 'static> {
 }
 
 impl<T: Default + ToString> Refinement<T> {
-    pub fn is_match(
+    pub fn process_record(
         &mut self,
         record: &ByteRecord,
         options: &MatcherOptions,
     ) -> Option<&T> {
         match self {
-            Self::Match(expr) => expr.is_match(record, options),
-            Self::If(expr) => expr.is_match(record, options),
+            Self::Match(expr) => expr.process_record(record, options),
+            Self::If(expr) => expr.process_record(record, options),
         }
     }
 
@@ -135,7 +172,7 @@ pub struct IfExpr<T: Default + ToString + 'static> {
 }
 
 impl<T: ToString + Default> IfExpr<T> {
-    pub fn is_match(
+    pub fn process_record(
         &mut self,
         record: &ByteRecord,
         options: &MatcherOptions,
@@ -208,7 +245,7 @@ enum MatchPattern {
 }
 
 impl<T: Default + ToString + 'static> MatchExpr<T> {
-    fn is_match(
+    fn process_record(
         &mut self,
         record: &ByteRecord,
         options: &MatcherOptions,
