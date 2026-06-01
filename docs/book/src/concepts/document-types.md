@@ -34,6 +34,7 @@
 - `policy-paper`
 - `preface`
 - `preprint-article`
+- `reference-work`
 - `retraction-note`
 - `review`
 - `scientific-article`
