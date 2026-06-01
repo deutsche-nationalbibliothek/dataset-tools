@@ -8,7 +8,7 @@ use crate::refinement::Refinements;
 
 pub type DoctypeRefinements = Refinements<Doctype>;
 
-pub(crate) const DOCTYPES: [&str; 36] = [
+pub(crate) const DOCTYPES: [&str; 37] = [
     "abstract",
     "bachelor-thesis",
     "blog-post",
