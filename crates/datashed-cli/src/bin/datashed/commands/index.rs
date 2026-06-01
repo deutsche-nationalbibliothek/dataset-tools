@@ -5,8 +5,8 @@ use std::path::PathBuf;
 use actix_web::rt::task::spawn_blocking;
 use datashed::{
     Doctype, DoctypeRefinements, Document, GenreRefinements,
-    GroupRefinements, doctype_dtype, genre_dtype, group_dtype,
-    iso6392b_dtype, translit,
+    GroupRefinements, TagsRefinements, doctype_dtype, genre_dtype,
+    group_dtype, iso6392b_dtype, translit,
 };
 use indicatif::ParallelProgressIterator;
 use pica_record::prelude::*;
@@ -53,6 +53,10 @@ pub(crate) struct Index {
     #[arg(long, default_value = "none", value_name = "group")]
     default_group: String,
 
+    /// Whether to add a `tags` column or not.
+    #[arg(long)]
+    with_tags: bool,
+
     /// Stop processing after <N> documents.
     #[arg(long, short, default_value = "0", value_name = "N")]
     limit: usize,
@@ -84,6 +88,7 @@ impl Index {
         let mut doctype_refinements = DoctypeRefinements::default();
         let mut genre_refinements = GenreRefinements::default();
         let mut group_refinements = GroupRefinements::default();
+        let mut tags_refinements = TagsRefinements::default();
 
         if let Some(refinements) = config.refinements {
             if let Some(path) = refinements.genre {
@@ -113,6 +118,15 @@ impl Index {
                 doctype_refinements =
                     toml_edit::de::from_str(&content)?;
             }
+
+            if let Some(path) = refinements.tags {
+                let mut content = read_to_string(path)?;
+                if let Some(ref runtime) = config.runtime {
+                    content = translit(runtime.normalization)(content);
+                }
+
+                tags_refinements = toml_edit::de::from_str(&content)?;
+            }
         }
 
         if let Some(path) = self.metadata {
@@ -138,6 +152,11 @@ impl Index {
                         .process_record(record, &Default::default());
                 }
 
+                if self.with_tags {
+                    tags_refinements
+                        .process_record(record, &Default::default());
+                }
+
                 doctype_refinements
                     .process_record(record, &Default::default());
 
@@ -150,6 +169,7 @@ impl Index {
         let mut doctype_map = doctype_refinements.finish();
         let mut genre_map = genre_refinements.finish();
         let mut group_map = group_refinements.finish();
+        let mut tags_map = tags_refinements.finish();
 
         let is_arrow = if let Some(ref path) = self.output {
             path.extension()
@@ -212,6 +232,7 @@ impl Index {
         let mut sizes: Vec<u64> = vec![];
         let mut lfreqs: Vec<Option<f64>> = vec![];
         let mut alphas: Vec<f64> = vec![];
+        let mut tags: Vec<Vec<String>> = vec![];
         let mut mtimes: Vec<u64> = vec![];
 
         for doc in docs.into_iter() {
@@ -220,22 +241,39 @@ impl Index {
             let doctype = doc
                 .doctype
                 .map(|dt: Doctype| dt.to_string())
-                .or(doctype_map.remove(&name))
+                .or(doctype_map
+                    .remove(&name)
+                    .map(|list| list.into_iter().next())
+                    .flatten())
                 .unwrap_or(self.default_doctype.clone());
 
             if self.with_genre {
-                let genre = genre_map
+                let genre: String = genre_map
                     .remove(&name)
+                    .map(|list| {
+                        list.into_iter()
+                            .next()
+                            .unwrap_or(self.default_genre.clone())
+                    })
                     .unwrap_or(self.default_genre.clone());
                 genres.push(genre);
             }
 
             if self.with_group {
-                groups.push(
-                    group_map
-                        .remove(&name)
-                        .unwrap_or(self.default_group.clone()),
-                );
+                let group = group_map
+                    .remove(&name)
+                    .map(|list| {
+                        list.into_iter()
+                            .next()
+                            .unwrap_or(self.default_group.clone())
+                    })
+                    .unwrap_or(self.default_group.clone());
+                groups.push(group);
+            }
+
+            if self.with_tags {
+                let tags_ = tags_map.remove(&name).unwrap_or_default();
+                tags.push(tags_);
             }
 
             paths.push(doc.path);
@@ -273,6 +311,14 @@ impl Index {
 
         if self.with_group {
             columns.push(col!("group", groups).cast(&group_dtype())?);
+        }
+
+        if self.with_tags {
+            let tags: Vec<Series> = tags
+                .into_iter()
+                .map(|tags| tags.into_iter().collect::<Series>())
+                .collect();
+            columns.push(col!("tags", tags));
         }
 
         columns.push(col!("chars", chars));
