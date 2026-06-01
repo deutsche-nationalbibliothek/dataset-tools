@@ -243,8 +243,7 @@ impl Index {
                 .map(|dt: Doctype| dt.to_string())
                 .or(doctype_map
                     .remove(&name)
-                    .map(|list| list.into_iter().next())
-                    .flatten())
+                    .and_then(|list| list.into_iter().next()))
                 .unwrap_or(self.default_doctype.clone());
 
             if self.with_genre {
