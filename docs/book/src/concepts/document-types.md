@@ -24,6 +24,7 @@
 - `journal-article`
 - `journal-issue`
 - `journal-object`
+- `law-statutes`
 - `letter-to-the-editor`
 - `magazine-issue`
 - `magister-thesis`
