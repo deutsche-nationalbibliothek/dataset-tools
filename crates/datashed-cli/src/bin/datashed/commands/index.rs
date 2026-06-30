@@ -344,6 +344,7 @@ impl Index {
                 self.with_doctype,
                 self.with_genre,
                 self.with_group,
+                self.with_tags,
             );
         }
 

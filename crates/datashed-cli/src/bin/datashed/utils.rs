@@ -92,6 +92,7 @@ pub(crate) fn unnest_index(
     with_doctype: bool,
     with_genre: bool,
     with_group: bool,
+    with_tags: bool,
 ) -> LazyFrame {
     let mut lf = lf
         .unnest(by_name(["lang"], true, false), Some("_".into()))
@@ -107,6 +108,10 @@ pub(crate) fn unnest_index(
 
     if with_group {
         lf = lf.with_columns([col("group").cast(DataType::String)]);
+    }
+
+    if with_tags {
+        lf = lf.with_columns([col("tags").list().join(lit(","), true)]);
     }
 
     lf
