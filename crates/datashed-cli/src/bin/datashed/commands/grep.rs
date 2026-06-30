@@ -112,6 +112,7 @@ impl Grep {
         let with_doctype = index.column("doctype").is_ok();
         let with_genre = index.column("genre").is_ok();
         let with_group = index.column("group").is_ok();
+        let with_tags = index.column("tags").is_ok();
 
         let mut index =
             index.lazy().semi_join(matches, col("path"), col("path"));
@@ -122,6 +123,7 @@ impl Grep {
                 with_doctype,
                 with_genre,
                 with_group,
+                with_tags,
             );
         }
 
