@@ -39,9 +39,7 @@ pub(crate) fn read_df<P: AsRef<Path>>(
     let path = path.as_ref().to_path_buf();
 
     Ok(match path.extension().and_then(OsStr::to_str) {
-        Some("ipc") => IpcReader::new(File::open(path)?)
-            .memory_mapped(None)
-            .finish()?,
+        Some("ipc") => IpcReader::new(File::open(path)?).finish()?,
         _ => CsvReadOptions::default()
             .with_has_header(true)
             .with_infer_schema_length(Some(0))
@@ -122,9 +120,7 @@ pub(crate) async fn read_index(
     filter: &FilterOpts,
 ) -> DatasetResult<DataFrame> {
     let index = if let Some(ref path) = filter.index {
-        IpcReader::new(File::open(path)?)
-            .memory_mapped(None)
-            .finish()?
+        IpcReader::new(File::open(path)?).finish()?
     } else {
         datashed.index()?
     };
@@ -181,9 +177,9 @@ pub(crate) async fn read_index(
         } else if deny_list.column("ppn").is_ok() && index_has_ppn {
             index.anti_join(deny_list.lazy(), col("ppn"), col("ppn"))
         } else if index_has_ppn {
-            bail!("missing `path` or `ppn` column.")
+            bail!("missing `path` or `ppn` column.");
         } else {
-            bail!("missing `path` column.")
+            bail!("missing `path` column.");
         };
     };
 

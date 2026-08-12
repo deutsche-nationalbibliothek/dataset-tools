@@ -62,7 +62,6 @@ impl Datashed {
         Ok(IpcReader::new(File::open(
             self.base_dir().join(Self::INDEX),
         )?)
-        .memory_mapped(None)
         .finish()?)
     }
 }

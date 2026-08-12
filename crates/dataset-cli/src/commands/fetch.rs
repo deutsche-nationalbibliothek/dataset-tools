@@ -85,9 +85,7 @@ impl Fetch {
                 index.column("size")?.u64()?.sum().unwrap_or_default();
 
             let delta: i64 = if path.exists() {
-                let df = IpcReader::new(File::open(&path)?)
-                    .memory_mapped(None)
-                    .finish()?;
+                let df = IpcReader::new(File::open(&path)?).finish()?;
 
                 (index.height() - df.height()) as i64
             } else {

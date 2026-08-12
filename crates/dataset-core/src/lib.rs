@@ -8,6 +8,6 @@ pub use params::Parameters;
 #[macro_export]
 macro_rules! bail {
     ($($arg:tt)*) => {
-        return Err($crate::DatasetError::Other(format!($($arg)*)));
+        return Err($crate::DatasetError::Other(format!($($arg)*)))
     };
 }
