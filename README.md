@@ -19,6 +19,13 @@ HTTP/REST API to use the index and the documents as a data source for
 building datasets. The API can also be used to evaluate the quality of
 the documents or to carry out further annotations.
 
+## Citation
+
+When referencing this work, please use the following citation:
+
+> Wagner, N. (2026). Data Engineering und Daten-Pipelines für die
+> automatische Erschließung. ABI Technik, 46(3), 226-235.
+> https://doi.org/10.1515/abitech-2026-0036
 
 ## Contributing
 
@@ -26,12 +33,12 @@ All contributors are required to "sign-off" their commits (using `git
 commit -s`) to indicate that they have agreed to the [Developer
 Certificate of Origin](https://developercertificate.org/).
 
-
 ## License
 
 This project is licensed under the [European Union Public License 1.2].
 The [test data] were taken from the Wikipedia articles [DNB], [TIB] and
 [ZBW] and are licensed under [CC BY-SA].
+
 
 
 
