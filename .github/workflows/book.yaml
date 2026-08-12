@@ -9,10 +9,6 @@ on:
       - 'docs/book/custom.css'
       - 'docs/book/book.toml'
 
-permissions:
-  contents: read
-  id-token: write
-  pages: write
 
 concurrency:
   cancel-in-progress: false
@@ -20,6 +16,8 @@ concurrency:
 
 jobs:
   build:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     env:
       MDBOOK_VERSION: 0.5.4
@@ -50,6 +48,10 @@ jobs:
           path: target/docs/book
 
   deploy:
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

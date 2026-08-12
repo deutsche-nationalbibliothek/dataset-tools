@@ -5,4 +5,5 @@ extend-exclude = [
   "crates/datashed-cli/src/document.rs",
   "crates/datashed-cli/src/dtypes.rs",
   "crates/unhyphen/src/lib.rs",
+  "README.md",
 ]
