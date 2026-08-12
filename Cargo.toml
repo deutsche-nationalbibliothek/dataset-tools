@@ -17,12 +17,12 @@ rust-version = "1.89"
 
 [workspace.dependencies]
 actix-files = { version = "0.6" }
-actix-web = { version = "4.12", features = ["openssl"] }
+actix-web = { version = "4.14.0", features = ["openssl"] }
 anyhow = { version = "1.0.103" }
 approx = { version = "0.5" }
 assert_cmd = { version = "2.1" }
 assert_fs = { version = "1.1" }
-bstr = { version = "1.12" }
+bstr = { version = "1.13.0" }
 clap_complete = { version = "4.5" }
 dataset-core = { path = "crates/dataset-core", version = "0.1.0" }
 env_logger = { version = "0.11" }
@@ -37,16 +37,16 @@ owo-colors = { version = "4.2" }
 pica-record = { version = "1.4", features = ["serde"] }
 predicates = { version = "3.1" }
 rayon = { version = "1.11" }
-regex = { version = "1.12" }
+regex = { version = "1.13.1" }
 reqwest = { version = "0.13", features = ["json"] }
 semver = { version = "1.0", features = ["serde"] }
 serde_json = { version = "1.0" }
 serde = { version = "1.0", features = ["derive"] }
 sha2 = { version = "0.11" }
-sophia = { version = "0.9" }
+sophia = { version = "0.10.0" }
 tar = { version = "0.4" }
 thiserror = { version = "2.0" }
-tokio = { version = "1.52", features = ["rt"] }
+tokio = { version = "1.53.1", features = ["rt"] }
 toml_edit = { version = "0.25", features = ["serde"] }
 unicode_categories = { version = "0.1" }
 unicode-normalization = { version = "0.1" }

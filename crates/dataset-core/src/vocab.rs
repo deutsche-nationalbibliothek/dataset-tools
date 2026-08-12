@@ -104,9 +104,12 @@ impl VocabularyListing {
                 }
                 .unwrap();
 
-                let o = RcTerm::from_term(
-                    GenericLiteral::LanguageString(label.clone(), lang),
-                );
+                let o =
+                    RcTerm::from_term(GenericLiteral::LanguageString(
+                        label.clone(),
+                        lang,
+                        None,
+                    ));
 
                 graph.insert(s, p, o).unwrap();
             }
