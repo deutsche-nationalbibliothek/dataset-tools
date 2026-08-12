@@ -61,8 +61,8 @@ jobs:
 
       - name: Run tests
         run: |
-          cargo nextest run --target ${{ matrix.target.triple }} --workspace --profile ci --no-fail-fast
-          cargo test --target ${{ matrix.target.triple }} --doc --workspace --profile ci --no-fail-fast
+          cargo nextest run --target ${{ matrix.target.triple }} --workspace --no-fail-fast
+          cargo test --target ${{ matrix.target.triple }} --doc --workspace --no-fail-fast
 
   clippy:
     runs-on: ubuntu-latest
