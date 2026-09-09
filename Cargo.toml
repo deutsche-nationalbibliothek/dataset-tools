@@ -16,7 +16,7 @@ license = "EUPL-1.2"
 rust-version = "1.89"
 
 [workspace.dependencies]
-actix-files = { version = "0.6" }
+actix-files = { version = "0.7" }
 actix-web = { version = "4.14.0", features = ["openssl"] }
 anyhow = { version = "1.0.103" }
 approx = { version = "0.5" }
